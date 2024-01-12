@@ -101,34 +101,21 @@ const initialValues = {
 };
 
 const AgregarVal = ({ title }) => {
-  const [postData, setPostData] = useState({
-    title: '',
-    body: '',
-  });
-
-  const [dependencia, setDependencia] = useState('');
-  const [area, setArea] = useState('');
+  const [formData, setFormData] = useState(initialValues);
 
   const handleInputChange = (e) => {
-    setPostData({ ...postData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
   };
 
-  const handleDependenciaChange = (e) => {
-    setDependencia(e.target.value);
-    setArea(''); // Reiniciar area cuando dependencia cambia
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
+  const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await fetch('URL_DE_TU_API', {
+      const response = await fetch('http://127.0.0.1:5000/registroValidador', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // Agrega cualquier otra cabecera que tu API pueda requerir
         },
-        body: JSON.stringify(postData),
+        body: JSON.stringify(values),
       });
 
       const data = await response.json();
@@ -141,8 +128,11 @@ const AgregarVal = ({ title }) => {
       });
     } catch (error) {
       console.error('Error al enviar la solicitud:', error);
+    } finally {
+      setSubmitting(false);
     }
   };
+
 
   return (
     <div>
@@ -161,100 +151,149 @@ const AgregarVal = ({ title }) => {
       </h2>
 
       <FormContainer>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={(values, { setSubmitting }) => {
-            console.log(values);
-            setSubmitting(false);
-          }}
-        >
-          {({ handleSubmit, isValid }) => (
-            <StyledForm onSubmit={handleSubmit}>
-              <FormGroup>
-                <label htmlFor="usuario">Usuario</label>
-                <StyledField type="text" name="usuario" />
-                <ErrorMessageStyled name="usuario" component="div" />
-              </FormGroup>
+  <Formik
+    initialValues={formData}
+    validationSchema={validationSchema}
+    onSubmit={handleSubmit}
+  >
+    {({ isValid, isSubmitting, handleChange, values }) => (
+      <StyledForm>
+        <FormGroup>
+          <label htmlFor="usuario">Usuario</label>
+          <StyledField
+            type="text"
+            name="usuario"
+            onChange={(e) => {
+              handleChange(e);
+              handleInputChange(e);
+            }}
+            value={values.usuario}
+          />
+          <ErrorMessageStyled name="usuario" component="div" />
+        </FormGroup>
 
-              <FormGroup>
-                <label htmlFor="contrasenia">Contraseña</label>
-                <StyledField type="password" name="contrasenia" />
-                <ErrorMessageStyled name="contrasenia" component="div" />
-              </FormGroup>
+        <FormGroup>
+          <label htmlFor="contrasenia">Contraseña</label>
+          <StyledField
+            type="password"
+            name="contrasenia"
+            onChange={(e) => {
+              handleChange(e);
+              handleInputChange(e);
+            }}
+            value={values.contrasenia}
+          />
+          <ErrorMessageStyled name="contrasenia" component="div" />
+        </FormGroup>
 
-              <FormGroup>
-                <label htmlFor="nombre">Nombre</label>
-                <StyledField type="text" name="nombre" />
-                <ErrorMessageStyled name="nombre" component="div" />
-              </FormGroup>
+        <FormGroup>
+          <label htmlFor="nombre">Nombre</label>
+          <StyledField
+            type="text"
+            name="nombre"
+            onChange={(e) => {
+              handleChange(e);
+              handleInputChange(e);
+            }}
+            value={values.nombre}
+          />
+          <ErrorMessageStyled name="nombre" component="div" />
+        </FormGroup>
 
-              <FormGroup>
-                <label htmlFor="apellidop">Apellido Paterno</label>
-                <StyledField type="text" name="apellidop" />
-                <ErrorMessageStyled name="apellidop" component="div" />
-              </FormGroup>
+        <FormGroup>
+          <label htmlFor="apellidop">Apellido Paterno</label>
+          <StyledField
+            type="text"
+            name="apellidop"
+            onChange={(e) => {
+              handleChange(e);
+              handleInputChange(e);
+            }}
+            value={values.apellidop}
+          />
+          <ErrorMessageStyled name="apellidop" component="div" />
+        </FormGroup>
 
-              <FormGroup>
-                <label htmlFor="apellidom">Apellido Materno</label>
-                <StyledField type="text" name="apellidom" />
-                <ErrorMessageStyled name="apellidom" component="div" />
-              </FormGroup>
+        <FormGroup>
+          <label htmlFor="apellidom">Apellido Materno</label>
+          <StyledField
+            type="text"
+            name="apellidom"
+            onChange={(e) => {
+              handleChange(e);
+              handleInputChange(e);
+            }}
+            value={values.apellidom}
+          />
+          <ErrorMessageStyled name="apellidom" component="div" />
+        </FormGroup>
 
-              <FormGroup>
-                <label htmlFor="dependencia">Dependencia</label>
-                <StyledField
-                  as="select"
-                  name="dependencia"
-                  onChange={handleDependenciaChange}
-                >
-                  <option value="">Selecciona una dependencia</option>
-                  <option value="1">Secretaría de Hacienda</option>
-                  <option value="0">Secretaría de Gobierno</option>
-                </StyledField>
-                <ErrorMessageStyled name="dependencia" component="div" />
-              </FormGroup>
+        <FormGroup>
+          <label htmlFor="dependencia">Dependencia</label>
+          <StyledField
+            as="select"
+            name="dependencia"
+            onChange={(e) => {
+              handleChange(e);
+              handleInputChange(e);
+            }}
+            value={values.dependencia}
+          >
+            <option value="">Selecciona una dependencia</option>
+            <option value="1">Secretaría de Hacienda</option>
+            <option value="2">Secretaría de Gobierno</option>
+          </StyledField>
+          <ErrorMessageStyled name="dependencia" component="div" />
+        </FormGroup>
 
-              {dependencia === '1' && (
-                <FormGroup>
-                  <label htmlFor="area">Área de Adscripción</label>
-                  <StyledField
-                    as="select"
-                    name="area"
-                    onChange={(e) => setArea(e.target.value)}
-                  >
-                    <option value="">Selecciona un área</option>
-                    <option value="1.1">Gobierno Digital e Innovación</option>
-                  </StyledField>
-                  <ErrorMessageStyled name="area" component="div" />
-                </FormGroup>
-              )}
+        {values.dependencia === '1' && (
+          <FormGroup>
+            <label htmlFor="area">Área de Adscripción</label>
+            <StyledField
+              as="select"
+              name="area"
+              onChange={(e) => {
+                handleChange(e);
+                handleInputChange(e);
+              }}
+              value={values.area}
+            >
+              <option value="">Selecciona un área</option>
+              <option value="1">Gobierno Digital e Innovación</option>
+            </StyledField>
+            <ErrorMessageStyled name="area" component="div" />
+          </FormGroup>
+        )}
 
-              {dependencia === '0' && (
-                <FormGroup>
-                  <label htmlFor="area">Área de Adscripción</label>
-                  <StyledField
-                    as="select"
-                    name="area"
-                    onChange={(e) => setArea(e.target.value)}
-                  >
-                    <option value="">Selecciona un área</option>
-                    <option value="0.0">Oficialía Mayor</option>
-                    <option value="0.00">Recursos Humanos</option>
-                  </StyledField>
-                  <ErrorMessageStyled name="area" component="div" />
-                </FormGroup>
-              )}
+        {values.dependencia === '2' && (
+          <FormGroup>
+            <label htmlFor="area">Área de Adscripción</label>
+            <StyledField
+              as="select"
+              name="area"
+              onChange={(e) => {
+                handleChange(e);
+                handleInputChange(e);
+              }}
+              value={values.area}
+            >
+              <option value="">Selecciona un área</option>
+              <option value="2">Oficialía Mayor</option>
+              <option value="3">Recursos Humanos</option>
+            </StyledField>
+            <ErrorMessageStyled name="area" component="div" />
+          </FormGroup>
+        )}
 
-              <FormGroup>
-                <SubmitButton type="submit" disabled={!isValid}>
-                  Agregar Verificador
-                </SubmitButton>
-              </FormGroup>
-            </StyledForm>
-          )}
-        </Formik>
-      </FormContainer>
+        <FormGroup>
+          <SubmitButton type="submit" disabled={!isValid || isSubmitting}>
+            Agregar Verificador
+          </SubmitButton>
+        </FormGroup>
+      </StyledForm>
+    )}
+  </Formik>
+</FormContainer>
     </div>
   );
 };

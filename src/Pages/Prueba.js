@@ -7,58 +7,68 @@ import "../Styles/preregistro.css"
 function Preregistro() {
   const initialState = {
     usuario: "",
-    contraseña: "",
+    contrasenia: "",
     nombre: "",
-    apellidoPaterno: "",
-    apellidoMaterno: "",
-    escuelaProcedencia: "UAEH",
+    apellidop: "",
+    apellidom: "",
+    escuelaprocedencia: "",
     plantel: "",
-    otroPlantel: "",
-    semestre: "",
-    numSeguroSocial: "",
-    periodo: "",
+    otroplantel: "",
+    curp: "",
+    carrera: "",
+    
   };
 
   const [formData, setFormData] = useState(initialState);
 
+  
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
   };
+  
 
   const handleSubmit = (e) => {
+    // Previene el comportamiento predeterminado del formulario, que es el envío normal.
     e.preventDefault();
-
+  
+    // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
     axios
-      .post(`http://localhost:3001/preregistro/enviar-preregistro`, formData)
+      .post(`http://127.0.0.1:5000/registroAlumno`, formData)
       .then((response) => {
+        // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
         Swal.fire({
-          position: "center",
-          icon: "success",
-          title: "Gracias por tu interés. Te contactaremos pronto.",
-          showConfirmButton: false,
-          timer: 4000,
+          position: "center", // Posición de la ventana emergente en el centro.
+          icon: "success", // Ícono de éxito.
+          title: "Gracias por tu interés. Te contactaremos pronto.", // Título de la ventana emergente.
+          showConfirmButton: false, // No muestra el botón de confirmación.
+          timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
         });
-
+  
+        // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
         setFormData(initialState);
       })
       .catch((error) => {
+        // Maneja cualquier error que ocurra durante la solicitud.
         console.error("Error al enviar el formulario:", error);
+  
+        // Muestra una ventana emergente de error utilizando SweetAlert.
         Swal.fire({
-          icon: "error",
-          title: "Error al enviar el formulario",
-          text: "Hubo un problema al enviar el formulario.",
+          icon: "error", // Ícono de error.
+          title: "Error al enviar el formulario", // Título de la ventana emergente.
+          text: "Hubo un problema al enviar el formulario.", // Texto de la ventana emergente.
         });
       });
   };
+  
 
   const handleEscuelaProcedenciaChange = (e) => {
     const escuelaProcedenciaValue = e.target.value;
     setFormData({
       ...formData,
-      escuelaProcedencia: escuelaProcedenciaValue,
+      escuelaprocedencia: escuelaProcedenciaValue,
       plantel: "",
-      otroPlantel: "",
+      otroplantel: "",
     });
   };
 
@@ -76,14 +86,15 @@ function Preregistro() {
               value={formData.usuario}
               onChange={handleChange}
               required
+              
             />
           </div>
           <div className="form-group">
-            <label htmlFor="contraseña">Contraseña:</label>
+            <label htmlFor="contrasenia">Contraseña:</label>
             <input className="cuadros"
               type="password"
-              name="contraseña"
-              value={formData.contraseña}
+              name="contrasenia"
+              value={formData.contrasenia}
               onChange={handleChange}
               required
             />
@@ -99,30 +110,30 @@ function Preregistro() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="apellidoPaterno">Apellido Paterno:</label>
+            <label htmlFor="apellidop">Apellido Paterno:</label>
             <input className="cuadros"
               type="text"
-              name="apellidoPaterno"
-              value={formData.apellidoPaterno}
+              name="apellidop"
+              value={formData.apellidop}
               onChange={handleChange}
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="apellidoMaterno">Apellido Materno:</label>
+            <label htmlFor="apellidom">Apellido Materno:</label>
             <input className="cuadros"
               type="text"
-              name="apellidoMaterno"
-              value={formData.apellidoMaterno}
+              name="apellidom"
+              value={formData.apellidom}
               onChange={handleChange}
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="escuelaProcedencia">Escuela de Procedencia:</label>
+            <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
             <select className="cuadros"
-              name="escuelaProcedencia"
-              value={formData.escuelaProcedencia}
+              name="escuelaprocedencia"
+              value={formData.escuelaprocedencia}
               onChange={handleEscuelaProcedenciaChange}
               required
             >
@@ -130,7 +141,7 @@ function Preregistro() {
               <option value="Otras">Otras</option>
             </select>
           </div>
-          {formData.escuelaProcedencia === "UAEH" && (
+          {formData.escuelaprocedencia === "UAEH" && (
             <div className="form-group">
               <label htmlFor="plantel">Plantel:</label>
               <input className="cuadros"
@@ -142,48 +153,39 @@ function Preregistro() {
               />
             </div>
           )}
-          {formData.escuelaProcedencia === "Otras" && (
+          {formData.escuelaprocedencia === "Otras" && (
             <div className="form-group">
-              <label htmlFor="otroPlantel">Nombre de la Escuela:</label>
+              <label htmlFor="otroplantel">Nombre de la Escuela:</label>
               <input className="cuadros"
                 type="text"
-                name="otroPlantel"
-                value={formData.otroPlantel}
+                name="otroplantel"
+                value={formData.otroplantel}
                 onChange={handleChange}
                 required
               />
             </div>
           )}
           <div className="form-group">
-            <label htmlFor="semestre">Semestre:</label>
+            <label htmlFor="curp">CURP:</label>
             <input className="cuadros"
               type="text"
-              name="semestre"
-              value={formData.semestre}
+              name="curp"
+              value={formData.curp}
               onChange={handleChange}
               required
             />
           </div>
           <div className="form-group">
-            <label htmlFor="numSeguroSocial">Número de Seguro Social Facultativo:</label>
+            <label htmlFor="carrera">carrera:</label>
             <input className="cuadros"
               type="text"
-              name="numSeguroSocial"
-              value={formData.numSeguroSocial}
+              name="carrera"
+              value={formData.carrera}
               onChange={handleChange}
               required
             />
           </div>
-          <div className="form-group">
-            <label htmlFor="periodo">Periodo:</label>
-            <input className="cuadros"
-              type="text"
-              name="periodo"
-              value={formData.periodo}
-              onChange={handleChange}
-              required
-            />
-          </div>
+          
           <div className="form-group">
             <button type="submit" className="botonchido">Enviar</button>
           </div>

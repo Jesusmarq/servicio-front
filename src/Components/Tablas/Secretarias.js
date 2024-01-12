@@ -182,27 +182,29 @@ const SendButton = styled(Button)`
 `;
 
 function TablaSecretarias  ({ title })  {
-  const [selectedOption, setSelectedOption] = useState(''); // Estado para la opción seleccionada
-  const [selectedRow, setSelectedRow] = useState(null); // Estado para almacenar la fila seleccionada
-
+ 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
+
+
+  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [fileSelected, setFileSelected] = useState(false);
+  const [editedData, setEditedData] = useState({
+    secretaria: '',
+    area_de_adscripcion: '',
+  });
+  const [formChanged, setFormChanged] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const handleShow = (index) => {
     setSelectedRow(index);
     setShowModal(true);
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const [fileSelected, setFileSelected] = useState(false);
-
  
-  const [editedData, setEditedData] = useState({
-    escuela: '',
-    institucion: '',
-    // Agrega más campos según tus necesidades
-  });
 
 
   const handleSend = () => {
@@ -236,7 +238,7 @@ function TablaSecretarias  ({ title })  {
     handleClose();
   };
 
-  const [formChanged, setFormChanged] = useState(false);
+
 
 const handleEditChange = (e, field) => {
   setEditedData((prevData) => ({
@@ -252,10 +254,20 @@ const handleClose = () => {
   setShowModal(false);
 };
 
+const handleSearch = (e) => {
+  setSearchText(e.target.value);
+};
+
     return (
 <div>
 <TableWrapper>
 <h2>{title}</h2>
+<input
+          type="text"
+          placeholder="Buscar..."
+          value={searchText}
+          onChange={handleSearch}
+        />
 {/* Agregar el select con las opciones */}
 <select value={selectedOption} onChange={handleOptionChange}>
   <option value="">Todas las secretarias</option>
@@ -279,30 +291,34 @@ const handleClose = () => {
 </select>
 
 <StyledTable>
-  <thead>
-    <tr>
-      <StyledTh>Secretaria</StyledTh>
-      <StyledTh>Área de Adscripción</StyledTh>
-      <StyledTh>Editar</StyledTh>
-    </tr>
-  </thead>
-  <tbody>
-    {data
-      .filter((item) => !selectedOption || item.secretaria === selectedOption) // Filtrar según la opción seleccionada
-      .map((item, index) => (
-        <tr key={index}>
-          <StyledTd isEven={index % 2 !== 0}>{item.secretaria}</StyledTd>
-                <StyledTd isEven={index % 2 !== 0}>{item.area_de_adscripcion}</StyledTd>
-                <StyledTd isEven={index % 2 !== 0}>
-                  {/* Agrega aquí el botón de Editar con el estilo proporcionado */}
-                  <LiberacionButton variant="primary" onClick={() => handleShow(index)}>
+          <thead>
+            <tr>
+              <StyledTh>Secretaria</StyledTh>
+              <StyledTh>Área de Adscripción</StyledTh>
+              <StyledTh>Editar</StyledTh>
+            </tr>
+          </thead>
+          <tbody>
+            {data
+              .filter((item) => !selectedOption || item.secretaria === selectedOption)
+              .filter((item) =>
+                item.secretaria.toLowerCase().includes(searchText.toLowerCase()) ||
+                item.area_de_adscripcion.toLowerCase().includes(searchText.toLowerCase())
+              )
+              .map((item, index) => (
+                <tr key={index}>
+                  <StyledTd isEven={index % 2 !== 0}>{item.secretaria}</StyledTd>
+                  <StyledTd isEven={index % 2 !== 0}>{item.area_de_adscripcion}</StyledTd>
+                  <StyledTd isEven={index % 2 !== 0}>
+                    <LiberacionButton variant="primary" onClick={() => handleShow(index)}>
                       {item.edicion}
                     </LiberacionButton>
-                </StyledTd>
-        </tr>
-      ))}
-  </tbody>
-</StyledTable>
+                  </StyledTd>
+                </tr>
+              ))}
+          </tbody>
+        </StyledTable>
+
 </TableWrapper>
 
 

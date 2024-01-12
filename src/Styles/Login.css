@@ -7,13 +7,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-  }
-  
-  .login-page {
     background-image: url('/public/Images/1.png'); /* Ajusta la ruta de la imagen según tu estructura de carpetas */
     background-size: cover;
     background-position: center;
   }
+  
+  
 
 .login-container {
   display: flex;

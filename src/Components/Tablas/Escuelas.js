@@ -6,8 +6,6 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 
-
-
 const TableWrapper = styled.div`
   margin: 20px auto;
   width: 80%;
@@ -42,11 +40,9 @@ const LiberacionButton = styled.button`
   background-color: #9E2343;
   color: white;
   padding: 5px;
-  
   border: none;
   cursor: pointer;
   border-radius: 5px;
-
 
   &:hover {
     background-color: #7a1c33;
@@ -129,57 +125,56 @@ const data = [
     institucion: 'Instituto de Ciencias Sociales y Humanidades',
     edicion: 'Editar',
   },
-  
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad Nacional Autónoma de México (UNAM)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Universidad Nacional Autónoma de México (UNAM)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Instituto Tecnológico y de Estudios Superiores de Monterrey (ITESM)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Instituto Tecnológico y de Estudios Superiores de Monterrey (ITESM)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad Autónoma Metropolitana (UAM)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Universidad Autónoma Metropolitana (UAM)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad Iberoamericana (UIA)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Universidad Iberoamericana (UIA)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Benemérita Universidad Autónoma de Puebla (BUAP)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Benemérita Universidad Autónoma de Puebla (BUAP)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad Autónoma de Nuevo León (UANL)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Universidad Autónoma de Nuevo León (UANL)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad de Guadalajara (UDG)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Universidad de Guadalajara (UDG)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad Autónoma del Estado de México (UAEM)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Universidad Autónoma del Estado de México (UAEM)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Instituto Politécnico Nacional (IPN)",
-    "edicion": "Editar"
+    escuela: 'OTRAS',
+    institucion: 'Instituto Politécnico Nacional (IPN)',
+    edicion: 'Editar',
   },
   {
-    "escuela": "OTRAS",
-    "institucion": "Universidad Autónoma de Querétaro (UAQ)",
-    "edicion": "Editar"
-  }
+    escuela: 'OTRAS',
+    institucion: 'Universidad Autónoma de Querétaro (UAQ)',
+    edicion: 'Editar',
+  },
 ];
 
 const CenteredModal = styled(Modal)`
@@ -210,6 +205,7 @@ const CloseButton = styled(Button)`
   height: 40px;
   width: 10vw;
 `;
+
 const SendButton = styled(Button)`
   background-color: #BC955B !important;
   color: white !important;
@@ -221,8 +217,16 @@ const SendButton = styled(Button)`
 `;
 
 const TablaEscuelas = ({ title }) => {
-  const [selectedOption, setSelectedOption] = useState(''); // Estado para la opción seleccionada
-  const [selectedRow, setSelectedRow] = useState(null); // Estado para almacenar la fila seleccionada
+  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedRow, setSelectedRow] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [fileSelected, setFileSelected] = useState(false);
+  const [editedData, setEditedData] = useState({
+    escuela: '',
+    institucion: '',
+  });
+  const [formChanged, setFormChanged] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
@@ -233,69 +237,56 @@ const TablaEscuelas = ({ title }) => {
     setShowModal(true);
   };
 
-  const [showModal, setShowModal] = useState(false);
-  const [fileSelected, setFileSelected] = useState(false);
-
- 
-  const [editedData, setEditedData] = useState({
-    escuela: '',
-    institucion: '',
-    // Agrega más campos según tus necesidades
-  });
-
-
   const handleSend = () => {
     if (selectedRow !== null) {
-      // Aplica los cambios de edición a la fila seleccionada
       const newData = [...data];
       newData[selectedRow] = { ...data[selectedRow], ...editedData };
-      // Aquí puedes realizar cualquier lógica de actualización o enviar los datos editados al servidor
-  
-      // Muestra la alerta de éxito
       Swal.fire({
         icon: 'success',
         title: 'Edición exitosa',
         text: 'La información ha sido editada correctamente.',
       });
-  
-      // Cierra la ventana emergente
       handleClose();
     }
   };
 
   const handleCancel = () => {
-    // Muestra la alerta de error
     Swal.fire({
       icon: 'error',
       title: 'Carta no enviada',
       text: 'La carta no fue enviada.',
     });
-
-    // Cierra la ventana emergente
     handleClose();
   };
 
-  const [formChanged, setFormChanged] = useState(false);
+  const handleEditChange = (e, field) => {
+    setEditedData((prevData) => ({
+      ...prevData,
+      [field]: e.target.value,
+    }));
+    setFormChanged(true);
+  };
 
-const handleEditChange = (e, field) => {
-  setEditedData((prevData) => ({
-    ...prevData,
-    [field]: e.target.value,
-  }));
-  setFormChanged(true); // Indica que se han realizado cambios en el formulario
-};
+  const handleSearch = (e) => {
+    setSearchText(e.target.value);
+  };
 
-const handleClose = () => {
-  setFileSelected(false);
-  setFormChanged(false); // Restablece el estado cuando se cierra el modal
-  setShowModal(false);
-};
+  const handleClose = () => {
+    setFileSelected(false);
+    setFormChanged(false);
+    setShowModal(false);
+  };
 
   return (
     <div>
       <TableWrapper>
         <h2>{title}</h2>
-        {/* Agregar el select con las opciones */}
+        <input
+          type="text"
+          placeholder="Buscar..."
+          value={searchText}
+          onChange={handleSearch}
+        />
         <select value={selectedOption} onChange={handleOptionChange}>
           <option value="">Todas las instituciones</option>
           <option value="UAEH">UAEH</option>
@@ -312,7 +303,12 @@ const handleClose = () => {
           </thead>
           <tbody>
             {data
-              .filter((item) => !selectedOption || item.escuela === selectedOption) // Filtrar según la opción seleccionada
+              .filter(
+                (item) =>
+                  (!selectedOption || item.escuela === selectedOption) &&
+                  (item.escuela.toLowerCase().includes(searchText.toLowerCase()) ||
+                    item.institucion.toLowerCase().includes(searchText.toLowerCase()))
+              )
               .map((item, index) => (
                 <tr key={index}>
                   <StyledTd isEven={index % 2 !== 0}>{item.escuela}</StyledTd>
@@ -334,34 +330,32 @@ const handleClose = () => {
             <Modal.Title>Editar Información</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-  {selectedRow !== null && (
-    <Form>
-      <Form.Group controlId="formEscuela">
-        <Form.Label>Escuela:</Form.Label>
-        <Form.Control
-  type="text"
-  value={editedData.escuela}
-  onChange={(e) => handleEditChange(e, 'escuela')}
-/>
-      </Form.Group>
+            {selectedRow !== null && (
+              <Form>
+                <Form.Group controlId="formEscuela">
+                  <Form.Label>Escuela:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editedData.escuela}
+                    onChange={(e) => handleEditChange(e, 'escuela')}
+                  />
+                </Form.Group>
 
-      <Form.Group controlId="formInstitucion">
-        <Form.Label>Institución:</Form.Label>
-        <Form.Control
-          type="text"
-          value={editedData.institucion}
-          onChange={(e) => handleEditChange(e, 'institucion')}
-        />
-      </Form.Group>
-
-      {/* Agregar más campos según tus necesidades */}
-    </Form>
-  )}
-</Modal.Body>
+                <Form.Group controlId="formInstitucion">
+                  <Form.Label>Institución:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    value={editedData.institucion}
+                    onChange={(e) => handleEditChange(e, 'institucion')}
+                  />
+                </Form.Group>
+              </Form>
+            )}
+          </Modal.Body>
           <Modal.Footer>
-          <SendButton variant="primary" onClick={handleSend} disabled={!formChanged}>
-  Enviar
-</SendButton>
+            <SendButton variant="primary" onClick={handleSend} disabled={!formChanged}>
+              Enviar
+            </SendButton>
             <CloseButton variant="primary" onClick={handleCancel}>
               Cerrar
             </CloseButton>
@@ -373,4 +367,3 @@ const handleClose = () => {
 };
 
 export default TablaEscuelas;
-
