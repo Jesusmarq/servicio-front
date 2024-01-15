@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { IoMdExit } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
+import '../Styles/responsive.css';
 
 const LogoutButton = styled.button`
   background-color: #9E2343;

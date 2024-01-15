@@ -5,6 +5,7 @@ import 'sweetalert2/src/sweetalert2.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 import ServicioSocial from './Solicitudes/ServicioSocial';
 import Estadia from './Solicitudes/Estadias';
 import Estancia from './Solicitudes/Estancia';
@@ -14,6 +15,8 @@ import Residencia from './Solicitudes/Residencia';
 import ProyectoIntervencion from './Solicitudes/Proyecto';
 import ServicioSocialUAEH from './Solicitudes/ServicioUAEH';
 import PracticasUAEH from './Solicitudes/PracticasUAEH';
+
+import '../Styles/responsive.css';
 
 
 

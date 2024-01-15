@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import QRCode from 'qrcode.react';
+import '../../Styles/responsive.css';
 
 const Base64ToQRCode = () => {
   const [base64Text, setBase64Text] = useState('');

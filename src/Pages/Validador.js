@@ -5,6 +5,7 @@ import { IoMdExit } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
 import ValidarSolicitud from '../Components/Val';
+import '../Styles/responsive.css';
 
 const BrighterColor = '#9E2343';
 const LineColor = '#BC955B';

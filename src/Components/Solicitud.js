@@ -16,6 +16,7 @@ import imagecar5 from '../Img/01.jpg';
 import imagecar6 from '../Img/04.jpg';
 import imagecar7 from '../Img/03.jpg';
 import axios from "axios";
+import '../Styles/responsive.css';
 
 const Header = styled.div`
   height: 100px;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';
+import '../Styles/responsive.css';
 
 const Header = styled.div`
   height: 100px;

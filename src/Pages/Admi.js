@@ -9,6 +9,7 @@ import ADMIsol from '../Components/AdmiSol';
 import Liberar from '../Components/Liberar';
 import AgregarVal from '../Components/AgregarVeri';
 import Catalogo2 from '../Components/CatalogoNuevo';
+import '../Styles/responsive.css';
 
 const BrighterColor = '#9E2343';
 const LineColor = '#BC955B';

@@ -4,7 +4,9 @@ import Logo2 from '../Img/Oficialia.png';
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faFileUpload } from '@fortawesome/free-solid-svg-icons';
-
+import Swal from "sweetalert2";
+import axios from "axios";
+import '../Styles/responsive.css';
 
 
 const Header = styled.div`
@@ -101,6 +103,63 @@ const UploadButton = styled.label`
 
 
 function Reportes({ title }) {
+
+  const initialState = {
+    usuario: "",
+    contrasenia: "",
+    nombre: "",
+    apellidop: "",
+    apellidom: "",
+    escuelaprocedencia: "",
+    plantel: "",
+    otroplantel: "",
+    curp: "",
+    carrera: "",
+    
+  };
+
+  const [formData, setFormData] = useState(initialState);
+
+  
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
+  };
+  
+
+  const handleSubmit = (e) => {
+    // Previene el comportamiento predeterminado del formulario, que es el envío normal.
+    e.preventDefault();
+  
+    // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
+    axios
+      .post(`http://127.0.0.1:5000/registroAlumno`, formData)
+      .then((response) => {
+        // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
+        Swal.fire({
+          position: "center", // Posición de la ventana emergente en el centro.
+          icon: "success", // Ícono de éxito.
+          title: "Gracias por tu interés. Te contactaremos pronto.", // Título de la ventana emergente.
+          showConfirmButton: false, // No muestra el botón de confirmación.
+          timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
+        });
+  
+        // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
+        setFormData(initialState);
+      })
+      .catch((error) => {
+        // Maneja cualquier error que ocurra durante la solicitud.
+        console.error("Error al enviar el formulario:", error);
+  
+        // Muestra una ventana emergente de error utilizando SweetAlert.
+        Swal.fire({
+          icon: "error", // Ícono de error.
+          title: "Error al enviar el formulario", // Título de la ventana emergente.
+          text: "Hubo un problema al enviar el formulario.", // Texto de la ventana emergente.
+        });
+      });
+  };
+
   const [files, setFiles] = useState([]);
   const [previewUrl, setPreviewUrl] = useState('');
 

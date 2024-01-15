@@ -5,6 +5,7 @@ import 'sweetalert2/src/sweetalert2.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '../Styles/responsive.css';
 
 import Estadia2 from './liberaciones/Estadias';
 import Estancia2 from './liberaciones/Estancia';

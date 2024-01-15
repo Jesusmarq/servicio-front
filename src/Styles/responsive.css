@@ -1,0 +1,28 @@
+/* Estilos para pantallas más pequeñas (hasta 768px) */
+@media (max-width: 768px) {
+    .container {
+      width: 90%;
+    }
+  }
+  
+  /* Estilos para pantallas medianas (769px a 1024px) */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+      width: 70%;
+    }
+  }
+  
+  /* Estilos para pantallas más grandes (más de 1024px) */
+  @media (min-width: 1025px) {
+    .container {
+      width: 60%;
+    }
+  }
+  
+  /* Puedes agregar más media queries según sea necesario */
+  
+  /* Estilos para imágenes responsivas */
+  img {
+    max-width: 100%;
+    height: auto;
+  }

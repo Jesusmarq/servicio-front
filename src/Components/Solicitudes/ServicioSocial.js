@@ -7,7 +7,9 @@ import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 import jsPDF from 'jspdf';
 import { Helmet } from 'react-helmet';
-import QRCode from 'qrcode.react';
+import QRCode from 'react-qr-code';
+import '../../Styles/responsive.css';
+
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
@@ -186,11 +188,7 @@ function ServicioSocial ({ title }) {
           pdf.text(`${index + 1}. ${actividad}`, xPosition, yPosition);
     });
 
-    const getQRCodeDataURL = (data) => {
-      const canvas = document.createElement('canvas');
-      QRCode.toCanvas(canvas, data, { width: 200, height: 200 });
-      return canvas.toDataURL('image/png');
-    };
+  
 
 
   
@@ -229,7 +227,7 @@ function ServicioSocial ({ title }) {
   
 
   };
-
+ 
 
   //************************************************************************************************************************************************ */
 
@@ -321,7 +319,7 @@ function ServicioSocial ({ title }) {
               <StyledTh>Tipo de Solicitud</StyledTh>
               <StyledTh>Carta de Presentación</StyledTh>
               <StyledTh>Fecha</StyledTh>
-              <StyledTh>Aceptar Solicitud</StyledTh>
+              <StyledTh>Aceptar Solicitud2</StyledTh>
             </tr>
           </thead>
           <tbody>

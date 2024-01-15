@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';
 import backgroundImg from '../Img/fondo.png'; // Reemplaza con la ruta correcta de tu imagen de fondo
 import Swal from "sweetalert2";
+import '../Styles/responsive.css';
 
 const EstatusWrapper = styled.div`
   background-image: url(${backgroundImg});

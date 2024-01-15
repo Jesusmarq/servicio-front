@@ -2,7 +2,7 @@ import React from 'react';
 import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import '../Styles/registro.css';
-
+import './Styles/responsive.css';
 
 const validationSchema = Yup.object().shape({
   usuario: Yup.string().required('Campo requerido'),

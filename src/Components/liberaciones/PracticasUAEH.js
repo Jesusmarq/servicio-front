@@ -7,6 +7,7 @@ import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 import jsPDF from 'jspdf';
 import { Helmet } from 'react-helmet';
+import '../../Styles/responsive.css';
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';

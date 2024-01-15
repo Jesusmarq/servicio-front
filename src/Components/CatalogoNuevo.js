@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';  // Importa los estilos de Bootst
 import TablaEscuelas from './Tablas/Escuelas';
 import TablaSecretarias from './Tablas/Secretarias';
 import TablaUsuarios from './Tablas/Usuarios';
+import '../Styles/responsive.css';
 
 
 const Header = styled.div`

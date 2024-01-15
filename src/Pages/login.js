@@ -3,6 +3,7 @@ import { Link, useHistory } from 'react-router-dom';
 import axios from "axios";
 import Swal from "sweetalert2";
 import '../Styles/Login.css';
+import '../Styles/responsive.css';
 
 const Login = () => {
   const initialState = {

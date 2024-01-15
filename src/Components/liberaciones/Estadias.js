@@ -5,7 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
-
+import '../../Styles/responsive.css';
 
 
 const TableContainer = styled.div`
