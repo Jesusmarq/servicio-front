@@ -226,8 +226,8 @@ function TablaUsuarios({ title }) {
   const handleCancel = () => {
     Swal.fire({
       icon: 'error',
-      title: 'Carta no enviada',
-      text: 'La carta no fue enviada.',
+      title: 'Edición fallida',
+      text: 'No se logro editar la información.',
     });
     handleClose();
   };

@@ -130,6 +130,9 @@ function Estatus({ title }) {
             <tr>
               <StyledTh>Estatus de Solicitud</StyledTh>
               <StyledTh>Horas Acumuladas</StyledTh>
+              <StyledTh>Firma</StyledTh>
+              <StyledTh>Carta de Aceptación</StyledTh>
+              <StyledTh>Carta de Terminación</StyledTh>
               <StyledTh>Liberación</StyledTh>
             </tr>
           </thead>

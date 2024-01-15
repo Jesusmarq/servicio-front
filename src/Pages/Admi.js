@@ -8,7 +8,6 @@ import ValidarSolicitud from '../Components/Val';
 import ADMIsol from '../Components/AdmiSol';
 import Liberar from '../Components/Liberar';
 import AgregarVal from '../Components/AgregarVeri';
-import Catalogo from '../Components/Catalogo';
 import Catalogo2 from '../Components/CatalogoNuevo';
 
 const BrighterColor = '#9E2343';
@@ -148,7 +147,7 @@ const AlertMessage = styled.div`
 `;
 
 const ADMI = ({ title }) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState('Section1');
   const [expanded, setExpanded] = useState(false);
 
   const handleMenuItemClick = (item) => {

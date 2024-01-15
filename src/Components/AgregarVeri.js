@@ -110,29 +110,36 @@ const AgregarVal = ({ title }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
+      // Envia una solicitud POST a la URL 'http://127.0.0.1:5000/registroValidador'
       const response = await fetch('http://127.0.0.1:5000/registroValidador', {
-        method: 'POST',
+        method: 'POST', // Método de la solicitud HTTP
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json', // Tipo de contenido que se está enviando (en este caso, JSON)
         },
-        body: JSON.stringify(values),
+        body: JSON.stringify(values), // Convierte el objeto 'values' a una cadena JSON y lo envía como el cuerpo de la solicitud
       });
-
+  
+      // Parsea la respuesta de la API como JSON
       const data = await response.json();
+  
+      // Muestra la respuesta de la API en la consola
       console.log('Respuesta de la API:', data);
-
+  
+      // Muestra una ventana emergente (SweetAlert) indicando que el validador se agregó correctamente
       Swal.fire({
-        icon: 'success',
-        title: 'Validador Agregado',
-        text: 'Se agregó de manera correcta un nuevo validador.',
+        icon: 'success', // Ícono de éxito
+        title: 'Validador Agregado', // Título de la ventana emergente
+        text: 'Se agregó de manera correcta un nuevo validador.', // Texto de la ventana emergente
       });
     } catch (error) {
+      // Maneja cualquier error que ocurra durante la solicitud
       console.error('Error al enviar la solicitud:', error);
     } finally {
+      // Establece 'setSubmitting' a 'false' después de que la solicitud ha sido manejada
       setSubmitting(false);
     }
   };
-
+  
 
   return (
     <div>

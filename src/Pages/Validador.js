@@ -143,7 +143,7 @@ const AlertMessage = styled.div`
 `;
 
 const Validador = ({ title }) => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [selectedItem, setSelectedItem] = useState('Section1');
   const [expanded, setExpanded] = useState(false);
 
   const handleMenuItemClick = (item) => {

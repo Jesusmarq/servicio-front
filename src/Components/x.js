@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 
@@ -80,144 +81,194 @@ const SubmitButton = styled.button`
 `;
 
 const validationSchema = Yup.object().shape({
-    usuario: Yup.string().required('Campo requerido'),
-    contrasenia: Yup.string().required('Campo requerido'),
-    nombre: Yup.string().required('Campo requerido'),
-    apellidop: Yup.string().required('Campo requerido'),
-    apellidom: Yup.string().required('Campo requerido'),
-    dependencia: Yup.string().required('Campo requerido'),
-    area: Yup.string().required('Campo requerido'),
-  });
-  
-  const initialValues = {
-    usuario: '',
-    contrasenia: '',
-    nombre: '',
-    apellidop: '',
-    apellidom: '',
-    dependencia: '',
-    area: '',
+  usuario: Yup.string().required('Campo requerido'),
+  contrasenia: Yup.string().required('Campo requerido'),
+  nombre: Yup.string().required('Campo requerido'),
+  apellidop: Yup.string().required('Campo requerido'),
+  apellidom: Yup.string().required('Campo requerido'),
+  dependencia: Yup.string().required('Campo requerido'),
+  area: Yup.string().required('Campo requerido'),
+});
+
+const initialValues = {
+  usuario: '',
+  contrasenia: '',
+  nombre: '',
+  apellidop: '',
+  apellidom: '',
+  dependencia: '',
+  area: '',
+};
+
+const AgregarVal = ({ title }) => {
+  const [postData, setPostData] = useState({
+    title: '',
+    body: '',
+  }); 
+
+  console.log(validationSchema)
+  const[formData, setFormData] = useState(initialValues)
+  const [dependencia, setDependencia] = useState('');
+  const [area, setArea] = useState('');
+
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
   };
   
-  const AgregarVal = ({ title }) => {
-    const [formData, setFormData] = useState(initialValues);
+
+  const handleDependenciaChange = (e) => {
+    const newDependencia = e.target.value;
+    setFormData((prevData) => ({ ...prevData, dependencia: newDependencia, area: '' }));
+  };
   
-    const handleInputChange = (e) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
-  
-    const handleDependenciaChange = (e) => {
-      const newDependencia = e.target.value;
-      setFormData((prevData) => ({ ...prevData, dependencia: newDependencia, area: '' }));
-    };
-  
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      try {
-        const response = await fetch('http://127.0.0.1:5000/registroValidador', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-  
-        const data = await response.json();
-        console.log('Respuesta de la API:', data);
-  
-        Swal.fire({
-          icon: 'success',
-          title: 'Validador Agregado',
-          text: 'Se agregó de manera correcta un nuevo validador.',
-        });
-      } catch (error) {
-        console.error('Error al enviar la solicitud:', error);
-      }
-    };
-  
-    return (
-      <div>
-        <Header>
-          <TitleWrapper>
-            <Title>{title}Validación de Documentos: Liberación de Usuarios </Title>
-          </TitleWrapper>
-          <Image src={Logo2} alt="Logo2" />
-        </Header>
-        <h2>
-          Bienvenido al Centro de Validación y Liberación de Usuarios. Aquí,
-          encontrarás una interfaz intuitiva para liberar usuarios de manera
-          eficiente. Simplificamos el proceso para que puedas verificar la fecha
-          de solicitud y liberar usuarios de manera rápida. ¡Explora y toma
-          decisiones informadas con facilidad!
-        </h2>
-  
+  console.log(formData);
 
-        <FormContainer>
-        <StyledForm onSubmit={handleSubmit}>
-          <FormGroup>
-            <label htmlFor="usuario">Usuario</label>
-            <StyledField type="text" name="usuario" onChange={handleInputChange} value={formData.usuario} />
-            <ErrorMessageStyled>{validationSchema.errors?.usuario}</ErrorMessageStyled>
-          </FormGroup>
+ 
 
-          <FormGroup>
-            <label htmlFor="contrasenia">Contraseña</label>
-            <StyledField type="password" name="contrasenia" onChange={handleInputChange} value={formData.contrasenia} />
-            <ErrorMessageStyled>{validationSchema.errors?.contrasenia}</ErrorMessageStyled>
-          </FormGroup>
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-          <FormGroup>
-            <label htmlFor="nombre">Nombre</label>
-            <StyledField type="text" name="nombre" onChange={handleInputChange} value={formData.nombre} />
-            <ErrorMessageStyled>{validationSchema.errors?.nombre}</ErrorMessageStyled>
-          </FormGroup>
+    try {
+      const response = await fetch('http://127.0.0.1:5000/registroValidador', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Agrega cualquier otra cabecera que tu API pueda requerir
+        },
+        body: JSON.stringify(formData),
+      });
 
-          <FormGroup>
-            <label htmlFor="apellidop">Apellido Paterno</label>
-            <StyledField type="text" name="apellidop" onChange={handleInputChange} value={formData.apellidop} />
-            <ErrorMessageStyled>{validationSchema.errors?.apellidop}</ErrorMessageStyled>
-          </FormGroup>
+      const data = await response.json();
+      console.log('Respuesta de la API:', data);
 
-          <FormGroup>
-            <label htmlFor="apellidom">Apellido Materno</label>
-            <StyledField type="text" name="apellidom" onChange={handleInputChange} value={formData.apellidom} />
-            <ErrorMessageStyled>{validationSchema.errors?.apellidom}</ErrorMessageStyled>
-          </FormGroup>
+      Swal.fire({
+        icon: 'success',
+        title: 'Validador Agregado',
+        text: 'Se agregó de manera correcta un nuevo validador.',
+      });
+    } catch (error) {
+      console.error('Error al enviar la solicitud:', error);
+    }
+  };
 
-          <FormGroup>
-            <label htmlFor="dependencia">Dependencia</label>
-            <StyledField as="select" name="dependencia" onChange={handleDependenciaChange} value={formData.dependencia}>
-              <option value="">Selecciona una dependencia</option>
-              <option value="1">Secretaría de Hacienda</option>
-              <option value="2">Secretaría de Gobierno</option>
-              {/* Agrega más opciones según sea necesario */}
-            </StyledField>
-            <ErrorMessageStyled>{validationSchema.errors?.dependencia}</ErrorMessageStyled>
-          </FormGroup>
+  return (
+    <div>
+      <Header>
+        <TitleWrapper>
+          <Title>{title}Validación de Documentos: Liberación de Usuarios </Title>
+        </TitleWrapper>
+        <Image src={Logo2} alt="Logo2" />
+      </Header>
+      <h2>
+        Bienvenido al Centro de Validación y Liberación de Usuarios. Aquí,
+        encontrarás una interfaz intuitiva para liberar usuarios de manera
+        eficiente. Simplificamos el proceso para que puedas verificar la fecha
+        de solicitud y liberar usuarios de manera rápida. ¡Explora y toma
+        decisiones informadas con facilidad!
+      </h2>
 
-          <FormGroup>
-            <label htmlFor="area">Área de Adscripción</label>
-            <StyledField as="select" name="area" onChange={(e) => setFormData((prevData) => ({ ...prevData, area: e.target.value }))} value={formData.area}>
-              <option value="">Selecciona un área</option>
-              <option value="1">Gobierno Digital e Innovación</option>
-              <option value="2">Oficialía Mayor</option>
-              {/* Agrega más opciones según sea necesario */}
-            </StyledField>
-            <ErrorMessageStyled>{validationSchema.errors?.area}</ErrorMessageStyled>
-          </FormGroup>
+      <FormContainer>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={(values, { setSubmitting }) => {
+            console.log(values);
+            setSubmitting(false);
+          }}
+        >
+          {({ handleSubmit, isValid }) => (
+            <StyledForm onSubmit={handleSubmit}>
+              <FormGroup>
+                <label htmlFor="usuario">Usuario</label>
+                <StyledField type="text" name="usuario" onChange={handleInputChange} value={formData.usuario}/>
+                <ErrorMessageStyled name="usuario" component="div" />
+              </FormGroup>
 
-          {/* Otros campos adicionales según tus necesidades */}
+              <FormGroup>
+                <label htmlFor="contrasenia">Contraseña</label>
+                <StyledField type="password" name="contrasenia" onChange={handleInputChange} value={formData.contrasenia}/>
+                <ErrorMessageStyled name="contrasenia" component="div" />
+              </FormGroup>
 
-          <FormGroup>
-            <SubmitButton type="submit" disabled={!validationSchema.isValid}>
-              Agregar Verificador
-            </SubmitButton>
-          </FormGroup>
-        </StyledForm>
+              <FormGroup>
+                <label htmlFor="nombre">Nombre</label>
+                <StyledField type="text" name="nombre" onChange={handleInputChange} value={formData.nombre}/>
+                <ErrorMessageStyled name="nombre" component="div" />
+              </FormGroup>
+
+              <FormGroup>
+                <label htmlFor="apellidop">Apellido Paterno</label>
+                <StyledField type="text" name="apellidop" onChange={handleInputChange} value={formData.apellidop}/>
+                <ErrorMessageStyled name="apellidop" component="div" />
+              </FormGroup>
+
+              <FormGroup>
+                <label htmlFor="apellidom">Apellido Materno</label>
+                <StyledField type="text" name="apellidom" onChange={handleInputChange} value={formData.apellidom}/>
+                <ErrorMessageStyled name="apellidom" component="div" />
+              </FormGroup>
+
+              <FormGroup>
+  <label htmlFor="dependencia">Dependencia</label>
+  <StyledField
+    as="select"
+    name="dependencia"
+    onChange={handleDependenciaChange}
+    value={formData.dependencia}
+  >
+    <option value="">Selecciona una dependencia</option>
+    <option value="1">Secretaría de Hacienda</option>
+    <option value="2">Secretaría de Gobierno</option>
+  </StyledField>
+  <ErrorMessageStyled name="dependencia" component="div" />
+</FormGroup>
+
+{formData.dependencia === '1' && (
+  <FormGroup>
+    <label htmlFor="area">Área de Adscripción</label>
+    <StyledField
+      as="select"
+      name="area"
+      onChange={(e) => setFormData((prevData) => ({ ...prevData, area: e.target.value }))}
+      value={formData.area}
+    >
+      <option value="">Selecciona un área</option>
+      <option value="1">Gobierno Digital e Innovación</option>
+    </StyledField>
+    <ErrorMessageStyled name="area" component="div" />
+  </FormGroup>
+)}
+
+{formData.dependencia === '2' && (
+  <FormGroup>
+    <label htmlFor="area">Área de Adscripción</label>
+    <StyledField
+      as="select"
+      name="area"
+      onChange={(e) => setFormData((prevData) => ({ ...prevData, area: e.target.value }))}
+      value={formData.area}
+    >
+      <option value="">Selecciona un área</option>
+      <option value="2">Oficialía Mayor</option>
+      <option value="3">Recursos Humanos</option>
+    </StyledField>
+    <ErrorMessageStyled name="area" component="div" />
+  </FormGroup>
+)}
+
+              <FormGroup>
+                <SubmitButton type="submit" disabled={!isValid}>
+                  Agregar Verificador
+                </SubmitButton>
+              </FormGroup>
+            </StyledForm>
+          )}
+        </Formik>
       </FormContainer>
     </div>
   );
 };
 
 export default AgregarVal;
+

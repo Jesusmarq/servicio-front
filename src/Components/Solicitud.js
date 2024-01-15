@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import FormControl from 'react-bootstrap/FormControl';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Logo2 from '../Img/Oficialia.png';
@@ -14,6 +15,7 @@ import imagecar4 from '../Img/05.jpg';
 import imagecar5 from '../Img/01.jpg';
 import imagecar6 from '../Img/04.jpg';
 import imagecar7 from '../Img/03.jpg';
+import axios from "axios";
 
 const Header = styled.div`
   height: 100px;
@@ -145,8 +147,71 @@ const SendButton = styled(Button)`
 `;
 
 function Solicitud({ title }) {
+  const initialState = {
+   
+    selectedOption: "",
+    requestedHours: "", // Nuevo estado para las horas solicitadas
+    currentDate: new Date().toLocaleDateString(),
+  };
+
   const [showModal, setShowModal] = useState(false);
   const [fileSelected, setFileSelected] = useState(false);
+  const [formData, setFormData] = useState(initialState);
+
+         // Nueva función para manejar cambios en las horas solicitadas
+         const handleChangeHours = (e) => {
+          setFormData({ ...formData, requestedHours: e.target.value });
+        };
+
+          // Nueva función para manejar cambios en la fecha actual
+  const handleChangeDate = () => {
+    const today = new Date();
+    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    setFormData({ ...formData, currentDate: formattedDate });
+  };
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    console.log(formData);
+  };
+ 
+
+    // Función para manejar cambios en el select
+    const handleChangeSelect = (e) => {
+      setFormData({ ...formData, selectedOption: e.target.value });
+    };
+
+  const handleSubmit = (e) => {
+    // Previene el comportamiento predeterminado del formulario, que es el envío normal.
+    e.preventDefault();
+    // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
+    axios
+      .post(`http://127.0.0.1:5000/registroAlumno`, formData)
+      .then((response) => {
+        // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
+        Swal.fire({
+          position: "center", // Posición de la ventana emergente en el centro.
+          icon: "success", // Ícono de éxito.
+          title: "Gracias por tu interés. Te contactaremos pronto.", // Título de la ventana emergente.
+          showConfirmButton: false, // No muestra el botón de confirmación.
+          timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
+        });
+  
+        // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
+        setFormData(initialState);
+      })
+      .catch((error) => {
+        // Maneja cualquier error que ocurra durante la solicitud.
+        console.error("Error al enviar el formulario:", error);
+  
+        // Muestra una ventana emergente de error utilizando SweetAlert.
+        Swal.fire({
+          icon: "error", // Ícono de error.
+          title: "Error al enviar el formulario", // Título de la ventana emergente.
+          text: "Hubo un problema al enviar el formulario.", // Texto de la ventana emergente.
+        });
+      });
+  };
 
   const handleClose = () => {
     setFileSelected(false);
@@ -302,6 +367,8 @@ function Solicitud({ title }) {
         </StyledCard>
       </CardsContainer>
 
+
+
       <CenteredModal show={showModal} onHide={handleClose}>
         <ModalContent>
           <Modal.Header closeButton>
@@ -310,10 +377,36 @@ function Solicitud({ title }) {
           <Modal.Body>
             <p>Por favor, adjunta tu carta de presentación y envíala.</p>
             <Form>
+            <Form.Group controlId="selectOption" className="mb-3">
+                <Form.Label>Selecciona una opción</Form.Label>
+                <Form.Control
+                  as="select"
+                  value={formData.selectedOption}
+                  onChange={handleChangeSelect}
+                >
+                  <option value="">Selecciona...</option>
+                  <option value="Innovación Gubernamental">Innovación Gubernamental</option>
+                  <option value="Patrimonio Inmobiliario">Patrimonio Inmobiliario</option>
+                  <option value="Recursos Humanos">Recursos Humanos</option>
+                  <option value="Contraloría">Contraloría</option>
+                </Form.Control>
+              </Form.Group>
+
               <Form.Group controlId="formFile" className="mb-3">
                 <Form.Label>Selecciona tu archivo PDF</Form.Label>
                 <Form.Control type="file" accept=".pdf" onChange={handleChangeFile} />
               </Form.Group>
+
+              <Form.Group controlId="requestedHours" className="mb-3">
+                <Form.Label>Horas Solicitadas</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Ingrese las horas solicitadas"
+                  value={formData.requestedHours}
+                  onChange={handleChangeHours}
+                />
+              </Form.Group>
+              
             </Form>
           </Modal.Body>
           <Modal.Footer>
