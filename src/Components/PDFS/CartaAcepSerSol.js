@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet';
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
+import qr from '../../Img/qr.png';
 
 const CartaAcepSerSol = () => {
   const [modalData, setModalData] = useState({
@@ -58,8 +59,6 @@ const CartaAcepSerSol = () => {
     // Construir el texto con el formato deseado
     const textoPDF = `
 
-
-
     
                                                      Carta de Aceptación de Servicio Social
 
@@ -67,53 +66,67 @@ const CartaAcepSerSol = () => {
                                                                                                                                                         ${modalData.numeroArchivo}
                                                                                               Pachuca de Soto,Hgo., a ${modalData.fecha}
 
-    ${modalData.dirigidaA}
-    ${modalData.cargo}
-    P r e s e n t e
 
-    Por medio del presente informo a usted que el ${modalData.nombreEstudiante}, con número de control 
-    ${modalData.numeroControl}, alumn@ de la ${modalData.carrera}, ha sido aceptado para realizar su Servicio Social 
-    en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}, 
-    de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado a la ${modalData.direccionGeneral}, 
-    bajo el Programa: “${modalData.programa}” clave:
-    ${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
-    `;
+  ${modalData.dirigidaA}
+  ${modalData.cargo}
+  P r e s e n t e
 
+
+  Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de control ${modalData.numeroControl}, alumno/a de la ${modalData.carrera}, ha sido aceptado para realizar su Servicio Social en la Licenciatura en ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}, de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado a la ${modalData.direccionGeneral}, bajo el Programa: “${modalData.programa}” clave:${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+  `;
+   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+   const lines = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
+
+   // Agregar las líneas al PDF
+   pdf.text(lines, xPosition, yPosition);
+
+   yPosition += 90;
+
+  modalData.actividadesDesarrollar.forEach((actividad, index) => {
+    yPosition += 15;
+
+    // Dividir cada actividad en líneas
+    const actividadLines = pdf.splitTextToSize(`${index + 1}. ${actividad}`, pdf.internal.pageSize.width - 2 * xPosition);
+
+    // Agregar las líneas al PDF
+    pdf.text(actividadLines, xPosition, yPosition);
+  });
+  // Agregar el resto del texto del pie de página
+  const piePagina = `
+  Sin otro particular por el momento, le envío un cordial saludo.
+  A t e n t a m e n t e
     
-
-    // Agregar el texto al PDF
-    pdf.text(textoPDF, xPosition, yPosition);
-
-          yPosition += 100;
-          modalData.actividadesDesarrollar.forEach((actividad, index) => {
-          yPosition += 10;
-          pdf.text(`${index + 1}. ${actividad}`, xPosition, yPosition);
-    });
-
-    // Agregar el resto del texto del pie de página
-    const piePagina = `
-    Sin otro particular por el momento, le envío un cordial saludo.
-    A t e n t a m e n t e
-    
-    M.G.P. Odette Assad Díaz
-    Directora de Profesionalización
-    de la Oficialía Mayor
-
-
-
-
-
-
+  M.G.P. Odette Assad Díaz
+  Directora de Profesionalización
+  de la Oficialía Mayor
 
 
                                                                          Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
                                                                                                             Col. Centro, Pachuca, Hgo., C.P. 42000
                                                                                                              Tel.; 01(771)7176000 ext. 2095 y 6836
                                                                                                                                          www.hidalgo.gob.mx
-    `;
-
+                                                                                                                                         `;
+                                                                                                                                         
+  
     yPosition += 20;
-    pdf.text(piePagina, xPosition, yPosition);
+     // Dividir el texto del pie de página en líneas
+  const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.width - 2 * xPosition);
+    // Agregar las líneas al PDF
+  pdf.text(piePaginaLines, xPosition, yPosition);
+  
+  pdf.addImage(qr, 'PNG', 140, 190, 40, 40);
+
+  // Agregar un salto de línea antes de la cadena de firma electrónica
+  yPosition += 70;
+
+  // Ajustar el tamaño de letra solo para la cadena de firma electrónica
+  pdf.setFontSize(6);
+
+  const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
+
+  // Agregar la cadena de firma electrónica al PDF
+  const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
+  pdf.text(cadenaLines, xPosition, yPosition);
 
     // Guardar o mostrar el PDF (ajusta según tus necesidades)
     pdf.save('formulario.pdf');
@@ -122,7 +135,6 @@ const CartaAcepSerSol = () => {
 
   return (
     <>
-      {/* Incluir Helmet para agregar la fuente Montserrat */}
       <Helmet>
         <link
           rel="stylesheet"

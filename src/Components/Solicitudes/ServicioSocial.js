@@ -174,7 +174,7 @@ function ServicioSocial ({ title }) {
     en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}, 
     de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado a la ${modalData.direccionGeneral}, 
     bajo el Programa: “${modalData.programa}” clave:
-    ${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+    ${modalData.clave},cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
     `;
 
     

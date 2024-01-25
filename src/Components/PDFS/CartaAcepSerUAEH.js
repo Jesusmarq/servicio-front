@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Dropdown } from 'react-bootstrap';
 import jsPDF from 'jspdf';
 import { Helmet } from 'react-helmet';
+
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
@@ -15,6 +16,7 @@ const CartaAcepPracUAEH = () => {
     numeroControl: '',
     carrera: '',
     dependencia: '',
+    secretaria:'',
     periodo: '',
     periodo2:'',
     horario: '',
@@ -43,7 +45,15 @@ const CartaAcepPracUAEH = () => {
   };
 
   const generatePDF = () => {
-    const pdf = new jsPDF();
+    const pdf = new jsPDF({
+      orientation: 'p',  // 'p' para retrato, 'l' para apaisado
+      unit: 'mm',        // Unidad de medida (milímetros en este caso)
+      format: 'letter',  // Tamaño de página (carta en este caso)
+      marginLeft: 10,    // Márgenes izquierdo
+      marginRight: 10,   // Márgenes derecho
+      marginTop: 10,     // Márgenes superior
+      marginBottom: 10   // Márgenes inferior
+    });
 
     // Añadir la imagen de encabezado
     pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
@@ -76,9 +86,9 @@ const CartaAcepPracUAEH = () => {
     P r e s e n t e
 
     Por medio del presente informo a usted que el ${modalData.nombreEstudiante}, con número de 
-    cuenta:${modalData.numeroControl}, estudiante de la ${modalData.carrera}, del 
+    cuenta:${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del 
     ${modalData.instituto} ha sido aceptado para realizar sus Servicio 
-    Social en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}
+    Social en la ${modalData.dependencia},siendo asignado en la ${modalData.dependencia} cubriendo el periodo del ${modalData.periodo}
     ${modalData.periodo2}, de lunes a viernes en un horario de ${modalData.horario} hrs., bajo el Proyecto: 
     “${modalData.programa}” cubriendo un total de ${modalData.horas} horas, realizando las siguientes 
     actividades:
@@ -199,6 +209,37 @@ const CartaAcepPracUAEH = () => {
             value={modalData.dependencia}
             onChange={(e) => handleChange('dependencia', e.target.value)}
           />
+        </Form.Group>
+
+        <Form.Group controlId="secretaria" className="mb-3">
+          <Form.Label>Secretaria</Form.Label>
+          <Dropdown onSelect={(eventKey) => handleChange('secretaria', eventKey)}>
+              <Dropdown.Toggle variant="success" id="dropdown-dependencia">
+              {modalData.secretaria}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu>
+            {/* Agrega las opciones del ComboBox aquí */}
+            <Dropdown.Item eventKey="opcion1">Secretaría de Agricultura y Desarrollo Rural</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion2">Secretaría de Bienestar e Inclusión Social</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion3">Secretaría de Contraloría</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion4">Secretaría de Cultura</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion5">Secretaría de Desarrollo Económico</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion6">Secretaría de Educación Pública de Hidalgo</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion7">Secretaría de Gobierno</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion8">Secretaría de Hacienda</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion9">Secretaría de Infraestructura Pública y Desarrollo Urbano Sostenible</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion10">Secretaría de Medio Ambiente y Recursos Naturales</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion11">Secretaría de Movilidad y Transporte</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion12">Secretaría de Salud</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion13">Secretaría de Seguridad Pública</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion14">Secretaría de Turismo</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion15">Secretaría del Trabajo y Previsión Social</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion16">Oficialía Mayor</Dropdown.Item>
+            <Dropdown.Item eventKey="opcion17">Unidad de Planeación y Prospectiva</Dropdown.Item>
+           
+            </Dropdown.Menu>
+          </Dropdown>
         </Form.Group>
 
         <Form.Group controlId="periodo" className="mb-3">
