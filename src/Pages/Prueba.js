@@ -184,7 +184,6 @@ function Preregistro() {
             />
           </div>
           <div className="form-group">
-<<<<<<< HEAD
             <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
             <select className="cuadros"
               name="escuelaprocedencia"
@@ -226,60 +225,6 @@ function Preregistro() {
               />
             </div>
           )}
-=======
-  <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
-  <select
-    className="cuadros"
-    name="escuelaprocedencia"
-    value={formData.escuelaprocedencia}
-    onChange={handleEscuelaProcedenciaChange}
-    required
-  >
-    <option value="UAEH">UAEH</option>
-    <option value="Otras">Otras</option>
-  </select>
-</div>
-
-{formData.escuelaprocedencia === "UAEH" && (
-  <div className="form-group">
-    <label htmlFor="plantel">Plantel:</label>
-    <select
-      className="cuadros"
-      name="plantel"
-      value={formData.plantel}
-      onChange={handleChange}
-      required
-    >
-      {plantelOptions.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-)}
-
-{formData.escuelaprocedencia === "Otras" && (
-  <div className="form-group">
-    <label htmlFor="otroplantel">Nombre de la Escuela:</label>
-    <select
-      className="cuadros"
-      name="otroplantel"
-      value={formData.otroplantel}
-      onChange={handleChange}
-      required
-    >
-      {escuelaOptions.map((option) => (
-        <option key={option} value={option}>
-          {option}
-        </option>
-      ))}
-    </select>
-  </div>
-)}
-          
-        
->>>>>>> 2bcc1ef023ee77050f11ea372c542a270add1cf7
           <div className="form-group">
             <label htmlFor="curp">CURP:</label>
             <input className="cuadros"
