@@ -286,8 +286,8 @@ const AgregarVal = ({ title }) => {
               value={values.area}
             >
               <option value="">Selecciona un área</option>
-              <option value="2">Oficialía Mayor</option>
-              <option value="3">Recursos Humanos</option>
+              <option value="1">Oficialía Mayor</option>
+              <option value="2">Recursos Humanos</option>
             </StyledField>
             <ErrorMessageStyled name="area" component="div" />
           </FormGroup>

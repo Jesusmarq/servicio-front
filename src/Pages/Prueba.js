@@ -12,7 +12,7 @@ function Preregistro() {
     nombre: "",
     apellidop: "",
     apellidom: "",
-    escuelaprocedencia: "",
+    escuelaprocedencia: "UAEH",
     plantel: "",
     otroplantel: "",
     curp: "",
@@ -79,14 +79,13 @@ function Preregistro() {
   
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
   };
   
 
   const handleSubmit = (e) => {
     // Previene el comportamiento predeterminado del formulario, que es el envío normal.
     e.preventDefault();
-  
+    console.log(formData)
     // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
     axios
       .post(`http://127.0.0.1:5000/registroAlumno`, formData)
@@ -185,6 +184,49 @@ function Preregistro() {
             />
           </div>
           <div className="form-group">
+<<<<<<< HEAD
+            <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
+            <select className="cuadros"
+              name="escuelaprocedencia"
+              value={formData.escuelaprocedencia}
+              onChange={handleEscuelaProcedenciaChange}
+              required
+            >
+              <option value="UAEH">UAEH</option>
+              <option value="Otras">Otras</option>
+            </select>
+          </div>
+          {formData.escuelaprocedencia === "UAEH" && (
+            <div className="form-group">
+              <label htmlFor="plantel">Plantel:</label>
+              <select
+                className="cuadros"
+                name="plantel"
+                value={formData.plantel}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Selecciona un plantel</option>
+                <option value="1">Plantel 1</option>
+                <option value="2">Plantel 2</option>
+                {/* Agrega más opciones según tus necesidades */}
+              </select>
+            </div>
+          )}
+
+          {formData.escuelaprocedencia === "Otras" && (
+            <div className="form-group">
+              <label htmlFor="otroplantel">Nombre de la Escuela:</label>
+              <input className="cuadros"
+                type="text"
+                name="otroplantel"
+                value={formData.otroplantel}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+=======
   <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
   <select
     className="cuadros"
@@ -237,6 +279,7 @@ function Preregistro() {
 )}
           
         
+>>>>>>> 2bcc1ef023ee77050f11ea372c542a270add1cf7
           <div className="form-group">
             <label htmlFor="curp">CURP:</label>
             <input className="cuadros"
