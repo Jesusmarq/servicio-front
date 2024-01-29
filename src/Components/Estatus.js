@@ -1,9 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';
-import backgroundImg from '../Img/fondo.png'; // Reemplaza con la ruta correcta de tu imagen de fondo
+import backgroundImg from '../Img/fondo.png'; 
 import Swal from "sweetalert2";
-import '../Styles/responsive.css';
+import { Worker, Viewer } from '@react-pdf-viewer/core';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import { TRUE } from 'sass';
 
 const EstatusWrapper = styled.div`
   background-image: url(${backgroundImg});
@@ -14,8 +17,8 @@ const EstatusWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px; /* Ajusta el padding según tus necesidades */
-  box-sizing: border-box; /* Asegura que el padding no afecte el tamaño total */
+  padding: 20px;
+  box-sizing: border-box;
 `;
 
 const Header = styled.div`
@@ -58,7 +61,7 @@ const TableWrapper = styled.div`
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 0.8); /* Ajusta la opacidad del fondo de la tabla */
+  background-color: rgba(255, 255, 255, 0.8);
 `;
 
 const StyledTable = styled.table`
@@ -96,24 +99,73 @@ const LiberacionButton = styled.button`
     background-color: #7a1c33;
   }
 `;
+function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
+  const byteCharacters = atob(base64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: contentType });
+  return blob;
+}
 
 function Estatus({ title }) {
-  // Estado para almacenar los datos de la tabla
-  const [datosTabla, setDatosTabla] = useState({
-    estatusSolicitud: 'Aceptado',
-    horasAcumuladas: '456 horas',
-    liberacion: 'Pendiente',
-  });
+  const [datosTabla, setDatosTabla] = useState([]);
 
   const handleSolicitarLiberacion = () => {
-    // Lógica para solicitar liberación
     Swal.fire({
       icon: "success",
       title: "Liberación Solicitada",
-      text: "La solicitud se realizo de manera correcta.",
+      text: "La solicitud se realizó de manera correcta.",
     });
+
+  
   };
 
+  function handleDownloadPDF(pdfBase64, fileName) {
+    try {
+      const blob = base64toBlob(pdfBase64, 'application/pdf');
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Abrir el PDF en una nueva ventana o pestaña
+      window.open(blobUrl, '_blank');
+
+      // Limpiar el objeto URL creado
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error al descargar el PDF:', error);
+    }
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/consultaAlumno?alumno=5');
+        const data = await response.json();
+
+        // Verifica si la respuesta contiene la propiedad 'solicitudes'
+        if (data.solicitudes && Array.isArray(data.solicitudes)) {
+          setDatosTabla(data.solicitudes);
+        } else {
+          console.error('La respuesta del API no tiene la estructura esperada:', data);
+        }
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <EstatusWrapper>
       <Header>
@@ -121,31 +173,62 @@ function Estatus({ title }) {
           <Title>{title}Seguimiento de Solicitud: Estado, Horas Acumuladas y Liberación</Title>
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
-      </Header><br></br><br></br>
+      </Header>
+      <br></br><br></br>
       <h2>Explora tu Progreso: En este espacio dedicado, visualiza el estado actual de tu solicitud, las horas acumuladas y la liberación
          de manera clara y organizada. Mantén un control total sobre tu trayectoria.</h2>
       <br></br><br></br>
-      <TableWrapper>
-        <StyledTable>
-          <thead>
-            <tr>
-              <StyledTh>Estatus de Solicitud</StyledTh>
-              <StyledTh>Horas Acumuladas</StyledTh>
-              <StyledTh>Firma</StyledTh>
-              <StyledTh>Carta de Aceptación</StyledTh>
-              <StyledTh>Carta de Terminación</StyledTh>
-              <StyledTh>Liberación</StyledTh>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <StyledTd isEven={false}>{datosTabla.estatusSolicitud}</StyledTd>
-              <StyledTd isEven={true}>{datosTabla.horasAcumuladas}</StyledTd>
-              <StyledTd isEven={false}>{datosTabla.liberacion}</StyledTd>
-            </tr>
-          </tbody>
-        </StyledTable>
-      </TableWrapper>
+      {datosTabla.map((data, index) => (
+        <TableWrapper key={index}>
+          <StyledTable>
+            <thead>
+              <tr>
+                <StyledTh>Estatus de Solicitud</StyledTh>
+                <StyledTh>Horas Solicitadas</StyledTh>
+                <StyledTh>Horas Aprobadas</StyledTh>
+                <StyledTh>Tipo de solicitud</StyledTh>
+                <StyledTh>Carta de aceptacion</StyledTh>
+                <StyledTh>Fecha Liberacion</StyledTh>
+                {data.accesoAlumno === true && data.pdf_liberacion !== null && (
+                  <StyledTh>Carta de liberación</StyledTh>
+                )}
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <StyledTd isEven={false}>{data.estado}</StyledTd>
+                <StyledTd isEven={true}>{data.horas}</StyledTd>
+                <StyledTd isEven={true}>{data.horas_abrobadas}</StyledTd>
+                <StyledTd isEven={true}>{data.tipo}</StyledTd>
+                {data.pdf_aceptacion != null ? (
+                    <>
+                      <StyledTd isEven={true}>
+                      <button
+                        onClick={() => handleDownloadPDF(data.pdf_aceptacion, 'aceptacion.pdf')}>
+                        PDF
+                      </button>
+                      </StyledTd>
+                          </>
+                  ) : (
+                    <>
+                      <StyledTd>Aún no disponible</StyledTd>
+                    </>
+                  )}
+                <StyledTd isEven={true}>{data.fechaLiberacion}</StyledTd>
+                {data.accesoAlumno === true && data.pdf_liberacion !== null && (
+                  <StyledTd isEven={true}>
+                  <button
+                    onClick={() => handleDownloadPDF(data.pdf_liberacion, 'aceptacion.pdf')}>
+                    PDF
+                  </button>
+                  </StyledTd>
+                )}
+              </tr>
+            </tbody>
+          </StyledTable>
+        </TableWrapper>
+      ))}
 
       <LiberacionButton onClick={handleSolicitarLiberacion}>
         Solicitar Liberación
