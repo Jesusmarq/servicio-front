@@ -21,6 +21,60 @@ function Preregistro() {
   };
 
   const [formData, setFormData] = useState(initialState);
+  const [plantelOptions, setPlantelOptions] = useState(
+    ["Escuela Superior de Actopan", 
+    "Escuela Superior de Apan", 
+    "Escuela Superior de Atotonilco de Tula",
+    "Escuela Superior de Ciudad Sahagún ",
+    "Escuela Superior de Huejutla",
+    "Escuela Superior de Tepeji del Río",
+    "Escuela Superior de Tlahuelilpan",
+    "Escuela Superior de Tizayuca",
+    "Escuela Superior de Zimapán",
+    "Instituto de Artes", 
+    "Instituto de Ciencias Básicas e Ingeniería",
+    "Instituto de Ciencias Agropecuarias",
+    "Instituto de Ciencias de la Salud",
+    "Instituto de Ciencias Económico Administrativas",
+    "Instituto de Ciencias Sociales y Humanidades"]);
+  const [escuelaOptions, setEscuelaOptions] = useState(
+    [
+      "Centro Cultural Europeo de Estudios Universitarios (CE)",
+      "Centro Hidalguense de Estudios Superiores (CENHIES)",
+      "Centro Universitario Antares",
+      "Centro Universitario Hidalguense (CUH)",
+      "Centro Universitario Metropolitano Hidalgo (CEUMH)",
+      "Centro Universitario Siglo XXI",
+      "Centro de Estudios Universitarios de Hidalgo (CEUH)",
+      "Centros de Bachillerato Tecnológico Industrial y de Servicios (CBTis) No. 8",
+      "Centros de Bachillerato Tecnológico Industrial y de Servicios (CBTis) No. 222",
+      "Colegio de Estudios Científicos y Tecnológicos del Estado de Hidalgo (CECYTEH) Plantel Pachuca",
+      "Colegio de Estudios Científicos y Tecnológicos del Estado de Hidalgo (CECYTEH) Plantel Zempoala",
+      "Colegio Nacional de Educación Profesional Técnica (CONALEP) PACHUCA 1",
+      "Colegio Nacional de Educación Profesional Técnica (CONALEP) PACHUCA 2",
+      "Instituto de Estudios Universitarios IEU",
+      "Instituto Moyocoyani Plantel Actopan",
+      "Instituto Moyocoyani Plantel Pachuca",
+      "Instituto Tecnológico de Pachuca (ITP)",
+      "Instituto Tecnológico Latinoamericano (ITLA)",
+      "Instituto Tecnológico Superior del Occidente del Estado de Hidalgo (ITSOEH)",
+      "Universidad Abierta y a Distancia de México UnADM",
+      "Universidad Digital del Estado de Hidalgo (UNIDEH)",
+      "Universidad Iberomexicana de Hidalgo (UIH)",
+      "Universidad Interactiva Milenio",
+      "Universidad Interamericana para el Desarrollo (UNID)",
+      "Universidad Nacional Autonoma de México",
+      "Universidad Politécnica de Huejutla",
+      "Universidad Politécnica de Pachuca (UPP)",
+      "Universidad Politécnica Metropolitana de Hidalgo (UPMH)",
+      "Universidad Tecnologica El Puerto",
+      "Universidad Utel (UTEL)",
+      "Universidad Virtual del Estado de Guanajuato (UVEG)",
+      "Universidad Interamericana para el Desarrollo UNID",
+      "Universidad La Salle",
+      "Universidad Interglobal (UIG)"
+  ] );
+
 
   
   const handleChange = (e) => {
@@ -130,6 +184,7 @@ function Preregistro() {
             />
           </div>
           <div className="form-group">
+<<<<<<< HEAD
             <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
             <select className="cuadros"
               name="escuelaprocedencia"
@@ -171,6 +226,60 @@ function Preregistro() {
               />
             </div>
           )}
+=======
+  <label htmlFor="escuelaprocedencia">Escuela de Procedencia:</label>
+  <select
+    className="cuadros"
+    name="escuelaprocedencia"
+    value={formData.escuelaprocedencia}
+    onChange={handleEscuelaProcedenciaChange}
+    required
+  >
+    <option value="UAEH">UAEH</option>
+    <option value="Otras">Otras</option>
+  </select>
+</div>
+
+{formData.escuelaprocedencia === "UAEH" && (
+  <div className="form-group">
+    <label htmlFor="plantel">Plantel:</label>
+    <select
+      className="cuadros"
+      name="plantel"
+      value={formData.plantel}
+      onChange={handleChange}
+      required
+    >
+      {plantelOptions.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+
+{formData.escuelaprocedencia === "Otras" && (
+  <div className="form-group">
+    <label htmlFor="otroplantel">Nombre de la Escuela:</label>
+    <select
+      className="cuadros"
+      name="otroplantel"
+      value={formData.otroplantel}
+      onChange={handleChange}
+      required
+    >
+      {escuelaOptions.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
+    </select>
+  </div>
+)}
+          
+        
+>>>>>>> 2bcc1ef023ee77050f11ea372c542a270add1cf7
           <div className="form-group">
             <label htmlFor="curp">CURP:</label>
             <input className="cuadros"
@@ -182,7 +291,7 @@ function Preregistro() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="carrera">carrera:</label>
+            <label htmlFor="carrera">Carrera:</label>
             <input className="cuadros"
               type="text"
               name="carrera"

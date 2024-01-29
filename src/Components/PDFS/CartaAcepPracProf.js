@@ -71,8 +71,8 @@ const YourFormComponent = () => {
     ${modalData.cargo}
     P r e s e n t e
 
-    Por medio del presente informo a usted que el ${modalData.nombreEstudiante}, con número de 
-    matrícula ${modalData.numeroControl}, alumno de la ${modalData.carrera}, ha sido aceptado para realizar sus Prácticas 
+    Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de 
+    matrícula ${modalData.numeroControl}, alumn@ de la ${modalData.carrera}, ha sido aceptado para realizar sus Prácticas 
     Profesionales en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}, 
     de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado a la ${modalData.direccionGeneral}, 
     bajo el Programa: “${modalData.programa}” clave:
