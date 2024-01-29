@@ -19,18 +19,20 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     axios
       .post(`http://127.0.0.1:5000/login`, formData)
       .then((response) => {
-        console.log(response.data.payload.rol);
+        // Acceder y guardar solo las propiedades necesarias
+        const { rol, id, nombre,token } = response.data;
+  
+        localStorage.setItem('dataUser', JSON.stringify({ rol, id, nombre,token }));
         // Verifica la respuesta de la API y redirige según el usuario
-        if (response.data && response.data.payload.rol === 'admin') {
-          // Utiliza navigate para redirigir a la ruta de administrador
+        if (rol === 'admin') {
           history.push('/administrador');
-        } else if (response.data && response.data.payload.rol === 'user') {
-          // Utiliza navigate para redirigir a la ruta de usuario normal
-          history.push('/administrador');
+        } else if (rol === 'user') {
+
+          history.push('/usuario');
         }
       })
       .catch((error) => {
@@ -43,6 +45,7 @@ const Login = () => {
         });
       });
   };
+  
 
 
   return (

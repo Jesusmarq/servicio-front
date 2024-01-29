@@ -147,12 +147,17 @@ const SendButton = styled(Button)`
   width: 10vw;
 `;
 
+
+
 function Solicitud({ title }) {
+  
+  const dataUser = JSON.parse(localStorage.getItem('dataUser'));
+
   const initialState = {
-   
-    selectedOption: "",
-    requestedHours: "", // Nuevo estado para las horas solicitadas
-    currentDate: new Date().toLocaleDateString(),
+    alumno: dataUser.id,
+    horas: "", // Nuevo estado para las horas solicitadas
+    fecha: new Date().toLocaleDateString(),
+    pdf: ""
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -161,58 +166,18 @@ function Solicitud({ title }) {
 
          // Nueva función para manejar cambios en las horas solicitadas
          const handleChangeHours = (e) => {
-          setFormData({ ...formData, requestedHours: e.target.value });
+          setFormData({ ...formData, horas: e.target.value });
         };
 
           // Nueva función para manejar cambios en la fecha actual
-  const handleChangeDate = () => {
-    const today = new Date();
-    const formattedDate = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-    setFormData({ ...formData, currentDate: formattedDate });
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
-  };
  
 
     // Función para manejar cambios en el select
     const handleChangeSelect = (e) => {
-      setFormData({ ...formData, selectedOption: e.target.value });
+      setFormData({ ...formData, dependencia: e.target.value });
     };
 
-  const handleSubmit = (e) => {
-    // Previene el comportamiento predeterminado del formulario, que es el envío normal.
-    e.preventDefault();
-    // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
-    axios
-      .post(`http://127.0.0.1:5000/registroAlumno`, formData)
-      .then((response) => {
-        // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
-        Swal.fire({
-          position: "center", // Posición de la ventana emergente en el centro.
-          icon: "success", // Ícono de éxito.
-          title: "Gracias por tu interés. Te contactaremos pronto.", // Título de la ventana emergente.
-          showConfirmButton: false, // No muestra el botón de confirmación.
-          timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
-        });
   
-        // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
-        setFormData(initialState);
-      })
-      .catch((error) => {
-        // Maneja cualquier error que ocurra durante la solicitud.
-        console.error("Error al enviar el formulario:", error);
-  
-        // Muestra una ventana emergente de error utilizando SweetAlert.
-        Swal.fire({
-          icon: "error", // Ícono de error.
-          title: "Error al enviar el formulario", // Título de la ventana emergente.
-          text: "Hubo un problema al enviar el formulario.", // Texto de la ventana emergente.
-        });
-      });
-  };
 
   const handleClose = () => {
     setFileSelected(false);
@@ -223,17 +188,51 @@ function Solicitud({ title }) {
 
   const handleChangeFile = (e) => {
     setFileSelected(!!e.target.files.length);
+    // Actualiza el estado formData para incluir el archivo seleccionado
+    setFormData({ ...formData, pdf: e.target.files[0] });
   };
 
-  const handleSend = () => {
+
+  
+  
+  const handleSend = (e) => {
     // Lógica para enviar la carta
 
-    // Muestra la alerta de éxito
-    Swal.fire({
-      icon: 'success',
-      title: 'Carta enviada',
-      text: 'Tu carta de presentación ha sido enviada correctamente.',
-    });
+    const dataUser = JSON.parse(localStorage.getItem('dataUser'));
+
+    const jsonString = JSON.stringify(formData);
+    const formDataObj =  new FormData()
+
+    formDataObj.append('JSON',jsonString)
+    formDataObj.append('pdf', formData.pdf)
+    // Obtener el objeto JSON desde localStorage
+
+    console.log(formDataObj)
+    
+    e.preventDefault();
+  
+    axios
+      .post(`http://127.0.0.1:5000/subirCarta`, formDataObj)
+      .then((response) => {
+        
+        if (response.status == 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Carta enviada',
+            text: 'Tu carta de presentación ha sido enviada correctamente.',
+          });
+        }
+        
+      })
+      .catch((error) => {
+        // Maneja errores de solicitud
+        console.error("Error al enviar el formulario:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error al enviar el formulario",
+          text: "Hubo un problema al enviar el formulario.",
+        });
+      });
 
     // Cierra la ventana emergente
     handleClose();
@@ -377,7 +376,7 @@ function Solicitud({ title }) {
           </Modal.Header>
           <Modal.Body>
             <p>Por favor, adjunta tu carta de presentación y envíala.</p>
-            <Form>
+            <Form >
             <Form.Group controlId="selectOption" className="mb-3">
                 <Form.Label>Selecciona una opción</Form.Label>
                 <Form.Control
@@ -386,10 +385,10 @@ function Solicitud({ title }) {
                   onChange={handleChangeSelect}
                 >
                   <option value="">Selecciona...</option>
-                  <option value="Innovación Gubernamental">Innovación Gubernamental</option>
-                  <option value="Patrimonio Inmobiliario">Patrimonio Inmobiliario</option>
-                  <option value="Recursos Humanos">Recursos Humanos</option>
-                  <option value="Contraloría">Contraloría</option>
+                  <option value="1">Innovación Gubernamental</option>
+                  <option value="2">Patrimonio Inmobiliario</option>
+                  <option value="3">Recursos Humanos</option>
+                  <option value="4">Contraloría</option>
                 </Form.Control>
               </Form.Group>
 
@@ -398,12 +397,12 @@ function Solicitud({ title }) {
                 <Form.Control type="file" accept=".pdf" onChange={handleChangeFile} />
               </Form.Group>
 
-              <Form.Group controlId="requestedHours" className="mb-3">
+              <Form.Group controlId="horas" className="mb-3">
                 <Form.Label>Horas Solicitadas</Form.Label>
                 <Form.Control
                   type="text"
                   placeholder="Ingrese las horas solicitadas"
-                  value={formData.requestedHours}
+                  value={formData.horas}
                   onChange={handleChangeHours}
                 />
               </Form.Group>

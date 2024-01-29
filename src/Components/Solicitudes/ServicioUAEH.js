@@ -348,6 +348,16 @@ const SendButton = styled(Button)`
                   >
                     {item.validar ? 'Aceptado' : 'Aceptar'}
                   </StyledButton>
+
+                  <StyledButton
+                    variant="primary"
+                    onClick={() => {
+                      handleValidation(item.id);
+                    }}
+                
+                  >
+                    rechazar
+                  </StyledButton>
                 </StyledTd>
               </StyledTr>
             ))}
