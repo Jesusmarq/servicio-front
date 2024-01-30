@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -100,7 +99,25 @@ const UploadButton = styled.label`
   }
 `;
 
+function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
+  const byteCharacters = atob(base64Data);
+  const byteArrays = [];
 
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  const blob = new Blob(byteArrays, { type: contentType });
+  return blob;
+}
 
 function Reportes({ title }) {
 
@@ -117,47 +134,42 @@ function Reportes({ title }) {
     carrera: "",
     
   };
+  const [datosTabla, setDatosTabla] = useState([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/consultaReportesAlumno?alumno=5');
+        const data = await response.json();
+
+
+          setDatosTabla(data.solicitudes);
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const [formData, setFormData] = useState(initialState);
 
-  
+  function handleDownloadPDF(pdfBase64, fileName) {
+    try {
+      const blob = base64toBlob(pdfBase64, 'application/pdf');
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Abrir el PDF en una nueva ventana o pestaña
+      window.open(blobUrl, '_blank');
+
+      // Limpiar el objeto URL creado
+      URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Error al descargar el PDF:', error);
+    }
+  }
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
-  };
-  
-
-  const handleSubmit = (e) => {
-    // Previene el comportamiento predeterminado del formulario, que es el envío normal.
-    e.preventDefault();
-  
-    // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
-    axios
-      .post(`http://127.0.0.1:5000/registroAlumno`, formData)
-      .then((response) => {
-        // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
-        Swal.fire({
-          position: "center", // Posición de la ventana emergente en el centro.
-          icon: "success", // Ícono de éxito.
-          title: "Gracias por tu interés. Te contactaremos pronto.", // Título de la ventana emergente.
-          showConfirmButton: false, // No muestra el botón de confirmación.
-          timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
-        });
-  
-        // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
-        setFormData(initialState);
-      })
-      .catch((error) => {
-        // Maneja cualquier error que ocurra durante la solicitud.
-        console.error("Error al enviar el formulario:", error);
-  
-        // Muestra una ventana emergente de error utilizando SweetAlert.
-        Swal.fire({
-          icon: "error", // Ícono de error.
-          title: "Error al enviar el formulario", // Título de la ventana emergente.
-          text: "Hubo un problema al enviar el formulario.", // Texto de la ventana emergente.
-        });
-      });
   };
 
   const [files, setFiles] = useState([]);
@@ -167,7 +179,7 @@ function Reportes({ title }) {
     const newFiles = acceptedFiles.map((file) => ({
       name: file.name,
       date: new Date().toLocaleString(),
-      preview: URL.createObjectURL(file), // Crea una URL para la vista previa
+      preview: URL.createObjectURL(file),
     }));
 
     setFiles([...files, ...newFiles]);
@@ -199,13 +211,20 @@ function Reportes({ title }) {
         <Table>
           <thead>
             <tr>
-              <Th>Nombre del Archivo</Th>
-              <Th>Fecha de Subida</Th>
-              <Th>Acciones</Th>
+              <Th>Archivo</Th>
+              <Th>Horas</Th>
+              <Th>Estado</Th>
             </tr>
           </thead>
           <tbody>
-            {files.map((file, index) => (
+          {datosTabla.map((data, index) => (
+            <tr key={index}>
+            <Td onClick={() => handleDownloadPDF(data.pdf_reporte, 'reporte.pdf')}>PDF</Td>
+            <Td>{data.horas}</Td>
+            <Td>{data.estado}</Td>
+            </tr>
+          ))}
+            {/*{files.map((file, index) => (
               <tr key={index}>
                 <Td onClick={() => handleFileClick(file.preview)}>{file.name}</Td>
                 <Td>{file.date}</Td>
@@ -213,7 +232,7 @@ function Reportes({ title }) {
                   <TrashIcon icon={faTrash} onClick={() => handleDelete(index)} />
                 </Td>
               </tr>
-            ))}
+            ))}*/}
           </tbody>
         </Table>
         <br></br>
