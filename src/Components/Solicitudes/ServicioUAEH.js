@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
-import jsPDF from 'jspdf';
-import { Helmet } from 'react-helmet';
 import '../../Styles/responsive.css';
+
+
+//import 'jspdf-autotable';
+import { Helmet } from 'react-helmet';
+import { jsPDF } from 'jspdf';
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
@@ -102,125 +105,211 @@ const SendButton = styled(Button)`
       // ... más datos
     ]);
 
-  //codigo generar pdf------------------------------------------------------------
-  const [modalData, setModalData] = useState({
-    numeroArchivo: '',
-    fecha:'',
-    instituto:'',
-    nombreEstudiante: '',
-    numeroControl: '',
-    carrera: '',
-    dependencia: '',
-    periodo: '',
-    periodo2:'',
-    horario: '',
-    direccionGeneral: '',
-    programa: '',
-    clave: '',
-    horas: '',
-    actividadesDesarrollar: [''],
-  });
+ //-------------------------------generar pdf---------------------------------------------------------
+ const[datosQr,setDatosQr] = useState('')
 
-  const handleChange = (field, value) => {
-    setModalData({ ...modalData, [field]: value });
-  };
+ const fetchData = async () => {
+     try {
+       const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
+       const data = await response.json();
 
-  const handleActividadesChange = (index, value) => {
-    const newActividades = [...modalData.actividadesDesarrollar];
-    newActividades[index] = value;
-    setModalData({ ...modalData, actividadesDesarrollar: newActividades });
-  };
-
-  const addActividad = () => {
-    setModalData({
-      ...modalData,
-      actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
-    });
-  };
-
-  const generatePDF = () => {
-    const pdf = new jsPDF();
-
-    // Añadir la imagen de encabezado
-    pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
-
-    // Establecer la fuente Montserrat y el tamaño de letra
-  pdf.setFont('Montserrat');
-  pdf.setFontSize(12); // Ajusta el tamaño según tus preferencias
-
-    const xPosition = 10;
-    let yPosition = 20;
-
-    // Construir el texto con el formato deseado
-    const textoPDF = `
+       console.log(data)
+       // Verifica si la respuesta contiene la propiedad 'solicitudes'
+       if (data.qr_image_base64) {
+         setDatosQr(data.qr_image_base64);
+       } else {
+         console.error('La respuesta del API no tiene la estructura esperada:', data);
+       }
+     } catch (error) {
+       console.error('Error al obtener datos:', error);
+     }
+   };
+ 
+ useEffect(() => {
+     fetchData()
+   
+   }, []);
 
 
+ 
+ const [modalData, setModalData] = useState({
+   numeroArchivo: '',
+   fecha:'',
+   nombreEstudiante: '',
+   numeroControl: '',
+   carrera: '',
+   instituto:'',
+   dependencia:'',
+   asignado_a:'',
+   periodo: '',
+   horario: '',
+   direccionGeneral: '',
+   programa: '',
+   clave: '',
+   horas: '',
+   actividadesDesarrollar: [''],
+ });
 
-    
-                                                     Carta de Aceptación de Servicio Social
+ const handleChange = (field, value) => {
+   setModalData({ ...modalData, [field]: value });
+ };
 
+ const handleActividadesChange = (index, value) => {
+   const newActividades = [...modalData.actividadesDesarrollar];
+   newActividades[index] = value;
+   setModalData({ ...modalData, actividadesDesarrollar: newActividades });
+ };
 
-                                                                                                                                                        ${modalData.numeroArchivo}
-                                                                                              Pachuca de Soto,Hgo., a ${modalData.fecha}
+ const addActividad = () => {
+   setModalData({
+     ...modalData,
+     actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
+   });
+ };
 
+ // _____-------------------------------------FUNCION PARA CREAR PDF ******************************
+ const generatePDF = async () => {
 
-                                                                                              
-    Dr. Jesús Ibarra Zamudio
-    Director de Servicio Social, Practicas Profesionales y
-    Vinculción Laboral de la Universidad Autónoma del 
-    Estado de Hidalgo
-    P r e s e n t e
-
-    Por medio del presente informo a usted que el ${modalData.nombreEstudiante}, con número de 
-    cuenta:${modalData.numeroControl}, estudiante de la ${modalData.carrera}, del 
-    ${modalData.instituto} ha sido aceptado para realizar sus Servicio 
-    Social en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo} al
-    ${modalData.periodo2}, de lunes a viernes en un horario de ${modalData.horario} hrs., bajo el Proyecto: 
-    “${modalData.programa}” cubriendo un total de ${modalData.horas} horas, realizando las siguientes 
-    actividades:
-    `;
-
-    
-
-    // Agregar el texto al PDF
-    pdf.text(textoPDF, xPosition, yPosition);
-
-          yPosition += 130;
-          modalData.actividadesDesarrollar.forEach((actividad, index) => {
-          yPosition += 10;
-          pdf.text(`${index + 1}. ${actividad}`, xPosition, yPosition);
-    });
-
-    // Agregar el resto del texto del pie de página
-    const piePagina = `
-    Sin otro particular por el momento, le envío un cordial saludo.
-    A t e n t a m e n t e
-    
-    M.G.P. Odette Assad Díaz
-    Directora de Profesionalización
-    de la Oficialía Mayor
+   const pdf = new jsPDF();
+   pdf.setFont('Times-Roman', 'bold');
+   pdf.setFontSize(12);
 
 
+   // Añadir la imagen de encabezado
+   pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
+
+   const xPosition = 10;
+   let yPosition = 20;
+
+   // Construir el texto con el formato deseado
+   const textoPDF = `
+
+   
+                                                    Carta de Aceptación de Servicio Social
 
 
+                                                                                                                                                       ${modalData.numeroArchivo}`;
+    // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+  const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
+  // Agregar las líneas al PDF
+  pdf.text(linest, xPosition, yPosition);
+  
+  
+  pdf.setFont('Times-Roman', 'normal');
+  pdf.setFontSize(12);
+  yPosition += 30;                                                                                                                                                 
+  const fecha =`                                                                                                                                                     
+                                                                                             Pachuca de Soto,Hgo., a ${modalData.fecha}`;
 
 
+ 
+ 
+   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+   const linese = pdf.splitTextToSize(fecha, pdf.internal.pageSize.width - 2 * xPosition);
+   // Agregar las líneas al PDF
+   pdf.text(linese, xPosition, yPosition);   
+  
+  
+   pdf.setFont('Times-Roman', 'bold');
+   pdf.setFontSize(12);
+   yPosition += 10;                                                                                          
+ const encabezado=`                                                                                            
+ Dr. Jesús Ibarra Zamudio
+ Director de Servicio Social, Practicas Profesionales y
+ Vinculción Laboral de la Universidad Autónoma del 
+ Estado de Hidalgo
+ P r e s e n t e`;
+
+  // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+  const lines = pdf.splitTextToSize(encabezado, pdf.internal.pageSize.width - 2 * xPosition);
+  // Agregar las líneas al PDF
+  pdf.text(lines, xPosition, yPosition);
 
 
-                                                                         Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
-                                                                                                            Col. Centro, Pachuca, Hgo., C.P. 42000
-                                                                                                             Tel.; 01(771)7176000 ext. 2095 y 6836
-                                                                                                                                         www.hidalgo.gob.mx
-    `;
+  pdf.setFont('Times-Roman', 'normal');
+  pdf.setFontSize(12);
+  yPosition += 30;
+ const cuerpo =`
+ Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha sido aceptado/a, para realizar su Servicio Social en la ${modalData.dependencia}, siendo asignado en la ${modalData.asignado_a} cubriendo el periodo del ${modalData.periodo}, con un horario de ${modalData.horario} hrs., bajo el Proyecto: “${modalData.programa}” de la ${modalData.direccionGeneral}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ `;
+  // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+  const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
+  // Agregar las líneas al PDF
+  pdf.text(lines2, xPosition, yPosition);
 
-    yPosition += 20;
-    pdf.text(piePagina, xPosition, yPosition);
+  yPosition += 30;
+ modalData.actividadesDesarrollar.forEach((actividad, index) => {
+   yPosition += 15;
 
-    // Guardar o mostrar el PDF (ajusta según tus necesidades)
-    pdf.save('formulario.pdf');
-  };
-  //************************************************************************************************************************************/
+   // Dividir cada actividad en líneas
+   const actividadLines = pdf.splitTextToSize(`${index + 1}. ${actividad}`, pdf.internal.pageSize.width - 2 * xPosition);
 
+   // Agregar las líneas al PDF
+   pdf.text(actividadLines, xPosition, yPosition);
+ });
+
+ const saludo =` Sin otro particular por el momento, le reitero mi más distinguida consideración y respeto.`;
+ yPosition += 20;
+ // Dividir el texto del pie de página en líneas
+const saludolines = pdf.splitTextToSize(saludo, pdf.internal.pageSize.width - 2 * xPosition);
+// Agregar las líneas al PDF
+pdf.text(saludolines, xPosition, yPosition);
+
+pdf.setFont('Times-Roman', 'bold');
+   pdf.setFontSize(12);
+ // Agregar el resto del texto del pie de página
+ const piePagina = `
+
+ A t e n t a m e n t e
+
+   
+ M.G.P. Odette Assad Díaz
+ Directora de Profesionalización
+ de la Oficialía Mayor `;
+ yPosition += 5;
+ // Dividir el texto del pie de página en líneas
+const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.width - 2 * xPosition);
+// Agregar las líneas al PDF
+pdf.text(piePaginaLines, xPosition, yPosition);
+
+pdf.addImage(datosQr, 'PNG', 140, 200, 50, 50);
+
+pdf.setFont('Times-Roman', 'normal');
+   pdf.setFontSize(10);
+const direccion=`
+                                                                                                               Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
+                                                                                                                                                  Col. Centro, Pachuca, Hgo., C.P. 42000
+                                                                                                                                                   Tel.: 01(771)7176000 ext. 2095 y 6836
+                                                                                                                                                                               www.hidalgo.gob.mx
+                                                                                                                                        `;
+                                                                                                                                        
+ 
+   yPosition += 60;
+    // Dividir el texto del pie de página en líneas
+ const direccionLines = pdf.splitTextToSize(direccion, pdf.internal.pageSize.width - 2 * xPosition);
+   // Agregar las líneas al PDF
+ pdf.text(direccionLines, xPosition, yPosition);
+ 
+
+ // Agregar un salto de línea antes de la cadena de firma electrónica
+ yPosition += 25;
+
+ // Ajustar el tamaño de letra solo para la cadena de firma electrónica
+ pdf.setFont('Times-Roman', 'normal');
+ pdf.setFontSize(6);
+
+ const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
+
+ // Agregar la cadena de firma electrónica al PDF
+ const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
+ pdf.text(cadenaLines, xPosition, yPosition);
+
+   // Guardar o mostrar el PDF (ajusta según tus necesidades)
+   pdf.save('formulario.pdf');
+ };
+
+
+ //************************************************************************************************************************************************ */
   const [sendButtonClicked, setSendButtonClicked] = useState(false);
 
 
@@ -244,9 +333,9 @@ const SendButton = styled(Button)`
       nombreEstudiante: '',
       numeroControl: '',
       carrera: '',
-      dependencia: '',
+      dependencia:'',
+      asignado_a:'',
       periodo: '',
-      periodo2:'',
       horario: '',
       direccionGeneral: '',
       programa: '',
@@ -280,9 +369,9 @@ const SendButton = styled(Button)`
       nombreEstudiante: '',
       numeroControl: '',
       carrera: '',
-      dependencia: '',
+      dependencia:'',
+      asignado_a:'',
       periodo: '',
-      periodo2:'',
       horario: '',
       direccionGeneral: '',
       programa: '',
@@ -348,16 +437,6 @@ const SendButton = styled(Button)`
                   >
                     {item.validar ? 'Aceptado' : 'Aceptar'}
                   </StyledButton>
-
-                  <StyledButton
-                    variant="primary"
-                    onClick={() => {
-                      handleValidation(item.id);
-                    }}
-                
-                  >
-                    rechazar
-                  </StyledButton>
                 </StyledTd>
               </StyledTr>
             ))}
@@ -398,8 +477,6 @@ const SendButton = styled(Button)`
           />
         </Form.Group>
 
-        
-
         <Form.Group controlId="nombreEstudiante" className="mb-3">
           <Form.Label>Nombre del Estudiante</Form.Label>
           <Form.Control
@@ -418,21 +495,21 @@ const SendButton = styled(Button)`
           />
         </Form.Group>
 
-        <Form.Group controlId="instituto" className="mb-3">
-          <Form.Label>Instituto </Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.instituto}
-            onChange={(e) => handleChange('instituto', e.target.value)}
-          />
-        </Form.Group>
-
         <Form.Group controlId="carrera" className="mb-3">
           <Form.Label>Carrera</Form.Label>
           <Form.Control
             type="text"
             value={modalData.carrera}
             onChange={(e) => handleChange('carrera', e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="instituto" className="mb-3">
+          <Form.Label>Instituto</Form.Label>
+          <Form.Control
+            type="text"
+            value={modalData.instituto}
+            onChange={(e) => handleChange('instituto', e.target.value)}
           />
         </Form.Group>
 
@@ -445,21 +522,21 @@ const SendButton = styled(Button)`
           />
         </Form.Group>
 
+        <Form.Group controlId="asignado_a" className="mb-3">
+          <Form.Label>Asignado a:</Form.Label>
+          <Form.Control
+            type="text"
+            value={modalData.asignado_a}
+            onChange={(e) => handleChange('asignado_a', e.target.value)}
+          />
+        </Form.Group>
+
         <Form.Group controlId="periodo" className="mb-3">
-          <Form.Label>Periodo de inicio</Form.Label>
+          <Form.Label>Periodo</Form.Label>
           <Form.Control
             type="text"
             value={modalData.periodo}
             onChange={(e) => handleChange('periodo', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="periodo2" className="mb-3">
-          <Form.Label>Periodo de termino</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.periodo2}
-            onChange={(e) => handleChange('periodo2', e.target.value)}
           />
         </Form.Group>
 
@@ -472,10 +549,17 @@ const SendButton = styled(Button)`
           />
         </Form.Group>
 
-        
+        <Form.Group controlId="direccionGeneral" className="mb-3">
+          <Form.Label>Dirección General</Form.Label>
+          <Form.Control
+            type="text"
+            value={modalData.direccionGeneral}
+            onChange={(e) => handleChange('direccionGeneral', e.target.value)}
+          />
+        </Form.Group>
 
         <Form.Group controlId="programa" className="mb-3">
-          <Form.Label>Programa</Form.Label>
+          <Form.Label>Proyecto</Form.Label>
           <Form.Control
             type="text"
             value={modalData.programa}
@@ -483,7 +567,6 @@ const SendButton = styled(Button)`
           />
         </Form.Group>
 
-        
 
         <Form.Group controlId="horas" className="mb-3">
           <Form.Label>Horas</Form.Label>
@@ -516,6 +599,7 @@ const SendButton = styled(Button)`
       <Button variant="primary" onClick={generatePDF}>
         Generar PDF
       </Button>
+
           </Modal.Body>
           <Modal.Footer>
             <SendButton variant="primary" onClick={handleSend} disabled={!validateForm()}>

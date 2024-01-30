@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
-import jsPDF from 'jspdf';
-import { Helmet } from 'react-helmet';
 import '../../Styles/responsive.css';
+
+
+//import 'jspdf-autotable';
+import { Helmet } from 'react-helmet';
+import { jsPDF } from 'jspdf';
+
+
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
@@ -101,6 +106,32 @@ function PracticasProfesionales ({ title }) {
   ]);
       
   //-------------------------------generar pdf---------------------------------------------------------
+  const[datosQr,setDatosQr] = useState('')
+
+  const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
+        const data = await response.json();
+
+        console.log(data)
+        // Verifica si la respuesta contiene la propiedad 'solicitudes'
+        if (data.qr_image_base64) {
+          setDatosQr(data.qr_image_base64);
+        } else {
+          console.error('La respuesta del API no tiene la estructura esperada:', data);
+        }
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+  
+  useEffect(() => {
+      fetchData()
+    
+    }, []);
+
+
+  
   const [modalData, setModalData] = useState({
     numeroArchivo: '',
     fecha:'',
@@ -109,7 +140,6 @@ function PracticasProfesionales ({ title }) {
     nombreEstudiante: '',
     numeroControl: '',
     carrera: '',
-    dependencia: '',
     periodo: '',
     horario: '',
     direccionGeneral: '',
@@ -136,15 +166,16 @@ function PracticasProfesionales ({ title }) {
     });
   };
 
-  const generatePDF = () => {
+  // _____-------------------------------------FUNCION PARA CREAR PDF ******************************
+  const generatePDF = async () => {
+
     const pdf = new jsPDF();
+    pdf.setFont('Times-Roman', 'bold');
+    pdf.setFontSize(12);
+
 
     // Añadir la imagen de encabezado
     pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
-
-    // Establecer la fuente Montserrat y el tamaño de letra
-  pdf.setFont('Montserrat');
-  pdf.setFontSize(12); // Ajusta el tamaño según tus preferencias
 
     const xPosition = 10;
     let yPosition = 20;
@@ -152,66 +183,128 @@ function PracticasProfesionales ({ title }) {
     // Construir el texto con el formato deseado
     const textoPDF = `
 
+    
+                                                     Carta de Aceptación de Prácticas Profesionales
 
+
+                                                                                                                                                        ${modalData.numeroArchivo}`;
+     // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+   const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
+   // Agregar las líneas al PDF
+   pdf.text(linest, xPosition, yPosition);
+   
+   
+   pdf.setFont('Times-Roman', 'normal');
+   pdf.setFontSize(12);
+   yPosition += 30;                                                                                                                                                 
+   const fecha =`                                                                                                                                                     
+                                                                                              Pachuca de Soto,Hgo., a ${modalData.fecha}`;
+
+
+  
+  
+    // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+    const linese = pdf.splitTextToSize(fecha, pdf.internal.pageSize.width - 2 * xPosition);
+    // Agregar las líneas al PDF
+    pdf.text(linese, xPosition, yPosition);   
+   
+   
+    pdf.setFont('Times-Roman', 'bold');
+    pdf.setFontSize(12);
+    yPosition += 20;                                                                                          
+  const encabezado=`                                                                                            
+  ${modalData.dirigidaA}
+  ${modalData.cargo}
+  P r e s e n t e`;
+
+   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+   const lines = pdf.splitTextToSize(encabezado, pdf.internal.pageSize.width - 2 * xPosition);
+   // Agregar las líneas al PDF
+   pdf.text(lines, xPosition, yPosition);
+
+
+   pdf.setFont('Times-Roman', 'normal');
+   pdf.setFontSize(12);
+   yPosition += 20;
+  const cuerpo =`
+  Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de control ${modalData.numeroControl}, alumno/a de la Licenciatura en ${modalData.carrera}, ha sido aceptado para realizar sus Prácticas Profesionales en la Oficialia Mayor, cubriendo el periodo del ${modalData.periodo}, de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado/a a la ${modalData.direccionGeneral}, bajo el Programa: “${modalData.programa}” clave:${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+  `;
+   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+   const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
+   // Agregar las líneas al PDF
+   pdf.text(lines2, xPosition, yPosition);
+
+   yPosition += 30;
+  modalData.actividadesDesarrollar.forEach((actividad, index) => {
+    yPosition += 15;
+
+    // Dividir cada actividad en líneas
+    const actividadLines = pdf.splitTextToSize(`${index + 1}. ${actividad}`, pdf.internal.pageSize.width - 2 * xPosition);
+
+    // Agregar las líneas al PDF
+    pdf.text(actividadLines, xPosition, yPosition);
+  });
+
+  const saludo =` Sin otro particular por el momento, le envío un cordial saludo.`;
+  yPosition += 30;
+  // Dividir el texto del pie de página en líneas
+const saludolines = pdf.splitTextToSize(saludo, pdf.internal.pageSize.width - 2 * xPosition);
+ // Agregar las líneas al PDF
+pdf.text(saludolines, xPosition, yPosition);
+
+pdf.setFont('Times-Roman', 'bold');
+    pdf.setFontSize(12);
+  // Agregar el resto del texto del pie de página
+  const piePagina = `
+ 
+  A t e n t a m e n t e
 
     
-                                                     Carta de Aceptación de Practicas Profesionales
+  M.G.P. Odette Assad Díaz
+  Directora de Profesionalización
+  de la Oficialía Mayor `;
+  yPosition += 5;
+  // Dividir el texto del pie de página en líneas
+const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.width - 2 * xPosition);
+ // Agregar las líneas al PDF
+pdf.text(piePaginaLines, xPosition, yPosition);
 
+pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
 
-                                                                                                                                                        ${modalData.numeroArchivo}
-                                                                                              Pachuca de Soto,Hgo., a ${modalData.fecha}
+pdf.setFont('Times-Roman', 'normal');
+    pdf.setFontSize(10);
+const direccion=`
+                                                                                                                Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
+                                                                                                                                                   Col. Centro, Pachuca, Hgo., C.P. 42000
+                                                                                                                                                    Tel.: 01(771)7176000 ext. 2095 y 6836
+                                                                                                                                                                                www.hidalgo.gob.mx
+                                                                                                                                         `;
+                                                                                                                                         
+  
+    yPosition += 50;
+     // Dividir el texto del pie de página en líneas
+  const direccionLines = pdf.splitTextToSize(direccion, pdf.internal.pageSize.width - 2 * xPosition);
+    // Agregar las líneas al PDF
+  pdf.text(direccionLines, xPosition, yPosition);
+  
 
-    ${modalData.dirigidaA}
-    ${modalData.cargo}
-    P r e s e n t e
+  // Agregar un salto de línea antes de la cadena de firma electrónica
+  yPosition += 25;
 
-    Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de matrícula 
-    ${modalData.numeroControl}, alumn@ de la ${modalData.carrera}, ha sido aceptado para realizar sus Prácticas 
-    Profesionales en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}, 
-    de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado a la ${modalData.direccionGeneral}, 
-    bajo el Programa: “${modalData.programa}” clave:
-    ${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
-    `;
+  // Ajustar el tamaño de letra solo para la cadena de firma electrónica
+  pdf.setFont('Times-Roman', 'normal');
+  pdf.setFontSize(6);
 
-    
+  const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
 
-    // Agregar el texto al PDF
-    pdf.text(textoPDF, xPosition, yPosition);
-
-          yPosition += 100;
-          modalData.actividadesDesarrollar.forEach((actividad, index) => {
-          yPosition += 10;
-          pdf.text(`${index + 1}. ${actividad}`, xPosition, yPosition);
-    });
-
-    // Agregar el resto del texto del pie de página
-    const piePagina = `
-    Sin otro particular por el momento, le envío un cordial saludo.
-    A t e n t a m e n t e
-    
-    M.G.P. Odette Assad Díaz
-    Directora de Profesionalización
-    de la Oficialía Mayor
-
-
-
-
-
-
-
-
-                                                                         Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
-                                                                                                            Col. Centro, Pachuca, Hgo., C.P. 42000
-                                                                                                             Tel.; 01(771)7176000 ext. 2095 y 6836
-                                                                                                                                         www.hidalgo.gob.mx
-    `;
-
-    yPosition += 20;
-    pdf.text(piePagina, xPosition, yPosition);
+  // Agregar la cadena de firma electrónica al PDF
+  const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
+  pdf.text(cadenaLines, xPosition, yPosition);
 
     // Guardar o mostrar el PDF (ajusta según tus necesidades)
     pdf.save('formulario.pdf');
   };
+ 
 
   //************************************************************************************************************************************************ */
 
@@ -232,21 +325,19 @@ function PracticasProfesionales ({ title }) {
     handleClose();
     setSendButtonClicked(true);
     setModalData({
-    numeroArchivo: '',
-    fecha:'',
-    dirigidaA: '',
-    cargo:'',
-    nombreEstudiante: '',
-    numeroControl: '',
-    carrera: '',
-    dependencia: '',
-    periodo: '',
-    horario: '',
-    direccionGeneral: '',
-    programa: '',
-    clave: '',
-    horas: '',
-    actividadesDesarrollar: [''],
+      numeroArchivo: '',
+      dirigidaA: '',
+      nombreEstudiante: '',
+      numeroControl: '',
+      carrera: '',
+      dependencia: '',
+      periodo: '',
+      horario: '',
+      direccionGeneral: '',
+      programa: '',
+      clave: '',
+      horas: '',
+      actividadesDesarrollar: [''],
     });
   };
 
@@ -269,9 +360,7 @@ function PracticasProfesionales ({ title }) {
     setShowModal(false);
     setModalData({
       numeroArchivo: '',
-      fecha:'',
       dirigidaA: '',
-      cargo:'',
       nombreEstudiante: '',
       numeroControl: '',
       carrera: '',
@@ -426,15 +515,6 @@ function PracticasProfesionales ({ title }) {
           />
         </Form.Group>
 
-        <Form.Group controlId="dependencia" className="mb-3">
-          <Form.Label>Dependencia</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.dependencia}
-            onChange={(e) => handleChange('dependencia', e.target.value)}
-          />
-        </Form.Group>
-
         <Form.Group controlId="periodo" className="mb-3">
           <Form.Label>Periodo</Form.Label>
           <Form.Control
@@ -511,6 +591,7 @@ function PracticasProfesionales ({ title }) {
       <Button variant="primary" onClick={generatePDF}>
         Generar PDF
       </Button>
+      
           </Modal.Body>
           <Modal.Footer>
             <SendButton variant="primary" onClick={handleSend} disabled={!validateForm()}>
