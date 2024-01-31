@@ -122,18 +122,10 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 function Reportes({ title }) {
 
   const initialState = {
-    usuario: "",
-    contrasenia: "",
-    nombre: "",
-    apellidop: "",
-    apellidom: "",
-    escuelaprocedencia: "",
-    plantel: "",
-    otroplantel: "",
-    curp: "",
-    carrera: "",
-    
+    alumno:"5",
+    horas:"0"
   };
+
   const [datosTabla, setDatosTabla] = useState([]);
   useEffect(() => {
     const fetchData = async () => {
@@ -168,34 +160,42 @@ function Reportes({ title }) {
     }
   }
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const [files, setFiles] = useState([]);
-  const [previewUrl, setPreviewUrl] = useState('');
+
+  const [pdfFile, setPdfFile] = useState(null);
 
   const onDrop = (acceptedFiles) => {
-    const newFiles = acceptedFiles.map((file) => ({
-      name: file.name,
-      date: new Date().toLocaleString(),
-      preview: URL.createObjectURL(file),
-    }));
-
-    setFiles([...files, ...newFiles]);
+    const file = acceptedFiles[0];
+    setPdfFile(file);
   };
 
-  const handleDelete = (index) => {
-    const newFiles = [...files];
-    newFiles.splice(index, 1);
-    setFiles(newFiles);
-  };
 
-  const handleFileClick = (previewUrl) => {
-    // Abre la vista previa del archivo
-    window.open(previewUrl, '_blank');
-  };
+  const handleSend = async () => {
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append('JSON', JSON.stringify(formData));
+      formDataObj.append('pdf', pdfFile);
 
+      const response = await axios.post("http://127.0.0.1:5000/subirReporte", formDataObj);
+
+      if (response.status === 201) {
+        Swal.fire({
+          icon: "success",
+          title: "Archivo enviado",
+          text: "Tu archivo PDF ha sido enviado correctamente.",
+        });
+        window.location.reload()
+      }
+    } catch (error) {
+      console.error("Error al enviar el archivo:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el archivo",
+        text: "Hubo un problema al enviar el archivo.",
+      });
+    }
+  };
   const { getInputProps } = useDropzone({ onDrop });
 
   return (
@@ -241,8 +241,12 @@ function Reportes({ title }) {
 
         <UploadButton>
           <FontAwesomeIcon icon={faFileUpload} style={{ marginRight: '10px' }} />
-          Subir Archivos
+          Seleccionar Archivo
           <input type="file" {...getInputProps()} />
+        </UploadButton>
+        <UploadButton onClick={handleSend}>
+          <FontAwesomeIcon style={{ marginRight: '10px' }} />
+          Subir Archivo
         </UploadButton>
       </Container>
 
