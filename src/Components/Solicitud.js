@@ -154,7 +154,7 @@ function Solicitud({ title }) {
   const dataUser = JSON.parse(localStorage.getItem('dataUser'));
 
   const initialState = {
-    alumno: dataUser.id,
+    alumno: 5,
     horas: "", // Nuevo estado para las horas solicitadas
     fecha: new Date().toLocaleDateString(),
     pdf: ""
