@@ -5,15 +5,18 @@ import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
-import '../../Styles/responsive.css';
-
-
-//import 'jspdf-autotable';
 import { Helmet } from 'react-helmet';
+import axios from "axios";
+import '../../Styles/responsive.css';
 import { jsPDF } from 'jspdf';
+import { format } from 'date-fns';
+import esLocale from 'date-fns/locale/es';
+
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
+import { font } from '../Fuentes/Montserrat-Regular-normal'
+import { font2 } from '../Fuentes/Montserrat-Bold-normal';
 
 
 const TableContainer = styled.div`
@@ -90,97 +93,119 @@ const SendButton = styled(Button)`
 `;
 
 
-  function ServicioSocialUAEH({ title }) {
-    const [data, setData] = useState([
-      { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 2, nombre: 'Jesús Adolfo Márquez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '15/01/2023', validar: false },
-      { id: 3, nombre: 'Julián Trejo Melchor', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '10/02/2023', validar: true },
-      { id: 4, nombre: 'Ana María López', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 5, nombre: 'Miguel Ángel Ramírez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 6, nombre: 'Sofía Rodríguez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 7, nombre: 'Carlos Alberto Gómez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 8, nombre: 'Luisa Fernández', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 9, nombre: 'María José Díaz', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-      { id: 10, nombre: 'Pedro López Martínez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false }
-      // ... más datos
-    ]);
 
- //-------------------------------generar pdf---------------------------------------------------------
- const[datosQr,setDatosQr] = useState('')
+function ServicioSocial ({ title }) {
+  const [data, setData] = useState([
+    { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 2, nombre: 'Jesús Adolfo Márquez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '15/01/2023', validar: false },
+    { id: 3, nombre: 'Julián Trejo Melchor', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '10/02/2023', validar: true },
+    { id: 4, nombre: 'Ana María López', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 5, nombre: 'Miguel Ángel Ramírez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 6, nombre: 'Sofía Rodríguez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 7, nombre: 'Carlos Alberto Gómez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 8, nombre: 'Luisa Fernández', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 9, nombre: 'María José Díaz', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 10, nombre: 'Pedro López Martínez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false }
+    // ... más datos
+  ]);
+      
+  //-------------------------------generar pdf---------------------------------------------------------
+  const [datosQr, setDatosQr] = useState('');
+  const [datosFirma, setDatosFirma] = useState('');
+  
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
+      const data = await response.json();
+  
+      console.log(data);
+  
+      // Verifica si la respuesta contiene las propiedades 'qr_image_base64' y 'firma_image_base64'
+      if (data.qr_image_base64 && data.firma_base64) {
+        setDatosQr(data.qr_image_base64);
+        setDatosFirma(data.firma_base64);
+      } else {
+        console.error('La respuesta del API no tiene la estructura esperada:', data);
+      }
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    }
+  };
+  
+  useEffect(() => {
+      fetchData()
+    
+    }, []);
 
- const fetchData = async () => {
-     try {
-       const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
-       const data = await response.json();
 
-       console.log(data)
-       // Verifica si la respuesta contiene la propiedad 'solicitudes'
-       if (data.qr_image_base64) {
-         setDatosQr(data.qr_image_base64);
-       } else {
-         console.error('La respuesta del API no tiene la estructura esperada:', data);
-       }
-     } catch (error) {
-       console.error('Error al obtener datos:', error);
-     }
-   };
- 
- useEffect(() => {
-     fetchData()
+  
+  
+    const [modalData, setModalData] = useState({
+      numeroArchivo: '',
+      date:'',
+      nombreEstudiante: '',
+      numeroControl: '',
+      carrera: '',
+      instituto:'',
+      dependencia:'',
+      asignado_a:'',
+      periodo_inicio: '',
+      periodo_termino: '',
+      horarioInicio: '',
+      horarioFin:'',
+      direccionGeneral: '',
+      programa: '',
+      clave: '',
+      horas: '',
+      actividadesDesarrollar: [''],
+    });
+
    
-   }, []);
+    const handleChange = (field, value) => {
+      // Actualizar el campo de almacenamiento
+      setModalData((prevData) => ({ ...prevData, [field]: value }));
+      // Actualizar el campo de visualización (puedes aplicar el formato aquí si es necesario)
+     
+    };
+   
+    const handleActividadesChange = (index, value) => {
+      const newActividades = [...modalData.actividadesDesarrollar];
+      newActividades[index] = value;
+      setModalData({ ...modalData, actividadesDesarrollar: newActividades });
+    };
+   
+    const addActividad = () => {
+      setModalData({
+        ...modalData,
+        actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
+      });
+    };
+
+  // _____-------------------------------------FUNCION PARA CREAR PDF ******************************
+
+  const generatePDF = async () => {
+
+    const pdf = new jsPDF();
+
+  // Cargar Montserrat Bold
+  pdf.addFileToVFS('Montserrat-Bold-normal.ttf', font2);
+  pdf.addFont('Montserrat-Bold-normal.ttf', 'Montserrat-Bold', 'normal')
+
+// Cargar Montserrat Regular
+  pdf.addFileToVFS('Montserrat-Regular-normal.ttf', font);
+  pdf.addFont('Montserrat-Regular-normal.ttf', 'Montserrat-Regular', 'normal')
+
+    pdf.setFont('Montserrat-Bold');
+    pdf.setFontSize(11);
 
 
- 
- const [modalData, setModalData] = useState({
-   numeroArchivo: '',
-   fecha:'',
-   nombreEstudiante: '',
-   numeroControl: '',
-   carrera: '',
-   instituto:'',
-   dependencia:'',
-   asignado_a:'',
-   periodo: '',
-   horario: '',
-   direccionGeneral: '',
-   programa: '',
-   clave: '',
-   horas: '',
-   actividadesDesarrollar: [''],
- });
+    // Añadir la imagen de encabezado
+    pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
 
- const handleChange = (field, value) => {
-   setModalData({ ...modalData, [field]: value });
- };
+    const xPosition = 10;
+    let yPosition = 20;
 
- const handleActividadesChange = (index, value) => {
-   const newActividades = [...modalData.actividadesDesarrollar];
-   newActividades[index] = value;
-   setModalData({ ...modalData, actividadesDesarrollar: newActividades });
- };
-
- const addActividad = () => {
-   setModalData({
-     ...modalData,
-     actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
-   });
- };
-
- // _____-------------------------------------FUNCION PARA CREAR PDF ******************************
- const generatePDF = async () => {
-
-   const pdf = new jsPDF();
-   pdf.setFont('Times-Roman', 'bold');
-   pdf.setFontSize(12);
-
-
-   // Añadir la imagen de encabezado
-   pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
-
-   const xPosition = 10;
-   let yPosition = 20;
-
+   
    // Construir el texto con el formato deseado
    const textoPDF = `
 
@@ -188,18 +213,19 @@ const SendButton = styled(Button)`
                                                     Carta de Aceptación de Servicio Social
 
 
-                                                                                                                                                       ${modalData.numeroArchivo}`;
+                                                                                                                                                   ${modalData.numeroArchivo}`;
     // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
   // Agregar las líneas al PDF
   pdf.text(linest, xPosition, yPosition);
   
   
-  pdf.setFont('Times-Roman', 'normal');
-  pdf.setFontSize(12);
+  pdf.setFont('Montserrat-Regular');
+  pdf.setFontSize(11);
   yPosition += 30;                                                                                                                                                 
   const fecha =`                                                                                                                                                     
-                                                                                             Pachuca de Soto,Hgo., a ${modalData.fecha}`;
+                                                                                                  Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
+
 
 
  
@@ -210,14 +236,15 @@ const SendButton = styled(Button)`
    pdf.text(linese, xPosition, yPosition);   
   
   
-   pdf.setFont('Times-Roman', 'bold');
-   pdf.setFontSize(12);
+   pdf.setFont('Montserrat-Bold');
+   pdf.setFontSize(11);
    yPosition += 10;                                                                                          
  const encabezado=`                                                                                            
  Dr. Jesús Ibarra Zamudio
  Director de Servicio Social, Practicas Profesionales y
  Vinculción Laboral de la Universidad Autónoma del 
  Estado de Hidalgo
+ 
  P r e s e n t e`;
 
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
@@ -226,11 +253,11 @@ const SendButton = styled(Button)`
   pdf.text(lines, xPosition, yPosition);
 
 
-  pdf.setFont('Times-Roman', 'normal');
-  pdf.setFontSize(12);
+  pdf.setFont('Montserrat-Regular');
+  pdf.setFontSize(11);
   yPosition += 30;
  const cuerpo =`
- Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha sido aceptado/a, para realizar su Servicio Social en la ${modalData.dependencia}, siendo asignado en la ${modalData.asignado_a} cubriendo el periodo del ${modalData.periodo}, con un horario de ${modalData.horario} hrs., bajo el Proyecto: “${modalData.programa}” de la ${modalData.direccionGeneral}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha sido aceptado/a, para realizar su Servicio Social en la ${modalData.dependencia}, siendo asignado/a en la ${modalData.asignado_a} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${modalData.programa}” de la ${modalData.direccionGeneral}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
  `;
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -247,88 +274,137 @@ const SendButton = styled(Button)`
    // Agregar las líneas al PDF
    pdf.text(actividadLines, xPosition, yPosition);
  });
-
- const saludo =` Sin otro particular por el momento, le reitero mi más distinguida consideración y respeto.`;
- yPosition += 20;
- // Dividir el texto del pie de página en líneas
+  const saludo =` Sin otro particular por el momento, le envío un cordial saludo.`;
+  yPosition += 30;
+  // Dividir el texto del pie de página en líneas
 const saludolines = pdf.splitTextToSize(saludo, pdf.internal.pageSize.width - 2 * xPosition);
-// Agregar las líneas al PDF
+ // Agregar las líneas al PDF
 pdf.text(saludolines, xPosition, yPosition);
 
-pdf.setFont('Times-Roman', 'bold');
-   pdf.setFontSize(12);
- // Agregar el resto del texto del pie de página
- const piePagina = `
+pdf.setFont('Montserrat-Bold');
+    pdf.setFontSize(11);
+  // Agregar el resto del texto del pie de página
+  const att = `
+ 
+  A t e n t a m e n t e `;
+  yPosition += 5;
+  // Dividir el texto del pie de página en líneas
+const attLines = pdf.splitTextToSize(att, pdf.internal.pageSize.width - 2 * xPosition);
+ // Agregar las líneas al PDF
+pdf.text(attLines, xPosition, yPosition);
 
- A t e n t a m e n t e
-
-   
- M.G.P. Odette Assad Díaz
- Directora de Profesionalización
- de la Oficialía Mayor `;
- yPosition += 5;
- // Dividir el texto del pie de página en líneas
+const piePagina =`
+M.G.P. Odette Assad Díaz
+Directora de Profesionalización
+de la Oficialía Mayor `;
+yPosition += 40;
+// Dividir el texto del pie de página en líneas
 const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.width - 2 * xPosition);
 // Agregar las líneas al PDF
 pdf.text(piePaginaLines, xPosition, yPosition);
 
-pdf.addImage(datosQr, 'PNG', 140, 200, 50, 50);
+pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
+pdf.addImage(datosFirma, 'PNG', 10, 215, 50, 20);
 
-pdf.setFont('Times-Roman', 'normal');
-   pdf.setFontSize(10);
+pdf.setFont('Montserrat-Regular');
+    pdf.setFontSize(9);
 const direccion=`
-                                                                                                               Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
-                                                                                                                                                  Col. Centro, Pachuca, Hgo., C.P. 42000
-                                                                                                                                                   Tel.: 01(771)7176000 ext. 2095 y 6836
-                                                                                                                                                                               www.hidalgo.gob.mx
-                                                                                                                                        `;
-                                                                                                                                        
- 
-   yPosition += 60;
-    // Dividir el texto del pie de página en líneas
- const direccionLines = pdf.splitTextToSize(direccion, pdf.internal.pageSize.width - 2 * xPosition);
-   // Agregar las líneas al PDF
- pdf.text(direccionLines, xPosition, yPosition);
- 
+                                                                                                                     Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
+                                                                                                                                                           Col. Centro, Pachuca, Hgo., C.P. 42000
+                                                                                                                                                                Tel.: 01(771)7176000 ext. 2095 y 6836
+                                                                                                                                                                                           www.hidalgo.gob.mx
+                                                                                                                                         `;
+                                                                                                                                         
+  
+    yPosition += 10;
+     // Dividir el texto del pie de página en líneas
+  const direccionLines = pdf.splitTextToSize(direccion, pdf.internal.pageSize.width - 2 * xPosition);
+    // Agregar las líneas al PDF
+  pdf.text(direccionLines, xPosition, yPosition);
+  
 
- // Agregar un salto de línea antes de la cadena de firma electrónica
- yPosition += 25;
+  // Agregar un salto de línea antes de la cadena de firma electrónica
+  yPosition += 25;
 
- // Ajustar el tamaño de letra solo para la cadena de firma electrónica
- pdf.setFont('Times-Roman', 'normal');
- pdf.setFontSize(6);
+  // Ajustar el tamaño de letra solo para la cadena de firma electrónica
+  pdf.setFont('Montserrat-Regular');
+  pdf.setFontSize(6);
 
- const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
+  const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
 
- // Agregar la cadena de firma electrónica al PDF
- const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
- pdf.text(cadenaLines, xPosition, yPosition);
+  // Agregar la cadena de firma electrónica al PDF
+  const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
+  pdf.text(cadenaLines, xPosition, yPosition);
+  
+    // Obtener el contenido del PDF como ArrayBuffer
+  const pdfArrayBuffer = pdf.output('arraybuffer');
+  // Crear un Blob a partir del ArrayBuffer
+  const pdfBlob = new Blob([pdfArrayBuffer], { type: 'application/pdf' });
+  const pdfFile = new File([pdfBlob], 'pdfgenerado.pdf', {
+    lastModified: new Date().getTime(), // Timestamp de la última modificación
+    type: 'application/pdf',
+  });
+  
+  return pdfFile;
+  
+  };
+  const sendRequest = async() => {
+    // Crear FormData y agregar el PDF
+    const pdfFile = await generatePDF();
+    console.log(pdfFile)
+    const formData = new FormData();
+    formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
+  
+    // Agregar el JSON al FormData
+    const jsonData = {"solicitud":"2","estatus":"Aceptado","validador":"7"}; 
+    formData.append('JSON', JSON.stringify(jsonData));
+  
+    console.log('FormData antes de la solicitud:', formData);
+  
+    // Realizar la solicitud Axios
+    axios
+    .patch(`http://127.0.0.1:5000/AceptarRechazarSolicitud`, formData)
+    .then((response) => {
+      
+      if (response) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Carta enviada',
+          text: 'Tu carta de presentación ha sido enviada correctamente.',
+        });
+      }
+      
+    })
+    .catch((error) => {
+      // Maneja errores de solicitud
+      console.error("Error al enviar el formulario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el formulario",
+        text: "Hubo un problema al enviar el formulario.",
+      });
+    });
+};
+  
+  
+  //************************************************************************************************************************************************ *
 
-   // Guardar o mostrar el PDF (ajusta según tus necesidades)
-   pdf.save('formulario.pdf');
- };
+  const [sendButtonClicked, setSendButtonClicked] = useState(false);
 
-
- //************************************************************************************************************************************************ */
-  const [sendButtonClicked, setSendButtonClicked] = useState(false);
-
-
-  const handleSend = () => {
-    // Lógica para enviar la solicitud con los datos del formulario
-
-    // Muestra la alerta de éxito
-    Swal.fire({
-      icon: 'success',
-      title: 'Solicitud enviada',
-      text: 'Tu solicitud ha sido enviada correctamente.',
-    });
-
-    // Cierra la ventana emergente y restablece el estado del formulario
+  const handleSend = () => {
+    // Lógica para enviar la solicitud con los datos del formulario
+    // Muestra la alerta de éxito
+    Swal.fire({
+      icon: 'success',
+      title: 'Solicitud enviada',
+      text: 'Tu solicitud ha sido enviada correctamente.',
+    });
+    // Cierra la ventana emergente y restablece el estado del formulario
     handleClose();
     setSendButtonClicked(true);
     setModalData({
       numeroArchivo: '',
-      fecha:'',
+      date:'',
       instituto:'',
       nombreEstudiante: '',
       numeroControl: '',
@@ -364,7 +440,7 @@ const direccion=`
     setShowModal(false);
     setModalData({
       numeroArchivo: '',
-      fecha:'',
+      date:'',
       instituto:'',
       nombreEstudiante: '',
       numeroControl: '',
@@ -389,6 +465,8 @@ const direccion=`
     // Implementa la lógica de validación del formulario
     return true; // Devuelve true si el formulario es válido, o false si no lo es
   };
+
+
 
 
   return (
@@ -468,14 +546,16 @@ const direccion=`
           />
         </Form.Group>
 
-        <Form.Group controlId="fecha" className="mb-3">
-          <Form.Label>Fecha</Form.Label>
+        <Form.Group controlId="date" className="mb-3">
+          <Form.Label>Fecha de la carta</Form.Label>
           <Form.Control
-            type="text"
-            value={modalData.fecha}
-            onChange={(e) => handleChange('fecha', e.target.value)}
+            type="date"
+            value={modalData.date}
+            onChange={(e) => handleChange('date', e.target.value)}
           />
         </Form.Group>
+
+
 
         <Form.Group controlId="nombreEstudiante" className="mb-3">
           <Form.Label>Nombre del Estudiante</Form.Label>
@@ -531,23 +611,42 @@ const direccion=`
           />
         </Form.Group>
 
-        <Form.Group controlId="periodo" className="mb-3">
-          <Form.Label>Periodo</Form.Label>
+        <Form.Group controlId="periodo_inicio" className="mb-3">
+          <Form.Label>Fecha de Inicio</Form.Label>
           <Form.Control
-            type="text"
-            value={modalData.periodo}
-            onChange={(e) => handleChange('periodo', e.target.value)}
+            type="date"
+            value={modalData.periodo_inicio}
+            onChange={(e) => handleChange('periodo_inicio', e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="periodo_termino" className="mb-3">
+          <Form.Label>Fecha de Inicio</Form.Label>
+          <Form.Control
+            type="date"
+            value={modalData.periodo_termino}
+            onChange={(e) => handleChange('periodo_termino', e.target.value)}
           />
         </Form.Group>
 
         <Form.Group controlId="horario" className="mb-3">
           <Form.Label>Horario</Form.Label>
+          <div style={{ display: "flex" }}>
           <Form.Control
-            type="text"
-            value={modalData.horario}
-            onChange={(e) => handleChange('horario', e.target.value)}
+          type="time"
+          value={modalData.horarioInicio}
+          onChange={(e) => handleChange('horarioInicio', e.target.value)}
+          style={{ marginRight: "10px" }}
           />
-        </Form.Group>
+         <span style={{ margin: "auto" }}>a</span>
+        <Form.Control
+        type="time"
+        value={modalData.horarioFin}
+        onChange={(e) => handleChange('horarioFin', e.target.value)}
+        style={{ marginLeft: "10px" }}
+          />
+        </div>
+      </Form.Group>
 
         <Form.Group controlId="direccionGeneral" className="mb-3">
           <Form.Label>Dirección General</Form.Label>
@@ -571,7 +670,7 @@ const direccion=`
         <Form.Group controlId="horas" className="mb-3">
           <Form.Label>Horas</Form.Label>
           <Form.Control
-            type="text"
+            type="number"
             value={modalData.horas}
             onChange={(e) => handleChange('horas', e.target.value)}
           />
@@ -595,16 +694,14 @@ const direccion=`
           ))}
         </Form.Group>
       </Form>
+     
 
-      <Button variant="primary" onClick={generatePDF}>
-        Generar PDF
-      </Button>
-
-          </Modal.Body>
+           </Modal.Body>
           <Modal.Footer>
-            <SendButton variant="primary" onClick={handleSend} disabled={!validateForm()}>
-              Enviar
-            </SendButton>
+            <SendButton variant="primary" onClick={sendRequest}>
+              Enviar
+             </SendButton>
+
             <CloseButton variant="primary" onClick={handleClose}>
               Cerrar
             </CloseButton>
@@ -612,7 +709,6 @@ const direccion=`
         </ModalContent>
       </CenteredModal>
     </div>
-  );
+  );
 }
-
-export default ServicioSocialUAEH;
+export default ServicioSocial;

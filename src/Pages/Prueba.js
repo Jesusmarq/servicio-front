@@ -133,7 +133,7 @@ function Preregistro() {
         <h2 className="encabezado">Registro de Usuario</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="usuario">Usuario:</label>
+            <label htmlFor="usuario">Correo:</label>
             <input className="cuadros"
               type="text"
               name="usuario"
@@ -208,6 +208,7 @@ function Preregistro() {
                 <option value="">Selecciona un plantel</option>
                 <option value="1">Plantel 1</option>
                 <option value="2">Plantel 2</option>
+               
                 {/* Agrega más opciones según tus necesidades */}
               </select>
             </div>
@@ -215,16 +216,22 @@ function Preregistro() {
 
           {formData.escuelaprocedencia === "Otras" && (
             <div className="form-group">
-              <label htmlFor="otroplantel">Nombre de la Escuela:</label>
-              <input className="cuadros"
-                type="text"
+              <label htmlFor="otroplantel">Escuela:</label>
+              <select
+               className="cuadros"
                 name="otroplantel"
                 value={formData.otroplantel}
                 onChange={handleChange}
                 required
-              />
+              >
+              <option value="">Selecciona un plantel</option>
+                <option value="1">Plantel 1</option>
+                <option value="2">Plantel 2</option>
+                {/* Agrega más opciones según tus necesidades */}
+              </select>
             </div>
           )}
+
           <div className="form-group">
             <label htmlFor="curp">CURP:</label>
             <input className="cuadros"
