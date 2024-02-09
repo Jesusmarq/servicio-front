@@ -378,7 +378,7 @@ function Solicitud({ title }) {
             <p>Por favor, adjunta tu carta de presentación y envíala.</p>
             <Form >
             <Form.Group controlId="selectOption" className="mb-3">
-                <Form.Label>Selecciona una opción</Form.Label>
+                <Form.Label>Selecciona una dependencia</Form.Label>
                 <Form.Control
                   as="select"
                   value={formData.selectedOption}
