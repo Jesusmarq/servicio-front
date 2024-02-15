@@ -119,17 +119,44 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   return blob;
 }
 
-function Estatus({ title }) {
-  const [datosTabla, setDatosTabla] = useState([]);
+  function Estatus({ title }) {
+    const [datosTabla, setDatosTabla] = useState([]);
 
-  const handleSolicitarLiberacion = () => {
-    Swal.fire({
-      icon: "success",
-      title: "Liberación Solicitada",
-      text: "La solicitud se realizó de manera correcta.",
-    });
-
+  const handleSolicitarLiberacion = async () => {
+    try {
+      // Hacer la primera petición para obtener el id
+      const response = await fetch('http://127.0.0.1:5000/idSolicitud?alumno=5');
+      
+      if (!response.ok) {
+        throw new Error('Error al obtener el ID de solicitud');
+      }
   
+      const { id } = await response.json();
+  
+      // Hacer la segunda petición con el id obtenido
+      const secondResponse = await fetch(`http://127.0.0.1:5000/solicitarLiberacion?solicitud=${id}`, {
+        method: 'PATCH',
+      });
+  
+      if (!secondResponse.ok) {
+        throw new Error('No tienes una solicitud aplicable para liberación');
+      }
+  
+      // Mostrar el mensaje de éxito
+      Swal.fire({
+        icon: 'success',
+        title: 'Liberación Solicitada',
+        text: 'La solicitud se realizó de manera correcta.',
+      });
+    } catch (error) {
+      // Manejar errores
+      console.error(error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No tienes una solicitud aplicable para liberación',
+      });
+    }
   };
 
   function handleDownloadPDF(pdfBase64, fileName) {
