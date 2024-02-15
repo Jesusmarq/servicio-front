@@ -110,6 +110,7 @@ function ServicioSocial ({ title }) {
   //-------------------------------generar pdf---------------------------------------------------------
   const [datosQr, setDatosQr] = useState('');
   const [datosFirma, setDatosFirma] = useState('');
+  const [datosFirmaE, setDatosFirmaE] =useState('');
   
   const fetchData = async () => {
     try {
@@ -122,6 +123,8 @@ function ServicioSocial ({ title }) {
       if (data.qr_image_base64 && data.firma_base64) {
         setDatosQr(data.qr_image_base64);
         setDatosFirma(data.firma_base64);
+        setDatosFirmaE(data.firma);
+        
       } else {
         console.error('La respuesta del API no tiene la estructura esperada:', data);
       }
@@ -321,7 +324,7 @@ const direccion=`
   pdf.setFont('Montserrat-Regular');
   pdf.setFontSize(6);
 
-  const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
+  const cadena = `${datosFirmaE}`;
 
   // Agregar la cadena de firma electrónica al PDF
   const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
@@ -587,7 +590,7 @@ const direccion=`
         </Form.Group>
 
         <Form.Group controlId="periodo_termino" className="mb-3">
-          <Form.Label>Fecha de Inicio</Form.Label>
+          <Form.Label>Fecha de Termino</Form.Label>
           <Form.Control
             type="date"
             value={modalData.periodo_termino}

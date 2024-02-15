@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import LogoImage from '../Img/Logo_escudo_blanco.png';
-import { IoMdExit } from 'react-icons/io';
-import { MdError } from 'react-icons/md';
-import ReactDOM from 'react-dom';  // Agrega esta línea
-import ValidarSolicitud from '../Components/Val';
-import ADMIsol from '../Components/AdmiSol';
-import Liberar from '../Components/Liberar';
-import AgregarVal from '../Components/AgregarVeri';
-import Catalogo2 from '../Components/CatalogoNuevo';
-import '../Styles/responsive.css';
+import React, { useState } from "react";
+import styled from "styled-components";
+import LogoImage from "../Img/Logo_escudo_blanco.png";
+import { IoMdExit } from "react-icons/io";
+import { MdError } from "react-icons/md";
+import ReactDOM from "react-dom"; // Agrega esta línea
+import ValidarSolicitud from "../Components/Val";
+import ADMIsol from "../Components/AdmiSol";
+import Liberar from "../Components/Liberar";
+import AgregarVal from "../Components/AgregarVeri";
+import Catalogo2 from "../Components/CatalogoNuevo";
+import "../Styles/responsive.css";
 
-const BrighterColor = '#9E2343';
-const LineColor = '#BC955B';
-const SelectedColor = '#9E2343';
-const SidebarBackgroundColor = 'white';
+const BrighterColor = "#9E2343";
+const LineColor = "#BC955B";
+const SelectedColor = "#9E2343";
+const SidebarBackgroundColor = "white";
 
 const SidebarWrapper = styled.div`
-  width: ${({ expanded }) => (expanded ? '350px' : '100px')};
+  width: ${({ expanded }) => (expanded ? "350px" : "100px")};
   height: 100vh;
   background-color: ${SidebarBackgroundColor};
   position: fixed;
@@ -62,7 +62,8 @@ const SidebarItem = styled.div`
   padding: 20px;
   color: ${({ isSelected }) => (isSelected ? SelectedColor : BrighterColor)};
   text-align: left;
-  background-color: ${({ isSelected }) => (isSelected ? 'transparent' : SidebarBackgroundColor)};
+  background-color: ${({ isSelected }) =>
+    isSelected ? "transparent" : SidebarBackgroundColor};
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease, padding 0.3s ease;
 
@@ -102,17 +103,16 @@ const LineDivider = styled.div`
 `;
 
 const DashboardWrapper = styled.div`
-  margin-left: ${({ expanded }) => (expanded ? '350px' : '100px')};
+  margin-left: ${({ expanded }) => (expanded ? "350px" : "100px")};
   transition: margin-left 0.3s ease;
 `;
-
 
 const Content = styled.div`
   padding: 20px;
 `;
 
 const LogoutButton = styled.button`
-  background-color: #9E2343;
+  background-color: #9e2343;
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -132,7 +132,7 @@ const AlertContainer = styled.div`
   left: 10%;
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: #BC955B;
+  background-color: #bc955b;
   color: white;
   border-radius: 10px;
   display: flex;
@@ -148,13 +148,12 @@ const AlertMessage = styled.div`
 `;
 
 const ADMI = ({ title }) => {
-  const [selectedItem, setSelectedItem] = useState('Section1');
+  const [selectedItem, setSelectedItem] = useState("Section1");
   const [expanded, setExpanded] = useState(false);
 
   const handleMenuItemClick = (item) => {
     setSelectedItem(item);
   };
-
 
   const handleCerrarSesion = () => {
     // Lógica para cerrar sesión
@@ -163,7 +162,7 @@ const ADMI = ({ title }) => {
   };
 
   const showAlert = () => {
-    const alertElement = document.createElement('div');
+    const alertElement = document.createElement("div");
 
     const removeAlert = () => {
       document.body.removeChild(alertElement);
@@ -188,70 +187,100 @@ const ADMI = ({ title }) => {
 
   return (
     <div>
-      <SidebarWrapper expanded={expanded} onMouseEnter={() => setExpanded(true)} onMouseLeave={() => setExpanded(false)}>
+      <SidebarWrapper
+        expanded={expanded}
+        onMouseEnter={() => setExpanded(true)}
+        onMouseLeave={() => setExpanded(false)}
+      >
         <SidebarHeader>
           <SidebarImage src={LogoImage} alt="Logo" />
         </SidebarHeader>
         <LineSeparator />
         <LineDivider />
-        <SidebarItem isSelected={selectedItem === 'Section1'} onClick={() => handleMenuItemClick('Section1')}>
+        <SidebarItem
+          isSelected={selectedItem === "Section1"}
+          onClick={() => handleMenuItemClick("Section1")}
+        >
           <IcoContainer>
-            <IcoImage src={require('../Img/Solicitante.png')} alt='ImageSolicitante' />
+            <IcoImage
+              src={require("../Img/Solicitante.png")}
+              alt="ImageSolicitante"
+            />
             Solicitud
           </IcoContainer>
           <LineDivider />
         </SidebarItem>
 
-        <SidebarItem isSelected={selectedItem === 'Section2'} onClick={() => handleMenuItemClick('Section2')}>
+        <SidebarItem
+          isSelected={selectedItem === "Section2"}
+          onClick={() => handleMenuItemClick("Section2")}
+        >
           <IcoContainer>
-            <IcoImage src={require('../Img/Documentacion.png')} alt='Reportes' />
+            <IcoImage
+              src={require("../Img/Documentacion.png")}
+              alt="Reportes"
+            />
             Reportes
           </IcoContainer>
           <LineDivider />
         </SidebarItem>
 
-        <SidebarItem isSelected={selectedItem === 'Section3'} onClick={() => handleMenuItemClick('Section3')}>
+        <SidebarItem
+          isSelected={selectedItem === "Section3"}
+          onClick={() => handleMenuItemClick("Section3")}
+        >
           <IcoContainer>
-            <IcoImage src={require('../Img/Liberacion.png')} alt='ImageLiberacion' />
+            <IcoImage
+              src={require("../Img/Liberacion.png")}
+              alt="ImageLiberacion"
+            />
             Liberación
           </IcoContainer>
           <LineDivider />
         </SidebarItem>
 
-        <SidebarItem isSelected={selectedItem === 'Section4'} onClick={() => handleMenuItemClick('Section4')}>
+        <SidebarItem
+          isSelected={selectedItem === "Section4"}
+          onClick={() => handleMenuItemClick("Section4")}
+        >
           <IcoContainer>
-            <IcoImage src={require('../Img/Aval.png')} alt='ImageVerificador' />
-            Agregar Verificador 
+            <IcoImage src={require("../Img/Aval.png")} alt="ImageVerificador" />
+            Agregar Verificador
           </IcoContainer>
           <LineDivider />
         </SidebarItem>
 
-        <SidebarItem isSelected={selectedItem === 'Section5'} onClick={() => handleMenuItemClick('Section5')}>
+        <SidebarItem
+          isSelected={selectedItem === "Section5"}
+          onClick={() => handleMenuItemClick("Section5")}
+        >
           <IcoContainer>
-            <IcoImage src={require('../Img/catalogo.png')} alt='ImageCatalogo' />
-            Administrar Catalogos 
+            <IcoImage
+              src={require("../Img/catalogo.png")}
+              alt="ImageCatalogo"
+            />
+            Administrar Catalogos
           </IcoContainer>
           <LineDivider />
         </SidebarItem>
 
         <LogoutButton onClick={handleCerrarSesion}>
-        <IoMdExit style={{ marginRight: '10px' }} />
-        Cerrar Sesión
+          <IoMdExit style={{ marginRight: "10px" }} />
+          Cerrar Sesión
         </LogoutButton>
       </SidebarWrapper>
 
       <DashboardWrapper expanded={expanded}>
-      
         <Content>
           {/* CONTENIDO FORMULARIOS SIDEBAR */}
-          {selectedItem === 'Section1' && <ADMIsol /> }
-          {selectedItem === 'Section2' && <ValidarSolicitud />}
-          {selectedItem === 'Section3' && <Liberar />}
-          {selectedItem === 'Section4' && <AgregarVal/>}
-          {selectedItem === 'Section5' && <Catalogo2 />}
-          {selectedItem === 'Section6' && <p></p>}
-          {selectedItem === 'Section7' && <p></p>}
-          {selectedItem === 'Section8' && <p></p>}
+          {selectedItem === "Section1" && <ADMIsol />}
+          {selectedItem === "Section2" && <ValidarSolicitud />}
+          {selectedItem === "Section3" && <Liberar />}
+          {selectedItem === "Section4" && <AgregarVal />}
+          {selectedItem === "Section5" && <Catalogo2 />}
+          {selectedItem === "Section6" && <p></p>}
+          {selectedItem === "Section7" && <p></p>}
+          {selectedItem === "Section8" && <p></p>}
         </Content>
       </DashboardWrapper>
     </div>

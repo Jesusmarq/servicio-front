@@ -111,7 +111,7 @@ const AgregarVal = ({ title }) => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      // Envia una solicitud POST a la URL 'http://127.0.0.1:5000/registroValidador'
+      // Envia una solicitud POST a la URL 
       const response = await fetch('http://127.0.0.1:5000/registroValidador', {
         method: 'POST', // Método de la solicitud HTTP
         headers: {

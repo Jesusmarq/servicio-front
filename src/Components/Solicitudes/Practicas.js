@@ -9,6 +9,8 @@ import { Helmet } from 'react-helmet';
 import axios from "axios";
 import '../../Styles/responsive.css';
 import { jsPDF } from 'jspdf';
+import { format } from 'date-fns';
+import esLocale from 'date-fns/locale/es';
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
@@ -92,7 +94,7 @@ const SendButton = styled(Button)`
 
 function ServicioSocial ({ title }) {
   const [data, setData] = useState([
-    { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
+    { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'OTRAS', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
     { id: 2, nombre: 'Jesús Adolfo Márquez', escuela:'OTRAS', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '15/01/2023', validar: false },
     { id: 3, nombre: 'Julián Trejo Melchor', escuela:'OTRAS', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '10/02/2023', validar: true },
     { id: 4, nombre: 'Ana María López', escuela:'OTRAS', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
@@ -108,6 +110,7 @@ function ServicioSocial ({ title }) {
   //-------------------------------generar pdf---------------------------------------------------------
   const [datosQr, setDatosQr] = useState('');
   const [datosFirma, setDatosFirma] = useState('');
+  const [datosFirmaE, setDatosFirmaE] =useState('');
   
   const fetchData = async () => {
     try {
@@ -120,6 +123,7 @@ function ServicioSocial ({ title }) {
       if (data.qr_image_base64 && data.firma_base64) {
         setDatosQr(data.qr_image_base64);
         setDatosFirma(data.firma_base64);
+        setDatosFirmaE(data.firma);  
       } else {
         console.error('La respuesta del API no tiene la estructura esperada:', data);
       }
@@ -137,14 +141,16 @@ function ServicioSocial ({ title }) {
   
   const [modalData, setModalData] = useState({
     numeroArchivo: '',
-    fecha:'',
+    date:'',
     dirigidaA: '',
     cargo:'',
     nombreEstudiante: '',
     numeroControl: '',
     carrera: '',
-    periodo: '',
-    horario: '',
+    periodo_inicio: '',
+    periodo_termino: '',
+    horarioInicio: '',
+    horarioFin:'',
     direccionGeneral: '',
     programa: '',
     clave: '',
@@ -153,21 +159,25 @@ function ServicioSocial ({ title }) {
   });
 
   const handleChange = (field, value) => {
-    setModalData({ ...modalData, [field]: value });
+    // Actualizar el campo de almacenamiento
+    setModalData((prevData) => ({ ...prevData, [field]: value }));
+    // Actualizar el campo de visualización (puedes aplicar el formato aquí si es necesario)
+   
   };
-
+ 
   const handleActividadesChange = (index, value) => {
     const newActividades = [...modalData.actividadesDesarrollar];
     newActividades[index] = value;
     setModalData({ ...modalData, actividadesDesarrollar: newActividades });
   };
-
+ 
   const addActividad = () => {
     setModalData({
       ...modalData,
       actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
     });
   };
+
 
   // _____-------------------------------------FUNCION PARA CREAR PDF ******************************
   const generatePDF = async () => {
@@ -210,7 +220,7 @@ pdf.setFont('Montserrat-Regular');
 pdf.setFontSize(11);
 yPosition += 30;                                                                                                                                                 
 const fecha =`                                                                                                                                                     
-                                                                                           Pachuca de Soto,Hgo., a ${modalData.fecha}`;
+                                                                                           Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
 
 
 
@@ -239,7 +249,7 @@ const fecha =`
    pdf.setFontSize(11);
    yPosition += 20;
   const cuerpo =`
-  Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de control ${modalData.numeroControl}, alumno/a de la Licenciatura en ${modalData.carrera}, ha sido aceptado/a para realizar sus Prácticas Profesionales en la Oficialia Mayor, cubriendo el periodo del ${modalData.periodo}, de lunes a viernes en un horario de ${modalData.horario} hrs.,siendo asignado/a en la ${modalData.direccionGeneral}, bajo el Programa: “${modalData.programa}” clave:${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+  Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de control ${modalData.numeroControl}, alumno/a de la Licenciatura en ${modalData.carrera}, ha sido aceptado/a para realizar sus Prácticas Profesionales en la Oficialia Mayor, cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al  ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, de lunes a viernes en un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs.,siendo asignado/a en la ${modalData.direccionGeneral}, bajo el Programa: “${modalData.programa}” clave:${modalData.clave}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
   `;
    // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
    const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -287,7 +297,7 @@ const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.widt
 pdf.text(piePaginaLines, xPosition, yPosition);
 
 pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
-pdf.addImage(datosFirma, 'PNG', 15,215, 50, 20);
+pdf.addImage(datosFirma, 'PNG', 10,215, 50, 20);
 
 pdf.setFont('Montserrat-Regular');
     pdf.setFontSize(9);
@@ -313,7 +323,7 @@ const direccion=`
   pdf.setFont('Montserrat-Regular');
   pdf.setFontSize(6);
 
-  const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
+  const cadena = `${datosFirmaE}`;
 
   // Agregar la cadena de firma electrónica al PDF
   const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
@@ -516,14 +526,14 @@ const direccion=`
       />
     </Form.Group>
 
-    <Form.Group controlId="fecha" className="mb-3">
-      <Form.Label>Fecha</Form.Label>
-      <Form.Control
-        type="text"
-        value={modalData.fecha}
-        onChange={(e) => handleChange('fecha', e.target.value)}
-      />
-    </Form.Group>
+    <Form.Group controlId="date" className="mb-3">
+          <Form.Label>Fecha de la carta</Form.Label>
+          <Form.Control
+            type="date"
+            value={modalData.date}
+            onChange={(e) => handleChange('date', e.target.value)}
+          />
+        </Form.Group>
 
     <Form.Group controlId="dirigidaA" className="mb-3">
       <Form.Label>A quien va dirigida la carta</Form.Label>
@@ -569,23 +579,42 @@ const direccion=`
       />
     </Form.Group>
 
-    <Form.Group controlId="periodo" className="mb-3">
-      <Form.Label>Periodo</Form.Label>
-      <Form.Control
-        type="text"
-        value={modalData.periodo}
-        onChange={(e) => handleChange('periodo', e.target.value)}
-      />
-    </Form.Group>
+    <Form.Group controlId="periodo_inicio" className="mb-3">
+          <Form.Label>Fecha de Inicio</Form.Label>
+          <Form.Control
+            type="date"
+            value={modalData.periodo_inicio}
+            onChange={(e) => handleChange('periodo_inicio', e.target.value)}
+          />
+        </Form.Group>
 
-    <Form.Group controlId="horario" className="mb-3">
-      <Form.Label>Horario</Form.Label>
-      <Form.Control
-        type="text"
-        value={modalData.horario}
-        onChange={(e) => handleChange('horario', e.target.value)}
-      />
-    </Form.Group>
+        <Form.Group controlId="periodo_termino" className="mb-3">
+          <Form.Label>Fecha de Termino</Form.Label>
+          <Form.Control
+            type="date"
+            value={modalData.periodo_termino}
+            onChange={(e) => handleChange('periodo_termino', e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="horario" className="mb-3">
+          <Form.Label>Horario</Form.Label>
+          <div style={{ display: "flex" }}>
+          <Form.Control
+          type="time"
+          value={modalData.horarioInicio}
+          onChange={(e) => handleChange('horarioInicio', e.target.value)}
+          style={{ marginRight: "10px" }}
+          />
+         <span style={{ margin: "auto" }}>a</span>
+        <Form.Control
+        type="time"
+        value={modalData.horarioFin}
+        onChange={(e) => handleChange('horarioFin', e.target.value)}
+        style={{ marginLeft: "10px" }}
+          />
+        </div>
+      </Form.Group>
 
     <Form.Group controlId="direccionGeneral" className="mb-3">
       <Form.Label>Dirección General</Form.Label>
@@ -617,7 +646,7 @@ const direccion=`
     <Form.Group controlId="horas" className="mb-3">
       <Form.Label>Horas</Form.Label>
       <Form.Control
-        type="text"
+        type="number"
         value={modalData.horas}
         onChange={(e) => handleChange('horas', e.target.value)}
       />
@@ -641,16 +670,13 @@ const direccion=`
       ))}
     </Form.Group>
   </Form>
-      <Button variant="primary" onClick={sendRequest}>
-      
-        Generar PDF
-      </Button>
+     
 
            </Modal.Body>
           <Modal.Footer>
-            <SendButton variant="primary" onClick={handleSend} disabled={!validateForm()}>
-              Enviar
-            </SendButton>
+          <SendButton variant="primary" onClick={sendRequest}>
+        Enviar
+      </SendButton>
             <CloseButton variant="primary" onClick={handleClose}>
               Cerrar
             </CloseButton>
