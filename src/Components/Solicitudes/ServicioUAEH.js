@@ -95,19 +95,7 @@ const SendButton = styled(Button)`
 
 
 function ServicioSocial ({ title }) {
-  const [data, setData] = useState([
-    { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 2, nombre: 'Jesús Adolfo Márquez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '15/01/2023', validar: false },
-    { id: 3, nombre: 'Julián Trejo Melchor', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '10/02/2023', validar: true },
-    { id: 4, nombre: 'Ana María López', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 5, nombre: 'Miguel Ángel Ramírez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 6, nombre: 'Sofía Rodríguez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 7, nombre: 'Carlos Alberto Gómez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 8, nombre: 'Luisa Fernández', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 9, nombre: 'María José Díaz', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 10, nombre: 'Pedro López Martínez', escuela:'UAEH', tipoSolicitud: 'Servicio Social', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false }
-    // ... más datos
-  ]);
+  const [data, setData] = useState([]);
       
   //-------------------------------generar pdf---------------------------------------------------------
   const [datosQr, setDatosQr] = useState('');
@@ -131,13 +119,74 @@ function ServicioSocial ({ title }) {
       console.error('Error al obtener datos:', error);
     }
   };
+
+  const fetchDataTabla = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/consultaSolicitudes?filtro=todos&limite=5');
+      
+      if (!response.ok) {
+        throw new Error('Error al obtener las solicitudes');
+      }
+  
+      const responseData = await response.json();
+      console.log(responseData);
+      // Asegúrate de que responseData.solicitudes_json es un array antes de asignarlo a data
+      if (Array.isArray(responseData.solicitudes)) {
+        setData(responseData.solicitudes);
+      } else {
+        throw new Error('La propiedad solicitudes_json de la respuesta de la API no es un array');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   
   useEffect(() => {
       fetchData()
-    
+      fetchDataTabla()
     }, []);
 
+    function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
+      try {
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+    
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          const slice = byteCharacters.slice(offset, offset + sliceSize);
+    
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+    
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+    
+        const blob = new Blob(byteArrays, { type: contentType });
+        console.log(blob)
+        return blob;
+      } catch (error) {
+        console.error('Error al convertir la cadena base64 a Blob:', error);
+        return null;
+      }
+    }
 
+    function handleDownloadPDF(pdfBase64, fileName) {
+      try {
+        const blob = base64toBlob(pdfBase64, 'application/pdf');
+        const blobUrl = URL.createObjectURL(blob);
+  
+        // Abrir el PDF en una nueva ventana o pestaña
+        window.open(blobUrl, '_blank');
+  
+        // Limpiar el objeto URL creado
+        URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error('Error al descargar el PDF:', error);
+      }
+    }
   
   
     const [modalData, setModalData] = useState({
@@ -487,19 +536,13 @@ const direccion=`
             {data.map((item, index) => (
               <StyledTr key={item.id} even={index % 2 === 0}>
                 <StyledTd>{item.nombre}</StyledTd>
-                <StyledTd>{item.escuela}</StyledTd>
-                <StyledTd>{item.tipoSolicitud}</StyledTd>
+                <StyledTd>{"escuela"}</StyledTd>
+                <StyledTd>{item.tipo}</StyledTd>
                 <StyledTd>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setSelectedPdf(item.cartaPresentacion);
-                      openPdfInNewTab(require('./1212.pdf'));
-                    }}
-                    style={{ color: selectedPdf === item.cartaPresentacion ? '#9e2343' : '#bc955b' }}
-                  >
-                    {item.cartaPresentacion}
-                  </Button>
+                <button
+                        onClick={() => handleDownloadPDF(data.pdf, 'aceptacion.pdf')}>
+                        PDF
+                      </button>
                 </StyledTd>
                 <StyledTd>{item.fecha}</StyledTd>
                 <StyledTd>
