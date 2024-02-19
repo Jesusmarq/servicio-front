@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import '../Styles/Login.css';
-import '../Styles/responsive.css';
+import "../Styles/Login.css";
+import "../Styles/responsive.css";
 
 const Login = () => {
   const initialState = {
@@ -19,20 +19,22 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+
     axios
       .post(`http://127.0.0.1:5000/login`, formData)
       .then((response) => {
         // Acceder y guardar solo las propiedades necesarias
-        const { rol, id, nombre,token } = response.data;
-  
-        localStorage.setItem('dataUser', JSON.stringify({ rol, id, nombre,token }));
-        // Verifica la respuesta de la API y redirige según el usuario
-        if (rol === 'admin') {
-          history.push('/administrador');
-        } else if (rol === 'user') {
+        const { rol, id, nombre, token } = response.data;
 
-          history.push('/usuario');
+        localStorage.setItem(
+          "dataUser",
+          JSON.stringify({ rol, id, nombre, token })
+        );
+        // Verifica la respuesta de la API y redirige según el usuario
+        if (rol === "admin") {
+          history.push("/administrador");
+        } else if (rol === "user") {
+          history.push("/usuario");
         }
       })
       .catch((error) => {
@@ -45,56 +47,89 @@ const Login = () => {
         });
       });
   };
-  
-
 
   return (
-    <div className='body1'>
+    <div className="body1">
       <div className="login-container">
         {/* Lado Izquierdo */}
-        <div className="left-side" style={{ backgroundColor: '#9E2343', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <img src="./Images/Escudo_fondo_osccuro.png" alt="Imagen Izquierda" className="centered-image" />
+        <div
+          className="left-side"
+          style={{
+            backgroundColor: "#9E2343",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src="./Images/Escudo_fondo_osccuro.png"
+            alt="Imagen Izquierda"
+            className="centered-image"
+          />
         </div>
 
         {/* Lado Derecho */}
         <div className="right-side">
-          <img src="./Images/logotipo-09.png" alt="Imagen Superior" className="top-image" />
+          <img
+            src="./Images/logotipo-09.png"
+            alt="Imagen Superior"
+            className="top-image"
+          />
 
           {/* Encabezado */}
-          <h2 className='h2'>Bienvenido al Sistema de Servicio Social, Prácticas Profesionales, Estancias y Estadías.</h2><br></br>
+          <h2 className="h2">
+            Bienvenido al Sistema de Servicio Social, Prácticas Profesionales,
+            Estancias y Estadías.
+          </h2>
+          <br></br>
           <h4>Por favor ingresa tus datos...</h4>
 
           {/* Formulario de Login */}
-          <form onSubmit={handleSubmit} className='form1'>
-            <label htmlFor="usuario" className='label1'>Usuario:</label>
+          <form onSubmit={handleSubmit} className="form1">
+            <label htmlFor="usuario" className="label1">
+              Usuario:
+            </label>
             <input
-              className='input1'
+              className="input1"
               type="text"
               id="usuario"
               name="usuario"
               onChange={handleChange}
               required
-            /><br /><br />
+            />
+            <br />
+            <br />
 
-            <label htmlFor="contrasenia" className='label1'>Contraseña:</label>
+            <label htmlFor="contrasenia" className="label1">
+              Contraseña:
+            </label>
             <input
-              className='input1'
-              type="password"  
+              className="input1"
+              type="password"
               id="contrasenia"
               name="contrasenia"
               onChange={handleChange}
               required
-            /><br /><br />
+            />
+            <br />
+            <br />
 
-            <button  className='button1' onClick={handleSubmit}>Iniciar sesión</button>
+            <button className="button1" onClick={handleSubmit}>
+              Iniciar sesión
+            </button>
           </form>
 
           {/* Opción para registrarse */}
-          <p style={{ textAlign: 'right' }}>¿No tienes una cuenta? <Link to="/registro" style={{ color: '#9E2343' }}>Registrarse</Link></p>
+          <p style={{ textAlign: "right" }}>
+            ¿No tienes una cuenta?{" "}
+            <Link to="/registro" style={{ color: "#9E2343" }}>
+              Registrarse
+            </Link>
+          </p>
         </div>
       </div>
     </div>
   );
-}
+};
 
 export default Login;

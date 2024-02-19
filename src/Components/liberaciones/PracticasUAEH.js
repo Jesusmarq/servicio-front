@@ -1,16 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
-import jsPDF from 'jspdf';
 import { Helmet } from 'react-helmet';
+import axios from "axios";
 import '../../Styles/responsive.css';
+import { jsPDF } from 'jspdf';
+import { format } from 'date-fns';
+import esLocale from 'date-fns/locale/es';
+
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
+import { font } from '../Fuentes/Montserrat-Regular-normal'
+import { font2 } from '../Fuentes/Montserrat-Bold-normal';
+
 
 const TableContainer = styled.div`
   margin: 20px;
@@ -85,7 +92,9 @@ const SendButton = styled(Button)`
   width: 10vw;
 `;
 
-function PracticasUAEH2 ({ title }) {
+
+
+function ServicioSocial ({ title }) {
   const [data, setData] = useState([
     { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
     { id: 2, nombre: 'Jesús Adolfo Márquez', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '15/01/2023', validar: false },
@@ -101,149 +110,310 @@ function PracticasUAEH2 ({ title }) {
   ]);
       
   //-------------------------------generar pdf---------------------------------------------------------
-  const [modalData, setModalData] = useState({
-    numeroArchivo: '',
-    fecha:'',
-    instituto:'',
-    nombreEstudiante: '',
-    numeroControl: '',
-    carrera: '',
-    dependencia: '',
-    periodo: '',
-    periodo2:'',
-    horario: '',
-    direccionGeneral: '',
-    programa: '',
-    clave: '',
-    horas: '',
-    actividadesDesarrollar: [''],
-  });
-
-  const handleChange = (field, value) => {
-    setModalData({ ...modalData, [field]: value });
+  const [datosQr, setDatosQr] = useState('');
+  const [datosFirma, setDatosFirma] = useState('');
+  const [datosFirmaE, setDatosFirmaE] =useState('');
+  
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
+      const data = await response.json();
+  
+      console.log(data);
+  
+      // Verifica si la respuesta contiene las propiedades 'qr_image_base64' y 'firma_image_base64'
+      if (data.qr_image_base64 && data.firma_base64) {
+        setDatosQr(data.qr_image_base64);
+        setDatosFirma(data.firma_base64);
+        setDatosFirmaE(data.firma);
+      } else {
+        console.error('La respuesta del API no tiene la estructura esperada:', data);
+      }
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    }
   };
+  
+  useEffect(() => {
+      fetchData()
+    
+    }, []);
 
-  const handleActividadesChange = (index, value) => {
-    const newActividades = [...modalData.actividadesDesarrollar];
-    newActividades[index] = value;
-    setModalData({ ...modalData, actividadesDesarrollar: newActividades });
-  };
 
-  const addActividad = () => {
-    setModalData({
-      ...modalData,
-      actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
+  
+  
+    const [modalData, setModalData] = useState({
+      numeroArchivo: '',
+      date:'',
+      nombreEstudiante: '',
+      numeroControl: '',
+      carrera: '',
+      instituto:'',
+      dependencia:'',
+      asignado_a:'',
+      periodo_inicio: '',
+      periodo_termino: '',
+      horarioInicio: '',
+      horarioFin:'',
+      direccionGeneral: '',
+      programa: '',
+      clave: '',
+      horas: '',
+      actividadesDesarrollar: [''],
     });
-  };
 
-  const generatePDF = () => {
+   
+    const handleChange = (field, value) => {
+      // Actualizar el campo de almacenamiento
+      setModalData((prevData) => ({ ...prevData, [field]: value }));
+      // Actualizar el campo de visualización (puedes aplicar el formato aquí si es necesario)
+     
+    };
+   
+    const handleActividadesChange = (index, value) => {
+      const newActividades = [...modalData.actividadesDesarrollar];
+      newActividades[index] = value;
+      setModalData({ ...modalData, actividadesDesarrollar: newActividades });
+    };
+   
+    const addActividad = () => {
+      setModalData({
+        ...modalData,
+        actividadesDesarrollar: [...modalData.actividadesDesarrollar, ''],
+      });
+    };
+
+  // _____-------------------------------------FUNCION PARA CREAR PDF ******************************
+
+  const generatePDF = async () => {
+
     const pdf = new jsPDF();
+
+  // Cargar Montserrat Bold
+  pdf.addFileToVFS('Montserrat-Bold-normal.ttf', font2);
+  pdf.addFont('Montserrat-Bold-normal.ttf', 'Montserrat-Bold', 'normal')
+
+// Cargar Montserrat Regular
+  pdf.addFileToVFS('Montserrat-Regular-normal.ttf', font);
+  pdf.addFont('Montserrat-Regular-normal.ttf', 'Montserrat-Regular', 'normal')
+
+    pdf.setFont('Montserrat-Bold');
+    pdf.setFontSize(11);
+
 
     // Añadir la imagen de encabezado
     pdf.addImage(encabezadoImage, 'PNG', 0, -15, 200, 300); // Ajusta las coordenadas y el tamaño según tus necesidades
 
-    // Establecer la fuente Montserrat y el tamaño de letra
-  pdf.setFont('Montserrat');
-  pdf.setFontSize(12); // Ajusta el tamaño según tus preferencias
-
     const xPosition = 10;
     let yPosition = 20;
 
-    // Construir el texto con el formato deseado
-    const textoPDF = `
+   
+   // Construir el texto con el formato deseado
+   const textoPDF = `
+
+   
+                                                    Carta de Aceptación de Prácticas Profesionales
+
+
+                                                                                                                                                   ${modalData.numeroArchivo}`;
+    // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+  const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
+  // Agregar las líneas al PDF
+  pdf.text(linest, xPosition, yPosition);
+  
+  
+  pdf.setFont('Montserrat-Regular');
+  pdf.setFontSize(11);
+  yPosition += 30;                                                                                                                                                 
+  const fecha =`                                                                                                                                                     
+                                                                                                  Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
 
 
 
-    
-                                                     Carta de Terminación de Practicas Profesionales
+ 
+ 
+   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+   const linese = pdf.splitTextToSize(fecha, pdf.internal.pageSize.width - 2 * xPosition);
+   // Agregar las líneas al PDF
+   pdf.text(linese, xPosition, yPosition);   
+  
+  
+   pdf.setFont('Montserrat-Bold');
+   pdf.setFontSize(11);
+   yPosition += 10;                                                                                          
+ const encabezado=`                                                                                            
+ Dr. Jesús Ibarra Zamudio
+ Director de Servicio Social, Practicas Profesionales y
+ Vinculción Laboral de la Universidad Autónoma del 
+ Estado de Hidalgo
+ 
+ P r e s e n t e`;
+
+  // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+  const lines = pdf.splitTextToSize(encabezado, pdf.internal.pageSize.width - 2 * xPosition);
+  // Agregar las líneas al PDF
+  pdf.text(lines, xPosition, yPosition);
 
 
-                                                                                                                                                        ${modalData.numeroArchivo}
-                                                                                              Pachuca de Soto,Hgo., a ${modalData.fecha}
+  pdf.setFont('Montserrat-Regular');
+  pdf.setFontSize(11);
+  yPosition += 30;
+ const cuerpo =`
+ Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha concluido  sus Prácticas Profesionales en la ${modalData.dependencia}, siendo asignado/a en la ${modalData.asignado_a} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${modalData.programa}” de la ${modalData.direccionGeneral}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ `;
+  // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
+  const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
+  // Agregar las líneas al PDF
+  pdf.text(lines2, xPosition, yPosition);
 
+  yPosition += 30;
+ modalData.actividadesDesarrollar.forEach((actividad, index) => {
+   yPosition += 15;
 
-                                                                                              
-    Dr. Jesús Ibarra Zamudio
-    Director de Servicio Social, Practicas Profesionales y
-    Vinculción Laboral de la Universidad Autónoma del 
-    Estado de Hidalgo
-    P r e s e n t e
+   // Dividir cada actividad en líneas
+   const actividadLines = pdf.splitTextToSize(`${index + 1}. ${actividad}`, pdf.internal.pageSize.width - 2 * xPosition);
 
-    Por medio del presente informo a usted que el ${modalData.nombreEstudiante}, con número de 
-    cuenta:${modalData.numeroControl}, estudiante de la ${modalData.carrera}, del 
-    ${modalData.instituto} ha concluido sus Prácticas Profesionales 
-    en la ${modalData.dependencia}, cubriendo el periodo del ${modalData.periodo}${modalData.periodo2},
-     con un horario de ${modalData.horario} hrs., bajo el Proyecto: “${modalData.programa}”
-    cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
-    `;
+   // Agregar las líneas al PDF
+   pdf.text(actividadLines, xPosition, yPosition);
+ });
+  const saludo =` Sin otro particular por el momento, le envío un cordial saludo.`;
+  yPosition += 30;
+  // Dividir el texto del pie de página en líneas
+const saludolines = pdf.splitTextToSize(saludo, pdf.internal.pageSize.width - 2 * xPosition);
+ // Agregar las líneas al PDF
+pdf.text(saludolines, xPosition, yPosition);
 
-    
+pdf.setFont('Montserrat-Bold');
+    pdf.setFontSize(11);
+  // Agregar el resto del texto del pie de página
+  const att = `
+ 
+  A t e n t a m e n t e `;
+  yPosition += 5;
+  // Dividir el texto del pie de página en líneas
+const attLines = pdf.splitTextToSize(att, pdf.internal.pageSize.width - 2 * xPosition);
+ // Agregar las líneas al PDF
+pdf.text(attLines, xPosition, yPosition);
 
-    // Agregar el texto al PDF
-    pdf.text(textoPDF, xPosition, yPosition);
+const piePagina =`
+M.G.P. Odette Assad Díaz
+Directora de Profesionalización
+de la Oficialía Mayor `;
+yPosition += 40;
+// Dividir el texto del pie de página en líneas
+const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.width - 2 * xPosition);
+// Agregar las líneas al PDF
+pdf.text(piePaginaLines, xPosition, yPosition);
 
-          yPosition += 130;
-          modalData.actividadesDesarrollar.forEach((actividad, index) => {
-          yPosition += 10;
-          pdf.text(`${index + 1}. ${actividad}`, xPosition, yPosition);
-    });
+pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
+pdf.addImage(datosFirma, 'PNG', 10, 215, 50, 20);
 
-    // Agregar el resto del texto del pie de página
-    const piePagina = `
-    Sin otro particular por el momento, le envío un cordial saludo.
-    A t e n t a m e n t e
-    
-    M.G.P. Odette Assad Díaz
-    Directora de Profesionalización
-    de la Oficialía Mayor
+pdf.setFont('Montserrat-Regular');
+    pdf.setFontSize(9);
+const direccion=`
+                                                                                                                     Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
+                                                                                                                                                           Col. Centro, Pachuca, Hgo., C.P. 42000
+                                                                                                                                                                Tel.: 01(771)7176000 ext. 2095 y 6836
+                                                                                                                                                                                           www.hidalgo.gob.mx
+                                                                                                                                         `;
+                                                                                                                                         
+  
+    yPosition += 10;
+     // Dividir el texto del pie de página en líneas
+  const direccionLines = pdf.splitTextToSize(direccion, pdf.internal.pageSize.width - 2 * xPosition);
+    // Agregar las líneas al PDF
+  pdf.text(direccionLines, xPosition, yPosition);
+  
 
+  // Agregar un salto de línea antes de la cadena de firma electrónica
+  yPosition += 25;
 
+  // Ajustar el tamaño de letra solo para la cadena de firma electrónica
+  pdf.setFont('Montserrat-Regular');
+  pdf.setFontSize(6);
 
+  const cadena = `${datosFirmaE}`;
 
+  // Agregar la cadena de firma electrónica al PDF
+  const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
+  pdf.text(cadenaLines, xPosition, yPosition);
+  
+    // Obtener el contenido del PDF como ArrayBuffer
+  const pdfArrayBuffer = pdf.output('arraybuffer');
+  // Crear un Blob a partir del ArrayBuffer
+  const pdfBlob = new Blob([pdfArrayBuffer], { type: 'application/pdf' });
+  const pdfFile = new File([pdfBlob], 'pdfgenerado.pdf', {
+    lastModified: new Date().getTime(), // Timestamp de la última modificación
+    type: 'application/pdf',
+  });
+  
+  return pdfFile;
+  
+  };
+  const sendRequest = async() => {
+    // Crear FormData y agregar el PDF
+    const pdfFile = await generatePDF();
+    console.log(pdfFile)
+    const formData = new FormData();
+    formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
+  
+    // Agregar el JSON al FormData
+    const jsonData = {"solicitud":"2","estatus":"Aceptado","validador":"7"}; 
+    formData.append('JSON', JSON.stringify(jsonData));
+  
+    console.log('FormData antes de la solicitud:', formData);
+  
+    // Realizar la solicitud Axios
+    axios
+    .patch(`http://127.0.0.1:5000/AceptarRechazarSolicitud`, formData)
+    .then((response) => {
+      
+      if (response) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Carta enviada',
+          text: 'Tu carta de presentación ha sido enviada correctamente.',
+        });
+      }
+      
+    })
+    .catch((error) => {
+      // Maneja errores de solicitud
+      console.error("Error al enviar el formulario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el formulario",
+        text: "Hubo un problema al enviar el formulario.",
+      });
+    });
+};
+  
+  
+  //************************************************************************************************************************************************ *
 
+  const [sendButtonClicked, setSendButtonClicked] = useState(false);
 
-
-
-                                                                         Dirección de Profesionalización, Av. Madero 100-A, 1er Piso
-                                                                                                            Col. Centro, Pachuca, Hgo., C.P. 42000
-                                                                                                             Tel.; 01(771)7176000 ext. 2095 y 6836
-                                                                                                                                         www.hidalgo.gob.mx
-    `;
-
-    yPosition += 20;
-    pdf.text(piePagina, xPosition, yPosition);
-
-    // Guardar o mostrar el PDF (ajusta según tus necesidades)
-    pdf.save('formulario.pdf');
-  };
-  //************************************************************************************************************************************************ */
-
-  const [sendButtonClicked, setSendButtonClicked] = useState(false);
-
-
-  const handleSend = () => {
-    // Lógica para enviar la solicitud con los datos del formulario
-
-    // Muestra la alerta de éxito
-    Swal.fire({
-      icon: 'success',
-      title: 'Solicitud enviada',
-      text: 'Tu solicitud ha sido enviada correctamente.',
-    });
-
-    // Cierra la ventana emergente y restablece el estado del formulario
+  const handleSend = () => {
+    // Lógica para enviar la solicitud con los datos del formulario
+    // Muestra la alerta de éxito
+    Swal.fire({
+      icon: 'success',
+      title: 'Solicitud enviada',
+      text: 'Tu solicitud ha sido enviada correctamente.',
+    });
+    // Cierra la ventana emergente y restablece el estado del formulario
     handleClose();
     setSendButtonClicked(true);
     setModalData({
       numeroArchivo: '',
-      fecha:'',
+      date:'',
       instituto:'',
       nombreEstudiante: '',
       numeroControl: '',
       carrera: '',
-      dependencia: '',
+      dependencia:'',
+      asignado_a:'',
       periodo: '',
-      periodo2:'',
       horario: '',
       direccionGeneral: '',
       programa: '',
@@ -272,20 +442,20 @@ function PracticasUAEH2 ({ title }) {
     setShowModal(false);
     setModalData({
       numeroArchivo: '',
-    fecha:'',
-    instituto:'',
-    nombreEstudiante: '',
-    numeroControl: '',
-    carrera: '',
-    dependencia: '',
-    periodo: '',
-    periodo2:'',
-    horario: '',
-    direccionGeneral: '',
-    programa: '',
-    clave: '',
-    horas: '',
-    actividadesDesarrollar: [''],
+      date:'',
+      instituto:'',
+      nombreEstudiante: '',
+      numeroControl: '',
+      carrera: '',
+      dependencia:'',
+      asignado_a:'',
+      periodo: '',
+      horario: '',
+      direccionGeneral: '',
+      programa: '',
+      clave: '',
+      horas: '',
+      actividadesDesarrollar: [''],
     });
   };
 
@@ -297,6 +467,8 @@ function PracticasUAEH2 ({ title }) {
     // Implementa la lógica de validación del formulario
     return true; // Devuelve true si el formulario es válido, o false si no lo es
   };
+
+
 
 
   return (
@@ -324,7 +496,7 @@ function PracticasUAEH2 ({ title }) {
                     variant="link"
                     onClick={() => {
                       setSelectedPdf(item.cartaPresentacion);
-                      openPdfInNewTab(require('./12123.pdf'));
+                      openPdfInNewTab(require('./1212.pdf'));
                     }}
                     style={{ color: selectedPdf === item.cartaPresentacion ? '#9e2343' : '#bc955b' }}
                   >
@@ -376,16 +548,16 @@ function PracticasUAEH2 ({ title }) {
           />
         </Form.Group>
 
-        <Form.Group controlId="fecha" className="mb-3">
-          <Form.Label>Fecha</Form.Label>
+        <Form.Group controlId="date" className="mb-3">
+          <Form.Label>Fecha de la carta</Form.Label>
           <Form.Control
-            type="text"
-            value={modalData.fecha}
-            onChange={(e) => handleChange('fecha', e.target.value)}
+            type="date"
+            value={modalData.date}
+            onChange={(e) => handleChange('date', e.target.value)}
           />
         </Form.Group>
 
-        
+
 
         <Form.Group controlId="nombreEstudiante" className="mb-3">
           <Form.Label>Nombre del Estudiante</Form.Label>
@@ -405,21 +577,21 @@ function PracticasUAEH2 ({ title }) {
           />
         </Form.Group>
 
-        <Form.Group controlId="instituto" className="mb-3">
-          <Form.Label>Instituto </Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.instituto}
-            onChange={(e) => handleChange('instituto', e.target.value)}
-          />
-        </Form.Group>
-
         <Form.Group controlId="carrera" className="mb-3">
           <Form.Label>Carrera</Form.Label>
           <Form.Control
             type="text"
             value={modalData.carrera}
             onChange={(e) => handleChange('carrera', e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="instituto" className="mb-3">
+          <Form.Label>Instituto</Form.Label>
+          <Form.Control
+            type="text"
+            value={modalData.instituto}
+            onChange={(e) => handleChange('instituto', e.target.value)}
           />
         </Form.Group>
 
@@ -432,37 +604,63 @@ function PracticasUAEH2 ({ title }) {
           />
         </Form.Group>
 
-        <Form.Group controlId="periodo" className="mb-3">
-          <Form.Label>Periodo de inicio</Form.Label>
+        <Form.Group controlId="asignado_a" className="mb-3">
+          <Form.Label>Asignado a:</Form.Label>
           <Form.Control
             type="text"
-            value={modalData.periodo}
-            onChange={(e) => handleChange('periodo', e.target.value)}
+            value={modalData.asignado_a}
+            onChange={(e) => handleChange('asignado_a', e.target.value)}
           />
         </Form.Group>
 
-        <Form.Group controlId="periodo2" className="mb-3">
-          <Form.Label>Periodo de termino</Form.Label>
+        <Form.Group controlId="periodo_inicio" className="mb-3">
+          <Form.Label>Fecha de Inicio</Form.Label>
           <Form.Control
-            type="text"
-            value={modalData.periodo2}
-            onChange={(e) => handleChange('periodo2', e.target.value)}
+            type="date"
+            value={modalData.periodo_inicio}
+            onChange={(e) => handleChange('periodo_inicio', e.target.value)}
+          />
+        </Form.Group>
+
+        <Form.Group controlId="periodo_termino" className="mb-3">
+          <Form.Label>Fecha de Termino</Form.Label>
+          <Form.Control
+            type="date"
+            value={modalData.periodo_termino}
+            onChange={(e) => handleChange('periodo_termino', e.target.value)}
           />
         </Form.Group>
 
         <Form.Group controlId="horario" className="mb-3">
           <Form.Label>Horario</Form.Label>
+          <div style={{ display: "flex" }}>
+          <Form.Control
+          type="time"
+          value={modalData.horarioInicio}
+          onChange={(e) => handleChange('horarioInicio', e.target.value)}
+          style={{ marginRight: "10px" }}
+          />
+         <span style={{ margin: "auto" }}>a</span>
+        <Form.Control
+        type="time"
+        value={modalData.horarioFin}
+        onChange={(e) => handleChange('horarioFin', e.target.value)}
+        style={{ marginLeft: "10px" }}
+          />
+        </div>
+      </Form.Group>
+
+        <Form.Group controlId="direccionGeneral" className="mb-3">
+          <Form.Label>Dirección General</Form.Label>
           <Form.Control
             type="text"
-            value={modalData.horario}
-            onChange={(e) => handleChange('horario', e.target.value)}
+            value={modalData.direccionGeneral}
+            onChange={(e) => handleChange('direccionGeneral', e.target.value)}
           />
         </Form.Group>
 
-        
-
         <Form.Group controlId="programa" className="mb-3">
-          <Form.Label>Programa</Form.Label>
+          <Form.Label>Proyecto</Form.Label>
           <Form.Control
             type="text"
             value={modalData.programa}
@@ -470,12 +668,11 @@ function PracticasUAEH2 ({ title }) {
           />
         </Form.Group>
 
-        
 
         <Form.Group controlId="horas" className="mb-3">
           <Form.Label>Horas</Form.Label>
           <Form.Control
-            type="text"
+            type="number"
             value={modalData.horas}
             onChange={(e) => handleChange('horas', e.target.value)}
           />
@@ -499,15 +696,14 @@ function PracticasUAEH2 ({ title }) {
           ))}
         </Form.Group>
       </Form>
+     
 
-      <Button variant="primary" onClick={generatePDF}>
-        Generar PDF
-      </Button>
-          </Modal.Body>
+           </Modal.Body>
           <Modal.Footer>
-            <SendButton variant="primary" onClick={handleSend} disabled={!validateForm()}>
-              Enviar
-            </SendButton>
+            <SendButton variant="primary" onClick={sendRequest}>
+              Enviar
+             </SendButton>
+
             <CloseButton variant="primary" onClick={handleClose}>
               Cerrar
             </CloseButton>
@@ -515,7 +711,6 @@ function PracticasUAEH2 ({ title }) {
         </ModalContent>
       </CenteredModal>
     </div>
-  );
+  );
 }
-
-export default PracticasUAEH2;
+export default ServicioSocial;

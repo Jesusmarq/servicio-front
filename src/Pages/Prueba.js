@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import "../Styles/preregistro.css"
@@ -12,75 +12,25 @@ function Preregistro() {
     nombre: "",
     apellidop: "",
     apellidom: "",
-    escuelaprocedencia: "UAEH",
-    plantel: "",
-    otroplantel: "",
     curp: "",
     carrera: "",
+    plantel: "",
+    matricula:"",
+    
+    escuelaprocedencia: "",
     
   };
 
+  const [escuelas, setEscuelas] = useState();
+  const [planteles, setPlanteles] = useState();
+  const [institutos, setInstitutos] = useState();
+
   const [formData, setFormData] = useState(initialState);
-  const [plantelOptions, setPlantelOptions] = useState(
-    ["Escuela Superior de Actopan", 
-    "Escuela Superior de Apan", 
-    "Escuela Superior de Atotonilco de Tula",
-    "Escuela Superior de Ciudad Sahagún ",
-    "Escuela Superior de Huejutla",
-    "Escuela Superior de Tepeji del Río",
-    "Escuela Superior de Tlahuelilpan",
-    "Escuela Superior de Tizayuca",
-    "Escuela Superior de Zimapán",
-    "Instituto de Artes", 
-    "Instituto de Ciencias Básicas e Ingeniería",
-    "Instituto de Ciencias Agropecuarias",
-    "Instituto de Ciencias de la Salud",
-    "Instituto de Ciencias Económico Administrativas",
-    "Instituto de Ciencias Sociales y Humanidades"]);
-  const [escuelaOptions, setEscuelaOptions] = useState(
-    [
-      "Centro Cultural Europeo de Estudios Universitarios (CE)",
-      "Centro Hidalguense de Estudios Superiores (CENHIES)",
-      "Centro Universitario Antares",
-      "Centro Universitario Hidalguense (CUH)",
-      "Centro Universitario Metropolitano Hidalgo (CEUMH)",
-      "Centro Universitario Siglo XXI",
-      "Centro de Estudios Universitarios de Hidalgo (CEUH)",
-      "Centros de Bachillerato Tecnológico Industrial y de Servicios (CBTis) No. 8",
-      "Centros de Bachillerato Tecnológico Industrial y de Servicios (CBTis) No. 222",
-      "Colegio de Estudios Científicos y Tecnológicos del Estado de Hidalgo (CECYTEH) Plantel Pachuca",
-      "Colegio de Estudios Científicos y Tecnológicos del Estado de Hidalgo (CECYTEH) Plantel Zempoala",
-      "Colegio Nacional de Educación Profesional Técnica (CONALEP) PACHUCA 1",
-      "Colegio Nacional de Educación Profesional Técnica (CONALEP) PACHUCA 2",
-      "Instituto de Estudios Universitarios IEU",
-      "Instituto Moyocoyani Plantel Actopan",
-      "Instituto Moyocoyani Plantel Pachuca",
-      "Instituto Tecnológico de Pachuca (ITP)",
-      "Instituto Tecnológico Latinoamericano (ITLA)",
-      "Instituto Tecnológico Superior del Occidente del Estado de Hidalgo (ITSOEH)",
-      "Universidad Abierta y a Distancia de México UnADM",
-      "Universidad Digital del Estado de Hidalgo (UNIDEH)",
-      "Universidad Iberomexicana de Hidalgo (UIH)",
-      "Universidad Interactiva Milenio",
-      "Universidad Interamericana para el Desarrollo (UNID)",
-      "Universidad Nacional Autonoma de México",
-      "Universidad Politécnica de Huejutla",
-      "Universidad Politécnica de Pachuca (UPP)",
-      "Universidad Politécnica Metropolitana de Hidalgo (UPMH)",
-      "Universidad Tecnologica El Puerto",
-      "Universidad Utel (UTEL)",
-      "Universidad Virtual del Estado de Guanajuato (UVEG)",
-      "Universidad Interamericana para el Desarrollo UNID",
-      "Universidad La Salle",
-      "Universidad Interglobal (UIG)"
-  ] );
-
-
   
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-  
 
   const handleSubmit = (e) => {
     // Previene el comportamiento predeterminado del formulario, que es el envío normal.
@@ -98,14 +48,14 @@ function Preregistro() {
           showConfirmButton: false, // No muestra el botón de confirmación.
           timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
         });
-  
+
         // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
         setFormData(initialState);
       })
       .catch((error) => {
         // Maneja cualquier error que ocurra durante la solicitud.
         console.error("Error al enviar el formulario:", error);
-  
+
         // Muestra una ventana emergente de error utilizando SweetAlert.
         Swal.fire({
           icon: "error", // Ícono de error.
@@ -114,21 +64,85 @@ function Preregistro() {
         });
       });
   };
-  
+
+  const traerPlanteles = async () => {
+    //Hacer peticion al endpoint  
+    const response = await fetch('http://127.0.0.1:5000/planteles');
+    const data = await response.json();
+
+    // Array para almacenar los objetos con id y universidad únicos
+    let arrayIdUniversidadUnicos = [
+      {
+        id: 0,
+        value: "Selecciona la escuela"
+      }
+    ];
+    let idUniversidadesSet = new Set();
+
+    // Recorres el array de objetos
+    data.forEach(objeto => {
+      if (!idUniversidadesSet.has(objeto.id_universidad)) {
+        idUniversidadesSet.add(objeto.id_universidad);
+
+        arrayIdUniversidadUnicos.push({
+          id: objeto.id_universidad,
+          value: objeto.universidad
+        });
+      }
+    });
+
+    const platelesTemp = data.map(element => {
+      return {
+        id: element.id_plantel,
+        value: element.plantel,
+        id_universidad: element.id_universidad
+      }
+    })
+
+    setPlanteles(platelesTemp)
+    setEscuelas(arrayIdUniversidadUnicos)
+  }
+
+  useEffect(() => {
+    if (!planteles) {
+      traerPlanteles();
+    }
+  })
 
   const handleEscuelaProcedenciaChange = (e) => {
-    const escuelaProcedenciaValue = e.target.value;
-    setFormData({
-      ...formData,
-      escuelaprocedencia: escuelaProcedenciaValue,
-      plantel: "",
-      otroplantel: "",
-    });
+    // Filtrar a los planteles según su dependencia seleccionada
+    const idEscuela = parseInt(e.target.value, 10); // Convertir a número
+
+    if (idEscuela === 0) {
+      // Mostrar todos los planteles sin filtrar
+      setInstitutos([
+        {
+          id: 0,
+          plantel: "Selecciona una escuela"
+        }
+      ]);
+
+      setFormData({
+        ...formData,
+        escuelaprocedencia: 0
+      });
+    } else {
+      // Filtrar los planteles según la escuela seleccionada
+      let resultadoFiltrado = planteles.filter(objeto => objeto.id_universidad === idEscuela);
+
+      setInstitutos(resultadoFiltrado);
+
+      setFormData({
+        ...formData,
+        escuelaprocedencia: idEscuela
+      });
+    }
   };
+
 
   return (
     <section id="section_pre">
-        <div className="form-container">
+      <div className="form-container">
         <img src="./Images/logotipo-09.png" alt="Imagen Superior" className="imagenlogo" />
         <h2 className="encabezado">Registro de Usuario</h2>
         <form onSubmit={handleSubmit}>
@@ -140,7 +154,7 @@ function Preregistro() {
               value={formData.usuario}
               onChange={handleChange}
               required
-              
+
             />
           </div>
           <div className="form-group">
@@ -191,6 +205,7 @@ function Preregistro() {
               onChange={handleEscuelaProcedenciaChange}
               required
             >
+              <option value="">Selecione alguna opción</option>
               <option value="UAEH">UAEH</option>
               <option value="Otras">Otras</option>
             </select>
@@ -205,11 +220,23 @@ function Preregistro() {
                 onChange={handleChange}
                 required
               >
-                <option value="">Selecciona un plantel</option>
-                <option value="1">Plantel 1</option>
-                <option value="2">Plantel 2</option>
-               
-                {/* Agrega más opciones según tus necesidades */}
+              <option value="">Selecciona un plantel</option>
+              <option value="1">Escuela Superior de Actopan</option>
+              <option value="2">Escuela Superior de Apan</option>
+              <option value="3">Escuela Superior de Atotonilco de Tula</option>
+              <option value="4">Escuela Superior de Ciudad Sahagún</option>
+              <option value="5">Escuela Superior de Huejutla</option>
+              <option value="6">Escuela Superior de Tepeji del Río</option>
+              <option value="7">Escuela Superior de Tlahuelilpan</option>
+              <option value="8">Escuela Superior de Tizayuca</option>
+              <option value="9">Escuela Superior de Zimapán</option>
+              <option value="10">Instituto de Artes</option>
+              <option value="11">Instituto de Ciencias Básicas e Ingeniería</option>
+              <option value="12">Instituto de Ciencias Agropecuarias</option>
+              <option value="13">Instituto de Ciencias de la Salud</option>
+              <option value="14">Instituto de Ciencias Económico Administrativas</option>
+              <option value="15">Instituto de Ciencias Sociales y Humanidades</option>
+
               </select>
             </div>
           )}
@@ -220,17 +247,53 @@ function Preregistro() {
               <select
                className="cuadros"
                 name="otroplantel"
-                value={formData.otroplantel}
+                value={formData.plantel}
                 onChange={handleChange}
                 required
               >
               <option value="">Selecciona un plantel</option>
-                <option value="1">Plantel 1</option>
-                <option value="2">Plantel 2</option>
-                {/* Agrega más opciones según tus necesidades */}
+              <option value="16">Centro Cultural Europeo de Estudios Universitarios (CE)</option>
+              <option value="17">Centro Hidalguense de Estudios Superiores (CENHIES)</option>
+              <option value="18">Centro Universitario Antares</option>
+              <option value="19">Centro Universitario Hidalguense (CUH)</option>
+              <option value="20">Centro Universitario Metropolitano Hidalgo (CEUMH)</option>
+              <option value="21">Centro Universitario Siglo XXI</option>
+              <option value="22">Centro de Estudios Universitarios de Hidalgo (CEUH)</option>
+              <option value="23">Centros de Bachillerato Tecnológico Industrial y de Servicios (CBTis) No. 8</option>
+              <option value="24">Centros de Bachillerato Tecnológico Industrial y de Servicios (CBTis) No. 222</option>
+              <option value="25">Colegio de Estudios Científicos y Tecnológicos del Estado de Hidalgo (CECYTEH) Plantel Pachuca</option>
+              <option value="26">Colegio de Estudios Científicos y Tecnológicos del Estado de Hidalgo (CECYTEH) Plantel Zempoala</option>
+              <option value="27">Colegio Nacional de Educación Profesional Técnica (CONALEP) PACHUCA 1</option>
+              <option value="28">Colegio Nacional de Educación Profesional Técnica (CONALEP) PACHUCA 2</option>
+              <option value="29">Instituto de Estudios Universitarios IEU</option>
+              <option value="30">Instituto Moyocoyani Plantel Actopan</option>
+              <option value="31">Instituto Moyocoyani Plantel Pachuca</option>
+              <option value="32">Instituto Tecnológico de Pachuca (ITP)</option>
+              <option value="33">Instituto Tecnológico Latinoamericano (ITLA)</option>
+              <option value="34">Instituto Tecnológico Superior del Occidente del Estado de Hidalgo (ITSOEH)</option>
+              <option value="35">Universidad Abierta y a Distancia de México UnADM</option>
+              <option value="36">Universidad Digital del Estado de Hidalgo (UNIDEH)</option>
+              <option value="37">Universidad Iberomexicana de Hidalgo (UIH)</option>
+              <option value="38">Universidad Interactiva Milenio</option>
+              <option value="39">Universidad Interamericana para el Desarrollo (UNID)</option>
+              <option value="40">Universidad Nacional Autonoma de México</option>
+              <option value="41">Universidad Politécnica de Huejutla</option>
+              <option value="42">Universidad Politécnica de Pachuca (UPP)</option>
+              <option value="43">Universidad Politécnica Metropolitana de Hidalgo (UPMH)</option>
+              <option value="44">Universidad Tecnologica El Puerto</option>
+              <option value="45">Universidad Utel (UTEL)</option>
+              <option value="46">Universidad Virtual del Estado de Guanajuato (UVEG)</option>
+              <option value="47">Universidad Interamericana para el Desarrollo UNID</option>
+              <option value="48">Universidad La Salle</option>
+              <option value="49">Universidad Interglobal (UIG)</option>
+              <option value="50">Universidad Politécnica de Huejutla</option>
+
+
               </select>
             </div>
           )}
+
+
 
           <div className="form-group">
             <label htmlFor="curp">CURP:</label>
@@ -252,13 +315,24 @@ function Preregistro() {
               required
             />
           </div>
+
+          <div className="form-group">
+            <label htmlFor="matricula">Matricula:</label>
+            <input className="cuadros"
+              type="text"
+              name="matriculas"
+              value={formData.matricula}
+              onChange={handleChange}
+              required
+            />
+          </div>
           
           <div className="form-group">
             <button type="submit" className="botonchido">Enviar</button>
           </div>
         </form>
       </div>
-      
+
     </section>
   );
 }

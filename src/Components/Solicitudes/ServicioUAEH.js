@@ -100,6 +100,7 @@ function ServicioSocial ({ title }) {
   //-------------------------------generar pdf---------------------------------------------------------
   const [datosQr, setDatosQr] = useState('');
   const [datosFirma, setDatosFirma] = useState('');
+  const [datosFirmaE, setDatosFirmaE] =useState('');
   
   const fetchData = async () => {
     try {
@@ -112,6 +113,7 @@ function ServicioSocial ({ title }) {
       if (data.qr_image_base64 && data.firma_base64) {
         setDatosQr(data.qr_image_base64);
         setDatosFirma(data.firma_base64);
+        setDatosFirmaE(data.firma);
       } else {
         console.error('La respuesta del API no tiene la estructura esperada:', data);
       }
@@ -202,13 +204,104 @@ function ServicioSocial ({ title }) {
       periodo_termino: '',
       horarioInicio: '',
       horarioFin:'',
-      direccionGeneral: '',
-      programa: '',
-      clave: '',
+      proyecto: '',
       horas: '',
       actividadesDesarrollar: [''],
     });
 
+    const getDependenciaNombre = (valor) => {
+      switch(valor) {
+        case '1':
+          return 'Procuraduría General de Justicia';
+        case '2':
+          return 'Secretaría del Despacho de la Persona Titular del Poder Ejecutivo del Estado';
+        case '3':
+          return 'Oficialía Mayor';
+        case '4':
+          return 'Secretaría de Turismo';
+        case '5':
+          return 'Secretaría de Movilidad y Transporte';
+        case '6':
+          return 'Unidad de Planeación y Prospectiva';
+        case '7':
+          return 'Comisión Estatal para el Desarrollo Sostenible de los Pueblos Indígenas';
+        case '8':
+          return 'Secretaría del Bienestar e Inclusión Social';
+        case '9':
+          return 'Secretaría del Medio Ambiente y Recursos Naturales';
+        case '10':
+          return 'Comisión Estatal de Biodiversidad de Hidalgo';
+        case '11':
+          return 'Secretaría de Hacienda';
+        case '12':
+          return 'Comisión Ejecutiva de Atención a Víctimas del Estado de Hidalgo';
+        case '13':
+          return 'Consejo de Ciencia, Tecnología e Innovación de Hidalgo';
+        case '14':
+          return 'Secretaría de Gobierno (ciudad de las mujeres)';
+        case '15':
+          return 'Secretaría de Gobierno (Centro de Justicia para Mujeres del Estado de Hidalgo)';
+        case '16':
+          return 'SECRETARIA DE GOBIERNO INDEMUN';
+        case '17':
+          return 'Secretaría de Gobierno (Dir. Gral de Archivo de Notarías)';
+        case '18':
+          return 'Secretaría de Gobierno (Coordinación General de Comunicación gubernamental)';
+        case '19':
+          return 'Secretaría de Gobierno (Apoyo a la Defensoría)';
+        case '20':
+          return 'Secretaría de Desarrollo Económico';
+        case '21':
+          return 'Secretaría de Contraloría';
+        default:
+          return '';
+      }
+    }
+
+    const getAsignadoNombre = (valor) => {
+      switch(valor) {
+        case '40':
+          return 'Dirección General de Recursos Materiales y Servicios';
+        case '41':
+          return 'Dirección General de Administración de la Oficialía Mayor';
+        case '42':
+          return 'Dirección General de Organización y Rediseño Institucional';
+        case '43':
+          return 'Dirección General de Recursos Humanos';
+        case '44':
+          return 'Archivo General del Estado';
+        
+        default:
+          return '';
+      }
+    }
+
+
+    const getProyectoNombre = (valor) => {
+      switch(valor) {
+        case '200':
+          return 'Abatimiento de Rezago ';
+        case '201':
+          return 'Revisión de los Recursos Materiales, Humanos y Financieros de la PGJEH ';
+        case '202':
+          return 'Integración de los Expedientes de Presunta Responsabilidad ';
+        case '203':
+          return 'Investigaciones Administrativas vs Servidores Públicos de la PGJEH ';
+        case '204':
+          return 'Servicio Social ';
+        case '205':
+          return 'Actividades que Realiza Ministerio Público Adscrito a Juzgado Penal Sistema Tradicional ';
+        case '206':
+          return 'Actividades Administrativas ';
+        case '207':
+          return 'Auxiliar en el Instituto de Formación Profesional de la Procuraduría';
+        
+    
+          default:
+          return '';
+      }
+    }
+    
    
     const handleChange = (field, value) => {
       // Actualizar el campo de almacenamiento
@@ -273,7 +366,7 @@ function ServicioSocial ({ title }) {
   pdf.setFontSize(11);
   yPosition += 30;                                                                                                                                                 
   const fecha =`                                                                                                                                                     
-                                                                                                  Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
+                                                                                                Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
 
 
 
@@ -306,7 +399,7 @@ function ServicioSocial ({ title }) {
   pdf.setFontSize(11);
   yPosition += 30;
  const cuerpo =`
- Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha sido aceptado/a, para realizar su Servicio Social en la ${modalData.dependencia}, siendo asignado/a en la ${modalData.asignado_a} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${modalData.programa}” de la ${modalData.direccionGeneral}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha sido aceptado/a, para realizar su Servicio Social en la ${getDependenciaNombre(modalData.dependencia)}, siendo asignado/a en la ${getAsignadoNombre(modalData.asignado_a)} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${getProyectoNombre(modalData.proyecto)}”, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
  `;
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -378,8 +471,8 @@ const direccion=`
   // Ajustar el tamaño de letra solo para la cadena de firma electrónica
   pdf.setFont('Montserrat-Regular');
   pdf.setFontSize(6);
-
-  const cadena = `MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAKW7Rv3W/7QdUoYGv5l1N1T4z8Y1Z+uAaVtD+u8SCnUf6zvDz4r6Jm8uRJn4IRHjuUL9FLFTWNQlD3rckA4Zjuh3V4/XoUHDbc7w1pvqnEs3JNp7PBJotz47ti2SPo5f0gJmCEuLVYSWifEjT+evxAdFt4mX31RlcMv5z/AgMBAAECgYEAi0k2d3aQhsWO6kmJXQ2cE5RugDqGtNhQQHrsx57lroF1DFqctKXOgYv6xdWdsfbBxmWkxSdoZGmFE5cxfF+6KtGbK/nWYEW0Q9GxShU1EYcyc4j4ISzo94jQsXqCrWAT02z3F7SryJ0wvFQ6e2SJ67U1t9Il9JY3lWYyx/vLkCQQD1jiA2spBrKlAWEa+IsmV/3LnzRrTtql+XgTYYraq5Rtoz/d6W0aVrDp78cV8QFh54j9uVACMsFYByQdEjYDAkEAyrqwWUmSbDTsXKYIYFIt4cO9Wt6HgGmvY/ghDsINbFJblp0+fF4zz2abzAMiBmIKI0Q1sUucQShY+/YrLgJBAN5bslF4gWpjjPCdNBlGz1TtNuyiMc2shMLqXy06+I13ud6RvOJ8QWghXKPE0GvDsgyffRplcSkTQOh3SGYx0CQQC07Zg8pgGupVYBTRa3Kw9nYRUZDNXszET7Goy6B16fz+n75WfToxdK4UvXcGILG1b+0eTpppJ7yIZoF3Td/NkLAkAZgSZj4iZxhq8wfhX2h7DFEAp7QAxS1a9lPN+qZgPIhgc02M50JHtOUwABcPm/n`;
+  
+  const cadena = `${datosFirmaE}`;
 
   // Agregar la cadena de firma electrónica al PDF
   const cadenaLines = pdf.splitTextToSize(cadena, pdf.internal.pageSize.width - 2 * xPosition);
@@ -462,7 +555,6 @@ const direccion=`
       asignado_a:'',
       periodo: '',
       horario: '',
-      direccionGeneral: '',
       programa: '',
       clave: '',
       horas: '',
@@ -636,23 +728,93 @@ const direccion=`
           />
         </Form.Group>
 
-        <Form.Group controlId="dependencia" className="mb-3">
-          <Form.Label>Dependencia</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.dependencia}
-            onChange={(e) => handleChange('dependencia', e.target.value)}
-          />
-        </Form.Group>
 
+
+
+        <Form.Group controlId="dependencia" className="mb-3">
+        <Form.Label>Dependencia</Form.Label>
+        <Form.Select
+          value={modalData.dependencia}
+          onChange={(e) => handleChange('dependencia', e.target.value)}
+        >
+          <option value="">Selecciona una dependencia</option>
+          <option value="1">Procuraduría General de Justicia</option>
+          <option value="2">Secretaría del Despacho de la Persona Titular del Poder Ejecutivo del Estado</option>
+          <option value="3">Oficialía Mayor</option>
+          <option value="4">Secretaría de Turismo</option>
+          <option value="5">Secretaría de Movilidad y Transporte</option>
+          <option value="6">Unidad de Planeación y Prospectiva</option>
+          <option value="7">Comisión Estatal para el Desarrollo Sostenible de los Pueblos Indígenas</option>
+          <option value="8">Secretaría del Bienestar e Inclusión Social</option>
+          <option value="9">Secretaría del Medio Ambiente y Recursos Naturales</option>
+          <option value="10">Comisión Estatal de Biodiversidad de Hidalgo</option>
+          <option value="11">Secretaría de Hacienda</option>
+          <option value="12">Comisión Ejecutiva de Atención a Víctimas del Estado de Hidalgo</option>
+          <option value="13">Consejo de Ciencia, Tecnología e Innovación de Hidalgo</option>
+          <option value="14">Secretaría de Gobierno (ciudad de las mujeres)</option>
+          <option value="15">Secretaría de Gobierno (Centro de Justicia para Mujeres del Estado de Hidalgo)</option>
+          <option value="16">SECRETARIA DE GOBIERNO INDEMUN</option>
+          <option value="17">Secretaría de Gobierno (Dir. Gral de Archivo de Notarías)</option>
+          <option value="18">Secretaría de Gobierno (Coordinación General de Comunicación gubernamental)</option>
+          <option value="19">Secretaría de Gobierno (Apoyo a la Defensoría)</option>
+          <option value="20">Secretaría de Desarrollo Económico</option>
+          <option value="21">Secretaría de Contraloría</option>
+        
+        </Form.Select>
+      </Form.Group>
+
+      {modalData.dependencia && (
         <Form.Group controlId="asignado_a" className="mb-3">
           <Form.Label>Asignado a:</Form.Label>
-          <Form.Control
-            type="text"
+          <Form.Select
             value={modalData.asignado_a}
             onChange={(e) => handleChange('asignado_a', e.target.value)}
-          />
+          >
+            
+            {modalData.dependencia === '3' && (
+              <>
+                <option value="">Selecciona una opción</option>
+                <option value="40">Dirección General de Recursos Materiales y Servicios</option>
+                <option value="41">Dirección General de Administración de la Oficialía Mayor</option>
+                <option value="42">Dirección General de Organización y Rediseño Institucional</option>
+                <option value="43">Dirección General de Recursos Humanos</option>
+                <option value="44">Archivo General del Estado</option>
+                {/* Agrega más opciones según sea necesario */}
+              </>
+            )}
+            {modalData.dependencia === 'Dependencia 2' && (
+              <>
+                <option value="Asignado A">Asignado A</option>
+                <option value="Asignado B">Asignado B</option>
+                {/* Agrega más opciones según sea necesario */}
+              </>
+            )}
+          </Form.Select>
         </Form.Group>
+      )}
+
+
+      
+<Form.Group controlId="proyecto" className="mb-3">
+        <Form.Label>Proyecto</Form.Label>
+        <Form.Select
+          value={modalData.proyecto}
+          onChange={(e) => handleChange('proyecto', e.target.value)}
+        >
+          <option value="">Selecciona un proyecto</option>
+          <option value="200">Abatimiento de Rezago</option>
+          <option value="201">Revisión de los Recursos Materiales, Humanos y Financieros de la PGJEH</option>
+          <option value="202">Integración de los Expedientes de Presunta Responsabilidad</option>
+          <option value="203">Investigaciones Administrativas vs Servidores Públicos de la PGJEH</option>
+          <option value="204">Servicio Social</option>
+          <option value="205">Actividades que Realiza Ministerio Público Adscrito a Juzgado Penal Sistema Tradicional</option>
+          <option value="206">Actividades Administrativas</option>
+          <option value="207">Auxiliar en el Instituto de Formación Profesional de la Procuraduría</option>
+          
+        
+        </Form.Select>
+      </Form.Group>
+
 
         <Form.Group controlId="periodo_inicio" className="mb-3">
           <Form.Label>Fecha de Inicio</Form.Label>
@@ -664,7 +826,7 @@ const direccion=`
         </Form.Group>
 
         <Form.Group controlId="periodo_termino" className="mb-3">
-          <Form.Label>Fecha de Inicio</Form.Label>
+          <Form.Label>Fecha de Termino</Form.Label>
           <Form.Control
             type="date"
             value={modalData.periodo_termino}
@@ -690,24 +852,6 @@ const direccion=`
           />
         </div>
       </Form.Group>
-
-        <Form.Group controlId="direccionGeneral" className="mb-3">
-          <Form.Label>Dirección General</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.direccionGeneral}
-            onChange={(e) => handleChange('direccionGeneral', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="programa" className="mb-3">
-          <Form.Label>Proyecto</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.programa}
-            onChange={(e) => handleChange('programa', e.target.value)}
-          />
-        </Form.Group>
 
 
         <Form.Group controlId="horas" className="mb-3">
