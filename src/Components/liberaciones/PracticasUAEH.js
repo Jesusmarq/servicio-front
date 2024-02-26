@@ -94,29 +94,28 @@ const SendButton = styled(Button)`
 
 
 
-function ServicioSocial ({ title }) {
-  const [data, setData] = useState([
-    { id: 1, nombre: 'Víctor Daniel Acosta', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 2, nombre: 'Jesús Adolfo Márquez', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '15/01/2023', validar: false },
-    { id: 3, nombre: 'Julián Trejo Melchor', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '10/02/2023', validar: true },
-    { id: 4, nombre: 'Ana María López', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 5, nombre: 'Miguel Ángel Ramírez', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 6, nombre: 'Sofía Rodríguez', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 7, nombre: 'Carlos Alberto Gómez', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 8, nombre: 'Luisa Fernández', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 9, nombre: 'María José Díaz', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false },
-    { id: 10, nombre: 'Pedro López Martínez', escuela:'UAEH', tipoSolicitud: 'Practicas Profesionales', cartaPresentacion: 'Carta-de-presentacion.pdf', fecha: '01/01/2023', validar: false }
-    // ... más datos
-  ]);
-      
-  //-------------------------------generar pdf---------------------------------------------------------
+function PracticasUAEH ({ title }) {
+
+  //  inicialisacion de los estados de tabla Y DEMAS COMO QR DATOS FIRMA ETC ---------
+  const [data, setData] = useState([]);//tabla
+ 
   const [datosQr, setDatosQr] = useState('');
   const [datosFirma, setDatosFirma] = useState('');
   const [datosFirmaE, setDatosFirmaE] =useState('');
+  const[numChange,setNumChange] = useState(0)
+
+  console.log(localStorage.getItem('dataUser'))
+  var dataUser = localStorage.getItem('dataUser')
+  var parsedDataUser = JSON.parse(dataUser);
   
-  const fetchData = async () => {
+  // Acceder a la propiedad 'id'
+  console.log(parsedDataUser.id);
+
+  //peticion para el qr  y los demas datos
+  const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
+    console.log(solicitudId)
     try {
-      const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
+      const response = await fetch(`http://127.0.0.1:5000/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
       console.log(data);
@@ -133,15 +132,81 @@ function ServicioSocial ({ title }) {
       console.error('Error al obtener datos:', error);
     }
   };
+
+  //peticion datos de la tabla  ------------------
+  const fetchDataTabla = async () => {
+    try {
+        const response = await fetch('http://127.0.0.1:5000/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
+
+        if (!response.ok) {
+            throw new Error('Error al obtener las solicitudes');
+        }
+
+        const responseData = await response.json();
+        console.log(responseData);
+
+        // Filtrar responseData.solicitudes para obtener solo las de tipo "servicio social" y universidad "UAEH"
+        const solicitudesFiltradas = responseData.solicitudes.filter(solicitud => solicitud.tipo === 'Prácticas Profesionales' && solicitud.universidad === 'UAEH');
+
+        // Asegúrate de que solicitudesFiltradas es un array antes de asignarlo a data
+        if (Array.isArray(solicitudesFiltradas)) {
+            setData(solicitudesFiltradas);
+        } else {
+            throw new Error('La propiedad solicitudes_json de la respuesta de la API no es un array');
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
   
+//------------------------   mada hacer los los cambios -------------
   useEffect(() => {
-      fetchData()
-    
+      //fetchData()
+      fetchDataTabla()
     }, []);
 
-
+    function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
+      try {
+        const byteCharacters = atob(base64Data);
+        const byteArrays = [];
+    
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          const slice = byteCharacters.slice(offset, offset + sliceSize);
+    
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+    
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+    
+        const blob = new Blob(byteArrays, { type: contentType });
+        console.log(blob)
+        return blob;
+      } catch (error) {
+        console.error('Error al convertir la cadena base64 a Blob:', error);
+        return null;
+      }
+    }
+//-----------------para que se muestre en la tabla------------------------
+    function handleDownloadPDF(pdfBase64, fileName) {
+      try {
+        const blob = base64toBlob(pdfBase64, 'application/pdf');
+        const blobUrl = URL.createObjectURL(blob);
   
+        // Abrir el PDF en una nueva ventana o pestaña
+        window.open(blobUrl, '_blank');
   
+        // Limpiar el objeto URL creado
+        URL.revokeObjectURL(blobUrl);
+      } catch (error) {
+        console.error('Error al descargar el PDF:', error);
+      }
+    }
+  
+  ////---------------para  almacenar los datos del modal-----------------
     const [modalData, setModalData] = useState({
       numeroArchivo: '',
       date:'',
@@ -155,13 +220,12 @@ function ServicioSocial ({ title }) {
       periodo_termino: '',
       horarioInicio: '',
       horarioFin:'',
-      direccionGeneral: '',
-      programa: '',
-      clave: '',
+      proyecto: '',
       horas: '',
       actividadesDesarrollar: [''],
     });
 
+  
    
     const handleChange = (field, value) => {
       // Actualizar el campo de almacenamiento
@@ -169,13 +233,13 @@ function ServicioSocial ({ title }) {
       // Actualizar el campo de visualización (puedes aplicar el formato aquí si es necesario)
      
     };
-   
+      //para crear actividades modAL
     const handleActividadesChange = (index, value) => {
       const newActividades = [...modalData.actividadesDesarrollar];
       newActividades[index] = value;
       setModalData({ ...modalData, actividadesDesarrollar: newActividades });
     };
-   
+   //para crear actividades modAL
     const addActividad = () => {
       setModalData({
         ...modalData,
@@ -189,6 +253,7 @@ function ServicioSocial ({ title }) {
 
     const pdf = new jsPDF();
 
+    console.log(selectedSecretaria)
   // Cargar Montserrat Bold
   pdf.addFileToVFS('Montserrat-Bold-normal.ttf', font2);
   pdf.addFont('Montserrat-Bold-normal.ttf', 'Montserrat-Bold', 'normal')
@@ -215,7 +280,7 @@ function ServicioSocial ({ title }) {
                                                     Carta de Aceptación de Prácticas Profesionales
 
 
-                                                                                                                                                   ${modalData.numeroArchivo}`;
+                                                                                                                                                     A-SS-00${datosSolicitud}`;
     // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
   // Agregar las líneas al PDF
@@ -226,7 +291,7 @@ function ServicioSocial ({ title }) {
   pdf.setFontSize(11);
   yPosition += 30;                                                                                                                                                 
   const fecha =`                                                                                                                                                     
-                                                                                                  Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
+                                                                                                Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
 
 
 
@@ -259,7 +324,7 @@ function ServicioSocial ({ title }) {
   pdf.setFontSize(11);
   yPosition += 30;
  const cuerpo =`
- Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha concluido  sus Prácticas Profesionales en la ${modalData.dependencia}, siendo asignado/a en la ${modalData.asignado_a} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${modalData.programa}” de la ${modalData.direccionGeneral}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ Por medio del presente informo a usted que el C.${datosAlumno}, con número de cuenta: ${datosMatricula}, estudiante de la Licenciatura en ${datosCarrera}, del ${datosPlantel}, ha sido aceptado/a, para realizar sus Prácticas Profesionales en la ${selectedSecretaria}, siendo asignado/a en la ${selectedDependencia} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: ${selectedProyecto}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
  `;
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -331,7 +396,7 @@ const direccion=`
   // Ajustar el tamaño de letra solo para la cadena de firma electrónica
   pdf.setFont('Montserrat-Regular');
   pdf.setFontSize(6);
-
+  
   const cadena = `${datosFirmaE}`;
 
   // Agregar la cadena de firma electrónica al PDF
@@ -350,31 +415,40 @@ const direccion=`
   return pdfFile;
   
   };
+
   const sendRequest = async() => {
     // Crear FormData y agregar el PDF
     const pdfFile = await generatePDF();
     console.log(pdfFile)
     const formData = new FormData();
     formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
-  
+  console.log(numChange)
     // Agregar el JSON al FormData
-    const jsonData = {"solicitud":"2","estatus":"Aceptado","validador":"7"}; 
+    const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id}; 
+console.log(jsonData)
     formData.append('JSON', JSON.stringify(jsonData));
   
     console.log('FormData antes de la solicitud:', formData);
   
     // Realizar la solicitud Axios
     axios
-    .patch(`http://127.0.0.1:5000/AceptarRechazarSolicitud`, formData)
+    .patch(`http://127.0.0.1:5000/AceptarRechazarLiberacion`, formData)
     .then((response) => {
-      
-      if (response) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Carta enviada',
-          text: 'Tu carta de presentación ha sido enviada correctamente.',
-        });
-      }
+  fetchDataTabla()
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Carta enviada',
+    text: 'Tu carta de presentación ha sido enviada correctamente.',
+    allowOutsideClick: false,
+    confirmButtonText: "Aceptar"
+  }).then((result) => {
+    console.log(result)
+    if (result.isConfirmed) {
+        console.log(result)
+        handleClose()
+    }
+});
       
     })
     .catch((error) => {
@@ -388,7 +462,52 @@ const direccion=`
     });
 };
   
-  
+  const sendRequest22 = async() => {
+      // Crear FormData y agregar el PDF
+    
+     
+      const formData = new FormData();
+    
+    console.log(numChange)
+      // Agregar el JSON al FormData
+      const jsonData = {"solicitud": numChange,"estatus":"Rechazado","validador":parsedDataUser.id}; 
+  console.log(jsonData)
+      formData.append('JSON', JSON.stringify(jsonData));
+    
+      console.log('FormData antes de la solicitud:', formData);
+    
+      // Realizar la solicitud Axios
+      axios
+      .patch(`http://127.0.0.1:5000/AceptarRechazarLiberacion`, formData)
+      .then((response) => {
+    fetchDataTabla()
+  
+    Swal.fire({
+      icon: 'success',
+      title: 'Solicitud Rechazada',
+      text: 'La solicitud ha sido rechazada correctamente.',
+      allowOutsideClick: false,
+      confirmButtonText: "Aceptar"
+    }).then((result) => {
+      console.log(result)
+      if (result.isConfirmed) {
+          console.log(result)
+          handleClose()
+      }
+  });
+        
+      })
+      .catch((error) => {
+        // Maneja errores de solicitud
+        console.error("Error al enviar el formulario:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error al rechazar la solicitud ",
+          text: "Hubo un problema al rechazar la solicitud.",
+        });
+      });
+  };
+    
   //************************************************************************************************************************************************ *
 
   const [sendButtonClicked, setSendButtonClicked] = useState(false);
@@ -415,7 +534,6 @@ const direccion=`
       asignado_a:'',
       periodo: '',
       horario: '',
-      direccionGeneral: '',
       programa: '',
       clave: '',
       horas: '',
@@ -431,11 +549,16 @@ const direccion=`
     window.open(pdf, '_blank');
   };
 
+  
+
   const handleValidation = (id) => {
     setData((prevData) =>
-      prevData.map((item) => (item.id === id ? { ...item, validar: !item.validar } : item))
+      prevData.map((item, index) =>
+        index === id ? { ...item, validar: !item.validar } : item
+      )
     );
   };
+  
 
   const handleClose = () => {
     setSendButtonClicked(false);
@@ -460,14 +583,152 @@ const direccion=`
   };
 
   const handleShow = () => setShowModal(true);
-
   
 
   const validateForm = () => {
-    // Implementa la lógica de validación del formulario
+    // Implementa la lógica de valcidación del formulario
     return true; // Devuelve true si el formulario es válido, o false si no lo es
   };
+  
 
+
+  //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------traer dependencias----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+  const [secretarias, setSecretarias] = useState([]);
+  const [dependencias, setDependencias] = useState([]);
+  const [selectedSecretaria, setSelectedSecretaria] = useState('');
+  const [selectedDependencia, setSelectedDependencia] = useState('');
+  const [datos, setDatos] = useState([]);
+
+console.log('Secretarias:', secretarias);
+console.log('Dependencias:', dependencias);
+console.log('Selected Secretaria:', selectedSecretaria);
+console.log('Selected Dependencia:', selectedDependencia);
+
+  const traerDatos = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/dependencias');
+      const datos = await response.json();
+      console.log(datos);
+
+      // Filtrar las secretarías únicas
+      const secretariasUnicas = [...new Set(datos.map(entry => entry.secretaria))];
+
+      setSecretarias(secretariasUnicas);
+      setDatos(datos); // Guardar los datos en el estado local
+      setDependencias([]);
+      setSelectedSecretaria('');
+      
+      setSelectedDependencia('');
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+    }
+  };
+
+  useEffect(() => {
+    traerDatos();
+    fetchDatosModal();
+  }, []);
+
+  const handleSecretariaChange = (e) => {
+    const selectedSec = e.target.value;
+    console.log(selectedSec)
+    setSelectedSecretaria(selectedSec);
+
+    // Filtrar las dependencias correspondientes a la secretaría seleccionada
+    const dependenciasSecretaria = secretarias.find(sec => sec === selectedSec)
+      ? datos.filter(entry => entry.secretaria === selectedSec).map(entry => entry.dependencia)
+      : [];
+
+    setDependencias(dependenciasSecretaria);
+    setSelectedDependencia('');
+  };
+
+    //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------Datos MOdal----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    const [datosAlumno, setDatosAlumno] = useState('');
+    const [datosCarrera, setDatosCarrera] = useState('');
+    const [datosMatricula, setDatosMatricula] = useState('');
+    const [datosPlantel, setDatosPlantel] = useState('');
+    const [datosSolicitud, setDatosSolicitud] = useState('');
+
+    console.log('Alumno:', datosAlumno);
+    console.log('Carrera:', datosCarrera);
+    console.log('Matricula:', datosMatricula);
+    console.log('Plantel:', datosPlantel);
+    console.log('Solicitud:', datosSolicitud);
+   
+    
+    // Función para realizar la solicitud y obtener los datos del nuevo endpoint
+    const fetchDatosModal = async (solicitudId) => {
+      console.log(solicitudId)
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/datosAceptacion?solicitud=${solicitudId}`);
+        const data = await response.json();
+        console.log(data);
+    
+        // Verifica si la respuesta contiene las propiedades necesarias
+        if (data.alumno && data.carrera && data.matricula && data.plantel && data.solicitud && data.universidad) {
+          // Establece los datos en el estado
+          setDatosAlumno(data.alumno);
+          setDatosCarrera(data.carrera);
+          setDatosMatricula(data.matricula);
+          setDatosPlantel(data.plantel);
+          setDatosSolicitud(data.solicitud);
+        } else {
+          console.error('La respuesta del API no tiene la estructura esperada:', data);
+        }
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+    
+    // Función para manejar el clic del botón
+    const sendRequest2 = (solicitudId) => {
+      fetchDatosModal(solicitudId); // Llamar a la función fetchDatosModal con el solicitudId como argumento
+    };  
+    
+    //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------traer Proyectos----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    const [proyectos, setProyectos] = useState([]);
+    const [selectedProyecto, setSelectedProyecto] = useState('');
+    const [selectedProyectoId, setSelectedProyectoId] = useState(null); // Nueva constante para almacenar la ID del proyecto seleccionado
+    const [proyectosData, setProyectosData] = useState([]);
+  
+    console.log('Proyectos:', proyectos);
+    console.log('Selected Proyecto:', selectedProyecto);
+    console.log('Selected Proyecto ID:', selectedProyectoId); // Agregamos un log para la ID del proyecto
+  
+    const traerDatos2 = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/consultaProyectos');
+        const data = await response.json();
+        console.log(data);
+  
+        // Obtener proyectos únicos
+        const proyectosUnicos = [...new Set(data.map(entry => entry.proyecto))];
+  
+        setProyectos(proyectosUnicos);
+        setProyectosData(data);
+        setSelectedProyecto('');
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+      }
+    };
+  
+    useEffect(() => {
+      traerDatos2();
+    }, []);
+  
+    const handleProyectoChange = (e) => {
+      const selectedProj = e.target.value;
+      console.log(selectedProj);
+  
+      // Buscar la ID del proyecto seleccionado
+      const proyectoSeleccionado = proyectosData.find(entry => entry.proyecto === selectedProj);
+      if (proyectoSeleccionado) {
+        setSelectedProyectoId(proyectoSeleccionado.id);
+      }
+  
+      setSelectedProyecto(selectedProj);
+    };
 
 
 
@@ -477,45 +738,39 @@ const direccion=`
         <StyledTable>
           <thead>
             <tr>
+            <StyledTh>ID</StyledTh>
               <StyledTh>Nombre</StyledTh>
               <StyledTh>Escuela</StyledTh>
               <StyledTh>Tipo de Solicitud</StyledTh>
-              <StyledTh>Carta de Presentación</StyledTh>
+             
               <StyledTh>Fecha</StyledTh>
-              <StyledTh>Aceptar Solicitud</StyledTh>
+              <StyledTh>Cambiar Estatus</StyledTh>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <StyledTr key={item.id} even={index % 2 === 0}>
+              <StyledTr key={item.solicitud_id} even={index % 2 === 0}>
+                <StyledTd>{item.solicitud_id}</StyledTd>
                 <StyledTd>{item.nombre}</StyledTd>
-                <StyledTd>{item.escuela}</StyledTd>
-                <StyledTd>{item.tipoSolicitud}</StyledTd>
-                <StyledTd>
-                  <Button
-                    variant="link"
-                    onClick={() => {
-                      setSelectedPdf(item.cartaPresentacion);
-                      openPdfInNewTab(require('./1212.pdf'));
-                    }}
-                    style={{ color: selectedPdf === item.cartaPresentacion ? '#9e2343' : '#bc955b' }}
-                  >
-                    {item.cartaPresentacion}
-                  </Button>
-                </StyledTd>
-                <StyledTd>{item.fecha}</StyledTd>
+                <StyledTd>{"UAEH"}</StyledTd>
+                <StyledTd>{item.tipo}</StyledTd>
+               
+                <StyledTd>{item.fechaSolicitud}</StyledTd>
                 <StyledTd>
                   <StyledButton
                     variant="primary"
                     onClick={() => {
                       handleShow();
+                      setNumChange(item.solicitud_id)
                       handleValidation(item.id);
                       setSendButtonClicked(false);
+                      fetchDatosModal(item.solicitud_id);
+                        fetchData(item.solicitud_id);
                     }}
                     validar={item.validar}
                     disabled={item.validar || sendButtonClicked}
                   >
-                    {item.validar ? 'Aceptado' : 'Aceptar'}
+                   {item.validar ? 'Revisado' : 'Revisar'}
                   </StyledButton>
                 </StyledTd>
               </StyledTr>
@@ -539,14 +794,7 @@ const direccion=`
       </Helmet>
 
       <Form>
-        <Form.Group controlId="numeroArchivo" className="mb-3">
-          <Form.Label>Número de Archivo</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.numeroArchivo}
-            onChange={(e) => handleChange('numeroArchivo', e.target.value)}
-          />
-        </Form.Group>
+      
 
         <Form.Group controlId="date" className="mb-3">
           <Form.Label>Fecha de la carta</Form.Label>
@@ -557,61 +805,49 @@ const direccion=`
           />
         </Form.Group>
 
+        <Form.Group controlId="secretaria" className="mb-3">
+        <Form.Label>Secretaría</Form.Label>
+        <Form.Select
+          value={selectedSecretaria}
+          onChange={handleSecretariaChange}
+        >
+          <option value="">Selecciona una secretaría</option>
+          {secretarias.map(secretaria => (
+            <option key={secretaria} value={secretaria}>{secretaria}</option>
+          ))}
+        </Form.Select>
+      </Form.Group>
 
-
-        <Form.Group controlId="nombreEstudiante" className="mb-3">
-          <Form.Label>Nombre del Estudiante</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.nombreEstudiante}
-            onChange={(e) => handleChange('nombreEstudiante', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="numeroControl" className="mb-3">
-          <Form.Label>Número de Control</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.numeroControl}
-            onChange={(e) => handleChange('numeroControl', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="carrera" className="mb-3">
-          <Form.Label>Carrera</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.carrera}
-            onChange={(e) => handleChange('carrera', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="instituto" className="mb-3">
-          <Form.Label>Instituto</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.instituto}
-            onChange={(e) => handleChange('instituto', e.target.value)}
-          />
-        </Form.Group>
-
+      {dependencias.length > 0 && (
         <Form.Group controlId="dependencia" className="mb-3">
           <Form.Label>Dependencia</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.dependencia}
-            onChange={(e) => handleChange('dependencia', e.target.value)}
-          />
+          <Form.Select
+            value={selectedDependencia}
+            onChange={(e) => setSelectedDependencia(e.target.value)}
+          >
+            <option value="">Selecciona una dependencia</option>
+            {dependencias.map(dependencia => (
+              <option key={dependencia} value={dependencia}>{dependencia}</option>
+            ))}
+          </Form.Select>
         </Form.Group>
+      )}
 
-        <Form.Group controlId="asignado_a" className="mb-3">
-          <Form.Label>Asignado a:</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.asignado_a}
-            onChange={(e) => handleChange('asignado_a', e.target.value)}
-          />
-        </Form.Group>
+<Form.Group controlId="proyecto" className="mb-3">
+      <Form.Label>Proyecto</Form.Label>
+      <Form.Select
+        value={selectedProyecto}
+        onChange={handleProyectoChange}
+      >
+        <option value="">Selecciona un proyecto</option>
+        {proyectos.map(proyecto => (
+          <option key={proyecto} value={proyecto}>{proyecto}</option>
+        ))}
+      </Form.Select>
+    </Form.Group>
+
+      
+
 
         <Form.Group controlId="periodo_inicio" className="mb-3">
           <Form.Label>Fecha de Inicio</Form.Label>
@@ -650,24 +886,6 @@ const direccion=`
         </div>
       </Form.Group>
 
-        <Form.Group controlId="direccionGeneral" className="mb-3">
-          <Form.Label>Dirección General</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.direccionGeneral}
-            onChange={(e) => handleChange('direccionGeneral', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="programa" className="mb-3">
-          <Form.Label>Proyecto</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.programa}
-            onChange={(e) => handleChange('programa', e.target.value)}
-          />
-        </Form.Group>
-
 
         <Form.Group controlId="horas" className="mb-3">
           <Form.Label>Horas</Form.Label>
@@ -679,33 +897,34 @@ const direccion=`
         </Form.Group>
 
         <Form.Group controlId="actividadesDesarrollar" className="mb-3">
-          <Form.Label>Actividades a Desarrollar</Form.Label>
-          {modalData.actividadesDesarrollar.map((actividad, index) => (
-            <div key={index}>
-              <Form.Control
-                type="text"
-                value={actividad}
-                onChange={(e) => handleActividadesChange(index, e.target.value)}
-              />
-              {index === modalData.actividadesDesarrollar.length - 1 && (
-                <button type="button" onClick={addActividad}>
-                  Agregar Más
-                </button>
-              )}
-            </div>
-          ))}
-        </Form.Group>
+  <Form.Label>Actividades a Desarrollar</Form.Label>
+  {[...Array(3)].map((_, index) => (
+    <div key={index}>
+      <Form.Control
+        type="text"
+        value={modalData.actividadesDesarrollar[index] || ''}
+        onChange={(e) => handleActividadesChange(index, e.target.value)}
+      />
+    </div>
+  ))}
+</Form.Group>
       </Form>
      
 
            </Modal.Body>
           <Modal.Footer>
-            <SendButton variant="primary" onClick={sendRequest}>
-              Enviar
-             </SendButton>
+              <SendButton variant="primary" onClick={() => {
+                  sendRequest();
+           
+                }}>
+                  Enviar
+              </SendButton>
 
-            <CloseButton variant="primary" onClick={handleClose}>
-              Cerrar
+              <CloseButton variant="primary" onClick={() => {
+                  sendRequest22();
+           
+                }}>
+              Rechazar Liberación
             </CloseButton>
           </Modal.Footer>
         </ModalContent>
@@ -713,4 +932,4 @@ const direccion=`
     </div>
   );
 }
-export default ServicioSocial;
+export default PracticasUAEH;

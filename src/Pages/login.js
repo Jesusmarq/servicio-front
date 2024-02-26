@@ -23,6 +23,7 @@ const Login = () => {
     axios
       .post(`http://127.0.0.1:5000/login`, formData)
       .then((response) => {
+        console.log(response.data);
         // Acceder y guardar solo las propiedades necesarias
         const { rol, id, nombre, token } = response.data;
 
@@ -30,11 +31,14 @@ const Login = () => {
           "dataUser",
           JSON.stringify({ rol, id, nombre, token })
         );
+
         // Verifica la respuesta de la API y redirige según el usuario
         if (rol === "admin") {
           history.push("/administrador");
-        } else if (rol === "user") {
+        } else if (rol === "alumno") {
           history.push("/usuario");
+        } else if (rol === "verificador") {
+          history.push("/validador");
         }
       })
       .catch((error) => {

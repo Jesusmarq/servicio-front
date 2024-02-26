@@ -122,42 +122,51 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   function Estatus({ title }) {
     const [datosTabla, setDatosTabla] = useState([]);
 
-  const handleSolicitarLiberacion = async () => {
-    try {
-      // Hacer la primera petición para obtener el id
-      const response = await fetch('http://127.0.0.1:5000/idSolicitud?alumno=5');
-      
-      if (!response.ok) {
-        throw new Error('Error al obtener el ID de solicitud');
+    //console.log("localStorage.getItem('dataUser')")
+
+    console.log(localStorage.getItem('dataUser'))
+    var dataUser = localStorage.getItem('dataUser')
+    var parsedDataUser = JSON.parse(dataUser);
+    
+    // Acceder a la propiedad 'id'
+    console.log(parsedDataUser.id);
+
+    const handleSolicitarLiberacion = async () => {
+      try {
+        // Hacer la primera petición para obtener el id
+        const response = await fetch(`http://127.0.0.1:5000/idSolicitud?alumno=${parsedDataUser.id}`);
+        
+        if (!response.ok) {
+          throw new Error('Error al obtener el ID de solicitud');
+        }
+    
+        const { id } = await response.json();
+    
+        // Hacer la segunda petición con el id obtenido
+        const secondResponse = await fetch(`http://127.0.0.1:5000/solicitarLiberacion?solicitud=${id}`, {
+          method: 'PATCH',
+        });
+    
+        if (!secondResponse.ok) {
+          throw new Error('No tienes una solicitud aplicable para liberación');
+        }
+    
+        // Mostrar el mensaje de éxito
+        Swal.fire({
+          icon: 'success',
+          title: 'Liberación Solicitada',
+          text: 'La solicitud se realizó de manera correcta.',
+        });
+      } catch (error) {
+        // Manejar errores
+        console.error(error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No tienes una solicitud aplicable para liberación',
+        });
       }
-  
-      const { id } = await response.json();
-  
-      // Hacer la segunda petición con el id obtenido
-      const secondResponse = await fetch(`http://127.0.0.1:5000/solicitarLiberacion?solicitud=${id}`, {
-        method: 'PATCH',
-      });
-  
-      if (!secondResponse.ok) {
-        throw new Error('No tienes una solicitud aplicable para liberación');
-      }
-  
-      // Mostrar el mensaje de éxito
-      Swal.fire({
-        icon: 'success',
-        title: 'Liberación Solicitada',
-        text: 'La solicitud se realizó de manera correcta.',
-      });
-    } catch (error) {
-      // Manejar errores
-      console.error(error);
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'No tienes una solicitud aplicable para liberación',
-      });
-    }
-  };
+    };
 
   function handleDownloadPDF(pdfBase64, fileName) {
     try {
@@ -177,9 +186,9 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/consultaAlumno?alumno=5');
+        const response = await fetch(`http://127.0.0.1:5000/consultaAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
-
+  
         // Verifica si la respuesta contiene la propiedad 'solicitudes'
         if (data.solicitudes && Array.isArray(data.solicitudes)) {
           setDatosTabla(data.solicitudes);
@@ -190,9 +199,10 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
         console.error('Error al obtener datos:', error);
       }
     };
-
+  
     fetchData();
-  }, []);
+  }, [parsedDataUser.id]); // Este efecto se ejecutará cada vez que parsedDataUser.id cambie
+  
   return (
     <EstatusWrapper>
       <Header>
@@ -216,7 +226,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
                 <StyledTh>Tipo de solicitud</StyledTh>
                 <StyledTh>Carta de aceptacion</StyledTh>
                 <StyledTh>Fecha Liberacion</StyledTh>
-                {data.accesoAlumno === true && data.pdf_liberacion !== null && (
+                {data.pdf_liberacion !== null && (
                   <StyledTh>Carta de liberación</StyledTh>
                 )}
 
@@ -243,7 +253,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
                     </>
                   )}
                 <StyledTd isEven={true}>{data.fechaLiberacion}</StyledTd>
-                {data.accesoAlumno === true && data.pdf_liberacion !== null && (
+                {data.pdf_liberacion !== null && (
                   <StyledTd isEven={true}>
                   <button
                     onClick={() => handleDownloadPDF(data.pdf_liberacion, 'aceptacion.pdf')}>

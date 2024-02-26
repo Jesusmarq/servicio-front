@@ -94,17 +94,28 @@ const SendButton = styled(Button)`
 
 
 
-function ServicioSocial ({ title }) {
-  const [data, setData] = useState([]);
-      
-  //-------------------------------generar pdf---------------------------------------------------------
+function ServicioSocialUAEH ({ title }) {
+
+  //  inicialisacion de los estados de tabla Y DEMAS COMO QR DATOS FIRMA ETC ---------
+  const [data, setData] = useState([]);//tabla
+ 
   const [datosQr, setDatosQr] = useState('');
   const [datosFirma, setDatosFirma] = useState('');
   const [datosFirmaE, setDatosFirmaE] =useState('');
+  const[numChange,setNumChange] = useState(0)
+
+  console.log(localStorage.getItem('dataUser'))
+  var dataUser = localStorage.getItem('dataUser')
+  var parsedDataUser = JSON.parse(dataUser);
   
-  const fetchData = async () => {
+  // Acceder a la propiedad 'id'
+  console.log(parsedDataUser.id);
+
+  //peticion para el qr  y los demas datos
+  const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
+    console.log(solicitudId)
     try {
-      const response = await fetch('http://127.0.0.1:5000/generarQr?solicitud=2');
+      const response = await fetch(`http://127.0.0.1:5000/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
       console.log(data);
@@ -121,31 +132,37 @@ function ServicioSocial ({ title }) {
       console.error('Error al obtener datos:', error);
     }
   };
+  
 
+  //peticion datos de la tabla  ------------------
   const fetchDataTabla = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/consultaSolicitudes?filtro=todos&limite=5');
-      
-      if (!response.ok) {
-        throw new Error('Error al obtener las solicitudes');
-      }
-  
-      const responseData = await response.json();
-      console.log(responseData);
-      // Asegúrate de que responseData.solicitudes_json es un array antes de asignarlo a data
-      if (Array.isArray(responseData.solicitudes)) {
-        setData(responseData.solicitudes);
-      } else {
-        throw new Error('La propiedad solicitudes_json de la respuesta de la API no es un array');
-      }
+        const response = await fetch('http://127.0.0.1:5000/consultaSolicitudes?filtro=Pendiente&limite=100');
+
+        if (!response.ok) {
+            throw new Error('Error al obtener las solicitudes');
+        }
+
+        const responseData = await response.json();
+        console.log(responseData);
+
+        // Filtrar responseData.solicitudes para obtener solo las de tipo "servicio social" y universidad "UAEH"
+        const solicitudesFiltradas = responseData.solicitudes.filter(solicitud => solicitud.tipo === 'Servicio Social' && solicitud.universidad === 'UAEH');
+
+        // Asegúrate de que solicitudesFiltradas es un array antes de asignarlo a data
+        if (Array.isArray(solicitudesFiltradas)) {
+            setData(solicitudesFiltradas);
+        } else {
+            throw new Error('La propiedad solicitudes_json de la respuesta de la API no es un array');
+        }
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+};
   
-  
+//------------------------   mada hacer los los cambios -------------
   useEffect(() => {
-      fetchData()
+      //fetchData()
       fetchDataTabla()
     }, []);
 
@@ -174,9 +191,10 @@ function ServicioSocial ({ title }) {
         return null;
       }
     }
-
+//-----------------para que se muestre en la tabla------------------------
     function handleDownloadPDF(pdfBase64, fileName) {
       try {
+        console.log(pdfBase64)
         const blob = base64toBlob(pdfBase64, 'application/pdf');
         const blobUrl = URL.createObjectURL(blob);
   
@@ -190,7 +208,7 @@ function ServicioSocial ({ title }) {
       }
     }
   
-  
+  ////---------------para  almacenar los datos del modal-----------------
     const [modalData, setModalData] = useState({
       numeroArchivo: '',
       date:'',
@@ -209,99 +227,7 @@ function ServicioSocial ({ title }) {
       actividadesDesarrollar: [''],
     });
 
-    const getDependenciaNombre = (valor) => {
-      switch(valor) {
-        case '1':
-          return 'Procuraduría General de Justicia';
-        case '2':
-          return 'Secretaría del Despacho de la Persona Titular del Poder Ejecutivo del Estado';
-        case '3':
-          return 'Oficialía Mayor';
-        case '4':
-          return 'Secretaría de Turismo';
-        case '5':
-          return 'Secretaría de Movilidad y Transporte';
-        case '6':
-          return 'Unidad de Planeación y Prospectiva';
-        case '7':
-          return 'Comisión Estatal para el Desarrollo Sostenible de los Pueblos Indígenas';
-        case '8':
-          return 'Secretaría del Bienestar e Inclusión Social';
-        case '9':
-          return 'Secretaría del Medio Ambiente y Recursos Naturales';
-        case '10':
-          return 'Comisión Estatal de Biodiversidad de Hidalgo';
-        case '11':
-          return 'Secretaría de Hacienda';
-        case '12':
-          return 'Comisión Ejecutiva de Atención a Víctimas del Estado de Hidalgo';
-        case '13':
-          return 'Consejo de Ciencia, Tecnología e Innovación de Hidalgo';
-        case '14':
-          return 'Secretaría de Gobierno (ciudad de las mujeres)';
-        case '15':
-          return 'Secretaría de Gobierno (Centro de Justicia para Mujeres del Estado de Hidalgo)';
-        case '16':
-          return 'SECRETARIA DE GOBIERNO INDEMUN';
-        case '17':
-          return 'Secretaría de Gobierno (Dir. Gral de Archivo de Notarías)';
-        case '18':
-          return 'Secretaría de Gobierno (Coordinación General de Comunicación gubernamental)';
-        case '19':
-          return 'Secretaría de Gobierno (Apoyo a la Defensoría)';
-        case '20':
-          return 'Secretaría de Desarrollo Económico';
-        case '21':
-          return 'Secretaría de Contraloría';
-        default:
-          return '';
-      }
-    }
-
-    const getAsignadoNombre = (valor) => {
-      switch(valor) {
-        case '40':
-          return 'Dirección General de Recursos Materiales y Servicios';
-        case '41':
-          return 'Dirección General de Administración de la Oficialía Mayor';
-        case '42':
-          return 'Dirección General de Organización y Rediseño Institucional';
-        case '43':
-          return 'Dirección General de Recursos Humanos';
-        case '44':
-          return 'Archivo General del Estado';
-        
-        default:
-          return '';
-      }
-    }
-
-
-    const getProyectoNombre = (valor) => {
-      switch(valor) {
-        case '200':
-          return 'Abatimiento de Rezago ';
-        case '201':
-          return 'Revisión de los Recursos Materiales, Humanos y Financieros de la PGJEH ';
-        case '202':
-          return 'Integración de los Expedientes de Presunta Responsabilidad ';
-        case '203':
-          return 'Investigaciones Administrativas vs Servidores Públicos de la PGJEH ';
-        case '204':
-          return 'Servicio Social ';
-        case '205':
-          return 'Actividades que Realiza Ministerio Público Adscrito a Juzgado Penal Sistema Tradicional ';
-        case '206':
-          return 'Actividades Administrativas ';
-        case '207':
-          return 'Auxiliar en el Instituto de Formación Profesional de la Procuraduría';
-        
-    
-          default:
-          return '';
-      }
-    }
-    
+  
    
     const handleChange = (field, value) => {
       // Actualizar el campo de almacenamiento
@@ -309,13 +235,13 @@ function ServicioSocial ({ title }) {
       // Actualizar el campo de visualización (puedes aplicar el formato aquí si es necesario)
      
     };
-   
+      //para crear actividades modAL
     const handleActividadesChange = (index, value) => {
       const newActividades = [...modalData.actividadesDesarrollar];
       newActividades[index] = value;
       setModalData({ ...modalData, actividadesDesarrollar: newActividades });
     };
-   
+   //para crear actividades modAL
     const addActividad = () => {
       setModalData({
         ...modalData,
@@ -329,6 +255,7 @@ function ServicioSocial ({ title }) {
 
     const pdf = new jsPDF();
 
+    console.log(selectedSecretaria)
   // Cargar Montserrat Bold
   pdf.addFileToVFS('Montserrat-Bold-normal.ttf', font2);
   pdf.addFont('Montserrat-Bold-normal.ttf', 'Montserrat-Bold', 'normal')
@@ -355,7 +282,7 @@ function ServicioSocial ({ title }) {
                                                     Carta de Aceptación de Servicio Social
 
 
-                                                                                                                                                   ${modalData.numeroArchivo}`;
+                                                                                                                                                     A-SS-00${datosSolicitud}`;
     // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
   // Agregar las líneas al PDF
@@ -399,7 +326,7 @@ function ServicioSocial ({ title }) {
   pdf.setFontSize(11);
   yPosition += 30;
  const cuerpo =`
- Por medio del presente informo a usted que el C.${modalData.nombreEstudiante}, con número de cuenta: ${modalData.numeroControl}, estudiante de la Licenciatura en ${modalData.carrera}, del ${modalData.instituto}, ha sido aceptado/a, para realizar su Servicio Social en la ${getDependenciaNombre(modalData.dependencia)}, siendo asignado/a en la ${getAsignadoNombre(modalData.asignado_a)} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${getProyectoNombre(modalData.proyecto)}”, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ Por medio del presente informo a usted que el C.${datosAlumno}, con número de cuenta: ${datosMatricula}, estudiante de la Licenciatura en ${datosCarrera}, del ${datosPlantel}, ha sido aceptado/a, para realizar su Servicio Social en la ${selectedSecretaria}, siendo asignado/a en la ${selectedDependencia} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: ${selectedProyecto}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
  `;
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -490,15 +417,17 @@ const direccion=`
   return pdfFile;
   
   };
+
   const sendRequest = async() => {
     // Crear FormData y agregar el PDF
     const pdfFile = await generatePDF();
     console.log(pdfFile)
     const formData = new FormData();
     formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
-  
+  console.log(numChange)
     // Agregar el JSON al FormData
-    const jsonData = {"solicitud":"2","estatus":"Aceptado","validador":"7"}; 
+    const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id}; 
+console.log(jsonData)
     formData.append('JSON', JSON.stringify(jsonData));
   
     console.log('FormData antes de la solicitud:', formData);
@@ -507,14 +436,21 @@ const direccion=`
     axios
     .patch(`http://127.0.0.1:5000/AceptarRechazarSolicitud`, formData)
     .then((response) => {
-      
-      if (response) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Carta enviada',
-          text: 'Tu carta de presentación ha sido enviada correctamente.',
-        });
-      }
+  fetchDataTabla()
+
+  Swal.fire({
+    icon: 'success',
+    title: 'Solicitud Aceptada',
+    text: 'La solicitud ha sido aceptada correctamente.',
+    allowOutsideClick: false,
+    confirmButtonText: "Aceptar"
+  }).then((result) => {
+    console.log(result)
+    if (result.isConfirmed) {
+        console.log(result)
+        handleClose()
+    }
+});
       
     })
     .catch((error) => {
@@ -522,12 +458,61 @@ const direccion=`
       console.error("Error al enviar el formulario:", error);
       Swal.fire({
         icon: "error",
-        title: "Error al enviar el formulario",
-        text: "Hubo un problema al enviar el formulario.",
+        title: "Error al aceptar la solicitud",
+        text: "Hubo un problema al aceptar la solicitud.",
       });
     });
 };
   
+
+  const sendRequest22 = async() => {
+      // Crear FormData y agregar el PDF
+    
+     
+      const formData = new FormData();
+    
+    console.log(numChange)
+      // Agregar el JSON al FormData
+      const jsonData = {"solicitud": numChange,"estatus":"Rechazado","validador":parsedDataUser.id}; 
+  console.log(jsonData)
+      formData.append('JSON', JSON.stringify(jsonData));
+    
+      console.log('FormData antes de la solicitud:', formData);
+    
+      // Realizar la solicitud Axios
+      axios
+      .patch(`http://127.0.0.1:5000/AceptarRechazarSolicitud`, formData)
+      .then((response) => {
+    fetchDataTabla()
+  
+    Swal.fire({
+      icon: 'success',
+      title: 'Solicitud Rechazada',
+      text: 'La solicitud ha sido rechazada correctamente.',
+      allowOutsideClick: false,
+      confirmButtonText: "Aceptar"
+    }).then((result) => {
+      console.log(result)
+      if (result.isConfirmed) {
+          console.log(result)
+          handleClose()
+      }
+  });
+        
+      })
+      .catch((error) => {
+        // Maneja errores de solicitud
+        console.error("Error al enviar el formulario:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Error al rechazar la solicitud ",
+          text: "Hubo un problema al rechazar la solicitud.",
+        });
+      });
+  };
+    
+
+
   
   //************************************************************************************************************************************************ *
 
@@ -570,11 +555,16 @@ const direccion=`
     window.open(pdf, '_blank');
   };
 
+  
+
   const handleValidation = (id) => {
     setData((prevData) =>
-      prevData.map((item) => (item.id === id ? { ...item, validar: !item.validar } : item))
+      prevData.map((item, index) =>
+        index === id ? { ...item, validar: !item.validar } : item
+      )
     );
   };
+  
 
   const handleClose = () => {
     setSendButtonClicked(false);
@@ -599,14 +589,147 @@ const direccion=`
   };
 
   const handleShow = () => setShowModal(true);
-
   
 
   const validateForm = () => {
-    // Implementa la lógica de validación del formulario
+    // Implementa la lógica de valcidación del formulario
     return true; // Devuelve true si el formulario es válido, o false si no lo es
   };
+  
 
+
+  //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------traer dependencias----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+  const [secretarias, setSecretarias] = useState([]);
+  const [dependencias, setDependencias] = useState([]);
+  const [selectedSecretaria, setSelectedSecretaria] = useState('');
+  const [selectedDependencia, setSelectedDependencia] = useState('');
+  const [datos, setDatos] = useState([]);
+
+
+  const traerDatos = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/dependencias');
+      const datos = await response.json();
+      console.log(datos);
+
+      // Filtrar las secretarías únicas
+      const secretariasUnicas = [...new Set(datos.map(entry => entry.secretaria))];
+
+      setSecretarias(secretariasUnicas);
+      setDatos(datos); // Guardar los datos en el estado local
+      setDependencias([]);
+      setSelectedSecretaria('');
+      
+      setSelectedDependencia('');
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+    }
+  };
+
+  useEffect(() => {
+    traerDatos();
+  }, []);
+
+  const handleSecretariaChange = (e) => {
+    const selectedSec = e.target.value;
+    console.log(selectedSec)
+    setSelectedSecretaria(selectedSec);
+
+    // Filtrar las dependencias correspondientes a la secretaría seleccionada
+    const dependenciasSecretaria = secretarias.find(sec => sec === selectedSec)
+      ? datos.filter(entry => entry.secretaria === selectedSec).map(entry => entry.dependencia)
+      : [];
+
+    setDependencias(dependenciasSecretaria);
+    setSelectedDependencia('');
+  };
+
+    //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------Datos MOdal----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    const [datosAlumno, setDatosAlumno] = useState('');
+    const [datosCarrera, setDatosCarrera] = useState('');
+    const [datosMatricula, setDatosMatricula] = useState('');
+    const [datosPlantel, setDatosPlantel] = useState('');
+    const [datosSolicitud, setDatosSolicitud] = useState('');
+
+    console.log('Alumno:', datosAlumno);
+    console.log('Carrera:', datosCarrera);
+    console.log('Matricula:', datosMatricula);
+    console.log('Plantel:', datosPlantel);
+    console.log('Solicitud:', datosSolicitud);
+   
+    
+    // Función para realizar la solicitud y obtener los datos del nuevo endpoint
+    const fetchDatosModal = async (solicitudId) => {
+      console.log(solicitudId)
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/datosAceptacion?solicitud=${solicitudId}`);
+        const data = await response.json();
+        console.log(data);
+    
+        // Verifica si la respuesta contiene las propiedades necesarias
+        if (data.alumno && data.carrera && data.matricula && data.plantel && data.solicitud && data.universidad) {
+          // Establece los datos en el estado
+          setDatosAlumno(data.alumno);
+          setDatosCarrera(data.carrera);
+          setDatosMatricula(data.matricula);
+          setDatosPlantel(data.plantel);
+          setDatosSolicitud(data.solicitud);
+        } else {
+          console.error('La respuesta del API no tiene la estructura esperada:', data);
+        }
+      } catch (error) {
+        console.error('Error al obtener datos:', error);
+      }
+    };
+    
+    // Función para manejar el clic del botón
+    const sendRequest2 = (solicitudId) => {
+      fetchDatosModal(solicitudId); // Llamar a la función fetchDatosModal con el solicitudId como argumento
+    };  
+    
+    //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------traer Proyectos----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+    const [proyectos, setProyectos] = useState([]);
+    const [selectedProyecto, setSelectedProyecto] = useState('');
+    const [selectedProyectoId, setSelectedProyectoId] = useState(null); // Nueva constante para almacenar la ID del proyecto seleccionado
+    const [proyectosData, setProyectosData] = useState([]);
+  
+    console.log('Proyectos:', proyectos);
+    console.log('Selected Proyecto:', selectedProyecto);
+    console.log('Selected Proyecto ID:', selectedProyectoId); // Agregamos un log para la ID del proyecto
+  
+    const traerDatos2 = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:5000/consultaProyectos');
+        const data = await response.json();
+        console.log(data);
+  
+        // Obtener proyectos únicos
+        const proyectosUnicos = [...new Set(data.map(entry => entry.proyecto))];
+  
+        setProyectos(proyectosUnicos);
+        setProyectosData(data);
+        setSelectedProyecto('');
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+      }
+    };
+  
+    useEffect(() => {
+      traerDatos2();
+    }, []);
+  
+    const handleProyectoChange = (e) => {
+      const selectedProj = e.target.value;
+      console.log(selectedProj);
+  
+      // Buscar la ID del proyecto seleccionado
+      const proyectoSeleccionado = proyectosData.find(entry => entry.proyecto === selectedProj);
+      if (proyectoSeleccionado) {
+        setSelectedProyectoId(proyectoSeleccionado.id);
+      }
+  
+      setSelectedProyecto(selectedProj);
+    };
 
 
 
@@ -616,23 +739,25 @@ const direccion=`
         <StyledTable>
           <thead>
             <tr>
+            <StyledTh>ID</StyledTh>
               <StyledTh>Nombre</StyledTh>
               <StyledTh>Escuela</StyledTh>
               <StyledTh>Tipo de Solicitud</StyledTh>
               <StyledTh>Carta de Presentación</StyledTh>
               <StyledTh>Fecha</StyledTh>
-              <StyledTh>Aceptar Solicitud</StyledTh>
+              <StyledTh>Cambiar Estatus</StyledTh>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
-              <StyledTr key={item.id} even={index % 2 === 0}>
+              <StyledTr key={item.solicitud_id} even={index % 2 === 0}>
+                <StyledTd>{item.solicitud_id}</StyledTd>
                 <StyledTd>{item.nombre}</StyledTd>
-                <StyledTd>{"escuela"}</StyledTd>
+                <StyledTd>{"UAEH"}</StyledTd>
                 <StyledTd>{item.tipo}</StyledTd>
                 <StyledTd>
                 <button
-                        onClick={() => handleDownloadPDF(data.pdf, 'aceptacion.pdf')}>
+                        onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
                         PDF
                       </button>
                 </StyledTd>
@@ -642,14 +767,18 @@ const direccion=`
                     variant="primary"
                     onClick={() => {
                       handleShow();
+                      setNumChange(item.solicitud_id)
                       handleValidation(item.id);
                       setSendButtonClicked(false);
+                      fetchDatosModal(item.solicitud_id);
+                      fetchData(item.solicitud_id);
                     }}
                     validar={item.validar}
                     disabled={item.validar || sendButtonClicked}
                   >
-                    {item.validar ? 'Aceptado' : 'Aceptar'}
+                    {item.validar ? 'Revisado' : 'Revisar'}
                   </StyledButton>
+                
                 </StyledTd>
               </StyledTr>
             ))}
@@ -672,14 +801,7 @@ const direccion=`
       </Helmet>
 
       <Form>
-        <Form.Group controlId="numeroArchivo" className="mb-3">
-          <Form.Label>Número de Archivo</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.numeroArchivo}
-            onChange={(e) => handleChange('numeroArchivo', e.target.value)}
-          />
-        </Form.Group>
+      
 
         <Form.Group controlId="date" className="mb-3">
           <Form.Label>Fecha de la carta</Form.Label>
@@ -690,130 +812,48 @@ const direccion=`
           />
         </Form.Group>
 
-
-
-        <Form.Group controlId="nombreEstudiante" className="mb-3">
-          <Form.Label>Nombre del Estudiante</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.nombreEstudiante}
-            onChange={(e) => handleChange('nombreEstudiante', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="numeroControl" className="mb-3">
-          <Form.Label>Número de Control</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.numeroControl}
-            onChange={(e) => handleChange('numeroControl', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="carrera" className="mb-3">
-          <Form.Label>Carrera</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.carrera}
-            onChange={(e) => handleChange('carrera', e.target.value)}
-          />
-        </Form.Group>
-
-        <Form.Group controlId="instituto" className="mb-3">
-          <Form.Label>Instituto</Form.Label>
-          <Form.Control
-            type="text"
-            value={modalData.instituto}
-            onChange={(e) => handleChange('instituto', e.target.value)}
-          />
-        </Form.Group>
-
-
-
-
-        <Form.Group controlId="dependencia" className="mb-3">
-        <Form.Label>Dependencia</Form.Label>
+        <Form.Group controlId="secretaria" className="mb-3">
+        <Form.Label>Secretaría</Form.Label>
         <Form.Select
-          value={modalData.dependencia}
-          onChange={(e) => handleChange('dependencia', e.target.value)}
+          value={selectedSecretaria}
+          onChange={handleSecretariaChange}
         >
-          <option value="">Selecciona una dependencia</option>
-          <option value="1">Procuraduría General de Justicia</option>
-          <option value="2">Secretaría del Despacho de la Persona Titular del Poder Ejecutivo del Estado</option>
-          <option value="3">Oficialía Mayor</option>
-          <option value="4">Secretaría de Turismo</option>
-          <option value="5">Secretaría de Movilidad y Transporte</option>
-          <option value="6">Unidad de Planeación y Prospectiva</option>
-          <option value="7">Comisión Estatal para el Desarrollo Sostenible de los Pueblos Indígenas</option>
-          <option value="8">Secretaría del Bienestar e Inclusión Social</option>
-          <option value="9">Secretaría del Medio Ambiente y Recursos Naturales</option>
-          <option value="10">Comisión Estatal de Biodiversidad de Hidalgo</option>
-          <option value="11">Secretaría de Hacienda</option>
-          <option value="12">Comisión Ejecutiva de Atención a Víctimas del Estado de Hidalgo</option>
-          <option value="13">Consejo de Ciencia, Tecnología e Innovación de Hidalgo</option>
-          <option value="14">Secretaría de Gobierno (ciudad de las mujeres)</option>
-          <option value="15">Secretaría de Gobierno (Centro de Justicia para Mujeres del Estado de Hidalgo)</option>
-          <option value="16">SECRETARIA DE GOBIERNO INDEMUN</option>
-          <option value="17">Secretaría de Gobierno (Dir. Gral de Archivo de Notarías)</option>
-          <option value="18">Secretaría de Gobierno (Coordinación General de Comunicación gubernamental)</option>
-          <option value="19">Secretaría de Gobierno (Apoyo a la Defensoría)</option>
-          <option value="20">Secretaría de Desarrollo Económico</option>
-          <option value="21">Secretaría de Contraloría</option>
-        
+          <option value="">Selecciona una secretaría</option>
+          {secretarias.map(secretaria => (
+            <option key={secretaria} value={secretaria}>{secretaria}</option>
+          ))}
         </Form.Select>
       </Form.Group>
 
-      {modalData.dependencia && (
-        <Form.Group controlId="asignado_a" className="mb-3">
-          <Form.Label>Asignado a:</Form.Label>
+      {dependencias.length > 0 && (
+        <Form.Group controlId="dependencia" className="mb-3">
+          <Form.Label>Dependencia</Form.Label>
           <Form.Select
-            value={modalData.asignado_a}
-            onChange={(e) => handleChange('asignado_a', e.target.value)}
+            value={selectedDependencia}
+            onChange={(e) => setSelectedDependencia(e.target.value)}
           >
-            
-            {modalData.dependencia === '3' && (
-              <>
-                <option value="">Selecciona una opción</option>
-                <option value="40">Dirección General de Recursos Materiales y Servicios</option>
-                <option value="41">Dirección General de Administración de la Oficialía Mayor</option>
-                <option value="42">Dirección General de Organización y Rediseño Institucional</option>
-                <option value="43">Dirección General de Recursos Humanos</option>
-                <option value="44">Archivo General del Estado</option>
-                {/* Agrega más opciones según sea necesario */}
-              </>
-            )}
-            {modalData.dependencia === 'Dependencia 2' && (
-              <>
-                <option value="Asignado A">Asignado A</option>
-                <option value="Asignado B">Asignado B</option>
-                {/* Agrega más opciones según sea necesario */}
-              </>
-            )}
+            <option value="">Selecciona una dependencia</option>
+            {dependencias.map(dependencia => (
+              <option key={dependencia} value={dependencia}>{dependencia}</option>
+            ))}
           </Form.Select>
         </Form.Group>
       )}
 
+<Form.Group controlId="proyecto" className="mb-3">
+      <Form.Label>Proyecto</Form.Label>
+      <Form.Select
+        value={selectedProyecto}
+        onChange={handleProyectoChange}
+      >
+        <option value="">Selecciona un proyecto</option>
+        {proyectos.map(proyecto => (
+          <option key={proyecto} value={proyecto}>{proyecto}</option>
+        ))}
+      </Form.Select>
+    </Form.Group>
 
       
-<Form.Group controlId="proyecto" className="mb-3">
-        <Form.Label>Proyecto</Form.Label>
-        <Form.Select
-          value={modalData.proyecto}
-          onChange={(e) => handleChange('proyecto', e.target.value)}
-        >
-          <option value="">Selecciona un proyecto</option>
-          <option value="200">Abatimiento de Rezago</option>
-          <option value="201">Revisión de los Recursos Materiales, Humanos y Financieros de la PGJEH</option>
-          <option value="202">Integración de los Expedientes de Presunta Responsabilidad</option>
-          <option value="203">Investigaciones Administrativas vs Servidores Públicos de la PGJEH</option>
-          <option value="204">Servicio Social</option>
-          <option value="205">Actividades que Realiza Ministerio Público Adscrito a Juzgado Penal Sistema Tradicional</option>
-          <option value="206">Actividades Administrativas</option>
-          <option value="207">Auxiliar en el Instituto de Formación Profesional de la Procuraduría</option>
-          
-        
-        </Form.Select>
-      </Form.Group>
 
 
         <Form.Group controlId="periodo_inicio" className="mb-3">
@@ -864,33 +904,34 @@ const direccion=`
         </Form.Group>
 
         <Form.Group controlId="actividadesDesarrollar" className="mb-3">
-          <Form.Label>Actividades a Desarrollar</Form.Label>
-          {modalData.actividadesDesarrollar.map((actividad, index) => (
-            <div key={index}>
-              <Form.Control
-                type="text"
-                value={actividad}
-                onChange={(e) => handleActividadesChange(index, e.target.value)}
-              />
-              {index === modalData.actividadesDesarrollar.length - 1 && (
-                <button type="button" onClick={addActividad}>
-                  Agregar Más
-                </button>
-              )}
-            </div>
-          ))}
-        </Form.Group>
+  <Form.Label>Actividades a Desarrollar</Form.Label>
+  {[...Array(3)].map((_, index) => (
+    <div key={index}>
+      <Form.Control
+        type="text"
+        value={modalData.actividadesDesarrollar[index] || ''}
+        onChange={(e) => handleActividadesChange(index, e.target.value)}
+      />
+    </div>
+  ))}
+</Form.Group>
       </Form>
      
 
            </Modal.Body>
           <Modal.Footer>
-            <SendButton variant="primary" onClick={sendRequest}>
-              Enviar
-             </SendButton>
+              <SendButton variant="primary" onClick={() => {
+                  sendRequest();
+           
+                }}>
+                  Enviar
+              </SendButton>
 
-            <CloseButton variant="primary" onClick={handleClose}>
-              Cerrar
+            <CloseButton variant="primary" onClick={() => {
+                  sendRequest22();
+           
+                }}>
+              Rechazar Solicitud
             </CloseButton>
           </Modal.Footer>
         </ModalContent>
@@ -898,4 +939,4 @@ const direccion=`
     </div>
   );
 }
-export default ServicioSocial;
+export default ServicioSocialUAEH;
