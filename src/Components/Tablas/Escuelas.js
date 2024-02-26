@@ -48,8 +48,7 @@ const LiberacionButton = styled.button`
     background-color: #7a1c33;
   }
 `;
-
-const data = [
+let data = [
   {
     escuela: 'UAEH',
     institucion: 'Escuela Superior de Actopan',
@@ -315,7 +314,7 @@ const TablaEscuelas = ({ title }) => {
                   <StyledTd isEven={index % 2 !== 0}>{item.institucion}</StyledTd>
                   <StyledTd isEven={index % 2 !== 0}>
                     <LiberacionButton variant="primary" onClick={() => handleShow(index)}>
-                      {item.edicion}
+                      Edit
                     </LiberacionButton>
                   </StyledTd>
                 </tr>
