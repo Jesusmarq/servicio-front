@@ -23,14 +23,27 @@ const Login = () => {
     axios
       .post(`http://127.0.0.1:5000/login`, formData)
       .then((response) => {
-        console.log(response.data);
+        //console.log(response.data);
         // Acceder y guardar solo las propiedades necesarias
-        const { rol, id, nombre, token } = response.data;
+        const { exp, rol, id, nombre, token } = response.data;
 
         localStorage.setItem(
           "dataUser",
-          JSON.stringify({ rol, id, nombre, token })
+          JSON.stringify({ exp, rol, id, nombre, token })
         );
+        console.log( exp, rol, id, nombre, token );
+
+        localStorage.setItem(
+          "token",
+          JSON.stringify({ token })
+        );
+        console.log(  token );
+
+        localStorage.setItem(
+          "exp",
+          JSON.stringify({ exp })
+        );
+        console.log(  exp );
 
         // Verifica la respuesta de la API y redirige según el usuario
         if (rol === "admin") {

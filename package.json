@@ -17,6 +17,7 @@
     "formik": "^2.4.5",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "jwt-decode": "^4.0.0",
     "keep-react": "^1.1.2",
     "qrcode": "^1.5.3",
     "qrcode.react": "^3.1.0",

@@ -758,7 +758,7 @@ const direccion=`
                   <StyledTd>{item.tipo}</StyledTd>
                   <StyledTd>
                   <button
-                          onClick={() => handleDownloadPDF(data.pdf, 'aceptacion.pdf')}>
+                          onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
                           PDF
                         </button>
                   </StyledTd>

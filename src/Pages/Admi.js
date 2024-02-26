@@ -156,13 +156,14 @@ const ADMI = ({ title }) => {
   };
 
   const handleCerrarSesion = () => {
-    // Lógica para cerrar sesión
-    showAlert();
-    // Puedes redirigir a la página de inicio de sesión o realizar otras acciones necesarias
+    // Redirige al usuario a la página de inicio de sesión
+    window.location.href = '/login';
+    // Borra los datos del localStorage después de redirigir al usuario
+    localStorage.clear();
   };
 
   const showAlert = () => {
-    const alertElement = document.createElement("div");
+    const alertElement = document.createElement('div');
 
     const removeAlert = () => {
       document.body.removeChild(alertElement);
@@ -264,7 +265,7 @@ const ADMI = ({ title }) => {
           <LineDivider />
         </SidebarItem>
 
-        <LogoutButton onClick={handleCerrarSesion}>
+        <LogoutButton onClick={() => { handleCerrarSesion(); showAlert(); }}>
           <IoMdExit style={{ marginRight: "10px" }} />
           Cerrar Sesión
         </LogoutButton>
