@@ -89,7 +89,7 @@ function ValidarSolicitud({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/consultaReportesTodos?tipo=servicio social');
+        const response = await fetch('http://127.0.0.1:5000/consultaReportesTodos?tipo=todos');
         const responseData = await response.json();
         
 

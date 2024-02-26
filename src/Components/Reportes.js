@@ -121,28 +121,35 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 
 function Reportes({ title }) {
 
+  console.log(localStorage.getItem('dataUser'))
+  var dataUser = localStorage.getItem('dataUser')
+  var parsedDataUser = JSON.parse(dataUser);
+  
+  // Acceder a la propiedad 'id'
+  console.log(parsedDataUser.id);
+
   const initialState = {
-    alumno:"5",
+    alumno: parsedDataUser.id,
     horas:"0"
   };
 
   const [datosTabla, setDatosTabla] = useState([]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/consultaReportesAlumno?alumno=5');
+        const response = await fetch(`http://127.0.0.1:5000/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
-
-
-          setDatosTabla(data.solicitudes);
+  
+        setDatosTabla(data.solicitudes);
       } catch (error) {
         console.error('Error al obtener datos:', error);
       }
     };
-
+  
     fetchData();
-  }, []);
-
+  }, [parsedDataUser.id]); // Agregar parsedDataUser.id como dependencia para que useEffect se ejecute cuando cambie
+  
   const [formData, setFormData] = useState(initialState);
 
   function handleDownloadPDF(pdfBase64, fileName) {

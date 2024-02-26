@@ -88,8 +88,9 @@ function ADMIsol({ title }) {
             
           </Tab>
           <Tab eventKey="practicas-profesionales" title="Practicas Profesionales">
-            <PracticasProfesionales />
             <PracticasUAEH />
+            <PracticasProfesionales />
+            
           </Tab>
           <Tab eventKey="estancia" title="Estancia">
             <Estancia />

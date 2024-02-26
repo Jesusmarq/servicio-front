@@ -151,13 +151,24 @@ const SendButton = styled(Button)`
 
 function Solicitud({ title }) {
   
-  const dataUser = JSON.parse(localStorage.getItem('dataUser'));
+  //const dataUser = JSON.parse(localStorage.getItem('dataUser'));
+  
+    
+  console.log(localStorage.getItem('dataUser'))
+  var dataUser = localStorage.getItem('dataUser')
+  var parsedDataUser = JSON.parse(dataUser);
+  
+  // Acceder a la propiedad 'id'
+  console.log(parsedDataUser.id);
+  
 
   const initialState = {
-    alumno: 5,
+    alumno: parsedDataUser.id, // Reemplazar el número de alumno con parsedDataUser.id
     horas: "", // Nuevo estado para las horas solicitadas
     fecha: new Date().toLocaleDateString(),
-    pdf: ""
+    pdf: "",
+ 
+    tipo: ""
   };
 
   const [showModal, setShowModal] = useState(false);
@@ -177,7 +188,10 @@ function Solicitud({ title }) {
       setFormData({ ...formData, dependencia: e.target.value });
     };
 
-  
+    const handleSelect = (type) => {
+      setFormData({ ...formData, tipo: type });
+      handleShow(); // Muestra el modal después de seleccionar
+    };
 
   const handleClose = () => {
     setFileSelected(false);
@@ -198,7 +212,8 @@ function Solicitud({ title }) {
   const handleSend = (e) => {
     // Lógica para enviar la carta
 
-    const dataUser = JSON.parse(localStorage.getItem('dataUser'));
+    //const dataUser = JSON.parse(localStorage.getItem('dataUser'));
+
 
     const jsonString = JSON.stringify(formData);
     const formDataObj =  new FormData()
@@ -215,7 +230,7 @@ function Solicitud({ title }) {
       .post(`http://127.0.0.1:5000/subirCarta`, formDataObj)
       .then((response) => {
         
-        if (response.status == 200) {
+        if (response.status == 201) {
           Swal.fire({
             icon: 'success',
             title: 'Carta enviada',
@@ -270,9 +285,7 @@ function Solicitud({ title }) {
             <CardText>
               Si estás listo para marcar la diferencia a través del servicio social, ¡Únete a nosotros!
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(1); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
 
@@ -285,9 +298,7 @@ function Solicitud({ title }) {
             <CardText>
               Explora nuestras prácticas profesionales en el gobierno y da forma a tu futuro. Haz clic abajo para empezar.
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(2); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
 
@@ -300,9 +311,7 @@ function Solicitud({ title }) {
             <CardText>
               Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(3); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
 
@@ -315,9 +324,7 @@ function Solicitud({ title }) {
             <CardText>
               Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(4); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
 
@@ -330,9 +337,7 @@ function Solicitud({ title }) {
             <CardText>
               Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(5); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
 
@@ -345,9 +350,7 @@ function Solicitud({ title }) {
             <CardText>
               Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(6); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
 
@@ -360,9 +363,7 @@ function Solicitud({ title }) {
             <CardText>
               Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
             </CardText>
-            <StyledButton variant="primary" onClick={handleShow}>
-              Seleccionar
-            </StyledButton>
+            <StyledButton variant="primary" onClick={() => { handleSelect(7); }}>Seleccionar</StyledButton>
           </CardBody>
         </StyledCard>
       </CardsContainer>
@@ -377,20 +378,7 @@ function Solicitud({ title }) {
           <Modal.Body>
             <p>Por favor, adjunta tu carta de presentación y envíala.</p>
             <Form >
-            <Form.Group controlId="selectOption" className="mb-3">
-                <Form.Label>Selecciona una dependencia</Form.Label>
-                <Form.Control
-                  as="select"
-                  value={formData.selectedOption}
-                  onChange={handleChangeSelect}
-                >
-                  <option value="">Selecciona...</option>
-                  <option value="1">Innovación Gubernamental</option>
-                  <option value="2">Patrimonio Inmobiliario</option>
-                  <option value="3">Recursos Humanos</option>
-                  <option value="4">Contraloría</option>
-                </Form.Control>
-              </Form.Group>
+        
 
               <Form.Group controlId="formFile" className="mb-3">
                 <Form.Label>Selecciona tu archivo PDF</Form.Label>
