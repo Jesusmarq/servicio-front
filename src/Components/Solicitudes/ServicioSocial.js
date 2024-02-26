@@ -161,51 +161,52 @@ function ServicioSocial ({ title }) {
 };
   
 //------------------------   mada hacer los los cambios -------------
-  useEffect(() => {
-      //fetchData()
-      fetchDataTabla()
-    }, []);
+useEffect(() => {
+  //fetchData()
+  fetchDataTabla()
+}, []);
 
-    function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
-      try {
-        const byteCharacters = atob(base64Data);
-        const byteArrays = [];
-    
-        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-          const slice = byteCharacters.slice(offset, offset + sliceSize);
-    
-          const byteNumbers = new Array(slice.length);
-          for (let i = 0; i < slice.length; i++) {
-            byteNumbers[i] = slice.charCodeAt(i);
-          }
-    
-          const byteArray = new Uint8Array(byteNumbers);
-          byteArrays.push(byteArray);
-        }
-    
-        const blob = new Blob(byteArrays, { type: contentType });
-        console.log(blob)
-        return blob;
-      } catch (error) {
-        console.error('Error al convertir la cadena base64 a Blob:', error);
-        return null;
+function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
+  try {
+    const byteCharacters = atob(base64Data);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
       }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
     }
+
+    const blob = new Blob(byteArrays, { type: contentType });
+    console.log(blob)
+    return blob;
+  } catch (error) {
+    console.error('Error al convertir la cadena base64 a Blob:', error);
+    return null;
+  }
+}
 //-----------------para que se muestre en la tabla------------------------
-    function handleDownloadPDF(pdfBase64, fileName) {
-      try {
-        const blob = base64toBlob(pdfBase64, 'application/pdf');
-        const blobUrl = URL.createObjectURL(blob);
-  
-        // Abrir el PDF en una nueva ventana o pestaña
-        window.open(blobUrl, '_blank');
-  
-        // Limpiar el objeto URL creado
-        URL.revokeObjectURL(blobUrl);
-      } catch (error) {
-        console.error('Error al descargar el PDF:', error);
-      }
-    }
+function handleDownloadPDF(pdfBase64, fileName) {
+  try {
+    console.log(pdfBase64)
+    const blob = base64toBlob(pdfBase64, 'application/pdf');
+    const blobUrl = URL.createObjectURL(blob);
+
+    // Abrir el PDF en una nueva ventana o pestaña
+    window.open(blobUrl, '_blank');
+
+    // Limpiar el objeto URL creado
+    URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error('Error al descargar el PDF:', error);
+  }
+}
   
   ////---------------para  almacenar los datos del modal-----------------
     const [modalData, setModalData] = useState({
@@ -758,7 +759,7 @@ const direccion=`
                   <StyledTd>{item.tipo}</StyledTd>
                   <StyledTd>
                   <button
-                          onClick={() => handleDownloadPDF(data.pdf, 'aceptacion.pdf')}>
+                          onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
                           PDF
                         </button>
                   </StyledTd>
