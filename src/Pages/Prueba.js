@@ -4,6 +4,7 @@ import axios from "axios";
 import "../Styles/preregistro.css"
 import '../Styles/responsive.css';
 import { useHistory } from "react-router-dom"; 
+import { Tag } from "keep-react";
 
 
 function Preregistro() {
@@ -103,7 +104,7 @@ function Preregistro() {
           position: "center", // Posición de la ventana emergente en el centro.
           icon: "success", // Ícono de éxito.
           title: "Registro Completo.", // Título de la ventana emergente.
-          showConfirmButton: false, // No muestra el botón de confirmación.
+          showConfirmButton: history.push("/login"), // No muestra el botón de confirmación.
           timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
         });
 
@@ -203,11 +204,19 @@ function Preregistro() {
   };
 
 
+  const [showConfirmation, setShowConfirmation] = useState(false); // Estado para controlar la visualización de la alerta
+
+const handleConfirmation = () => {
+  setShowConfirmation(true);
+};
+
   return (
     <section id="section_pre">
       <div className="form-container">
         <img src="./Images/logotipo-09.png" alt="Imagen Superior" className="imagenlogo" />
         <h2 className="encabezado">Registro de Usuario</h2>
+        
+        
         <form onSubmit={(e) => {handleSubmit(e); handleFormSubmit(e)}}>
           <div className="form-group">
             <label htmlFor="usuario">Correo:</label>
@@ -336,20 +345,23 @@ function Preregistro() {
             />
           </div>
 
+          {showConfirmation ? (
+          <>
+            <br></br><br></br><br></br><p className="alerta">Entiendo que los datos ingresados son correctos y no se podrán hacer cambios posteriores.</p>
+            <div className="form-group">
+              <button type="submit" className="botonchido">Enviar</button>
+            </div>
+            
+          </>
+        ) : (
           <div className="form-group">
-            <button type="submit" className="botonchido">Enviar</button>
+            <button className="botonchido2" onClick={handleConfirmation}>SEGUIR</button>
           </div>
-          <div className="form-group">
-          <button className="botonchido" onClick={() => history.push("/login")}>
-          Regresar
-        </button>
-          </div>
-          
-        </form>
-      </div>
-
-    </section>
-  );
+        )}
+      </form>
+    </div>
+  </section>
+);
 }
 
 export default Preregistro;

@@ -53,6 +53,29 @@
     background-color: #BC955B;
 }
 
+.botonchido2 {
+    color: white;
+    background-color: #9E2343;
+    border: none;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: 10px auto;
+    height: 40px; /* Ajusta la altura según tus necesidades */
+    width: 160px;
+}
+
+.botonchido2:hover {
+    background-color: #BC955B;
+}
+
+.alerta{
+    color:red;
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold; /* Agregando negrita */
+}
+
 .encabezado {
     text-align: center;
     width: 100%;
@@ -62,3 +85,5 @@
     max-width: 50%;
     margin-bottom: 20px;
   }
+
+ 

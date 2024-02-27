@@ -223,6 +223,7 @@ function handleDownloadPDF(pdfBase64, fileName) {
       proyecto: '',
       clave:'',
       horas: '',
+      ver_carta:'',
       actividadesDesarrollar: [''],
     });
 
@@ -422,7 +423,7 @@ const direccion=`
       formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
     console.log(numChange)
       // Agregar el JSON al FormData
-      const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id}; 
+      const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id, "ver_pdf":modalData.ver_carta,}; 
   console.log(jsonData)
       formData.append('JSON', JSON.stringify(jsonData));
     
@@ -932,6 +933,18 @@ const direccion=`
       />
     </div>
   ))}
+</Form.Group>
+
+<Form.Group controlId="ver_carta" className="mb-3 d-flex flex-column align-items-center">
+  <Form.Label className="mb-2">El alumno puede ver su carta</Form.Label>
+  <Form.Check
+    type="switch"
+    id="custom-switch"
+    label=""
+    checked={modalData.ver_carta}
+    onChange={(e) => handleChange('ver_carta', e.target.checked)}
+    className="custom-switch-lg"
+  />
 </Form.Group>
         </Form>
        

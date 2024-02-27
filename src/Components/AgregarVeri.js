@@ -161,22 +161,30 @@ const AgregarVal = ({ title }) => {
         },
         body: JSON.stringify(formData), // Convierte el objeto 'formData' a una cadena JSON y lo envía como el cuerpo de la solicitud
       });
-
       // Parsear la respuesta de la API como JSON
-      const data = await response.json();
+      //const data = await response.json();
 
-      // Mostrar la respuesta de la API en la consola
-      console.log('Respuesta de la API:', data);
-
+    
+ 
+     
       // Mostrar una ventana emergente (SweetAlert) indicando que el validador se agregó correctamente
+      if (response.ok) {
+      
       Swal.fire({
         icon: 'success', // Ícono de éxito
         title: 'Validador Agregado', // Título de la ventana emergente
-        text: 'Se agregó de manera correcta un nuevo validador.', // Texto de la ventana emergente
+        text: 'Se agregó de manera correcta un nuevo validador.',
+        timer: 400,// Texto de la ventana emergente
       });
+      window.location.reload()
+    }
     } catch (error) {
-      // Manejar cualquier error que ocurra durante la solicitud
-      console.error('Error al enviar la solicitud:', error);
+      console.error("Error al enviar el archivo:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al agregar Validador",
+        text: "Hubo un problema al agregar el validador.",
+      });
     }
   };
 
