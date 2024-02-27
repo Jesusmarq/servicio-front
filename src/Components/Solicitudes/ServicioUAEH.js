@@ -11,7 +11,7 @@ import '../../Styles/responsive.css';
 import { jsPDF } from 'jspdf';
 import { format } from 'date-fns';
 import esLocale from 'date-fns/locale/es';
-
+import { Toggle } from "keep-react";
 
 // Importa la imagen (asegúrate de tener la ruta correcta)
 import encabezadoImage from '../PDFS/image001.jpg';
@@ -95,6 +95,8 @@ const SendButton = styled(Button)`
 
 
 function ServicioSocialUAEH ({ title }) {
+
+
 
   //  inicialisacion de los estados de tabla Y DEMAS COMO QR DATOS FIRMA ETC ---------
   const [data, setData] = useState([]);//tabla
@@ -224,6 +226,7 @@ function ServicioSocialUAEH ({ title }) {
       horarioFin:'',
       proyecto: '',
       horas: '',
+      ver_carta:'',
       actividadesDesarrollar: [''],
     });
 
@@ -426,7 +429,7 @@ const direccion=`
     formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
   console.log(numChange)
     // Agregar el JSON al FormData
-    const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id}; 
+    const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id, "ver_pdf":modalData.ver_carta,}; 
 console.log(jsonData)
     formData.append('JSON', JSON.stringify(jsonData));
   
@@ -915,8 +918,22 @@ console.log(jsonData)
     </div>
   ))}
 </Form.Group>
+
+<Form.Group controlId="ver_carta" className="mb-3 d-flex flex-column align-items-center">
+  <Form.Label className="mb-2">El alumno puede ver su carta</Form.Label>
+  <Form.Check
+    type="switch"
+    id="custom-switch"
+    label=""
+    checked={modalData.ver_carta}
+    onChange={(e) => handleChange('ver_carta', e.target.checked)}
+    className="custom-switch-lg"
+  />
+</Form.Group>
+
       </Form>
-     
+     
+  
 
            </Modal.Body>
           <Modal.Footer>
