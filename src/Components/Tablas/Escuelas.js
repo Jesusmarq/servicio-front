@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -48,133 +48,7 @@ const LiberacionButton = styled.button`
     background-color: #7a1c33;
   }
 `;
-let data = [
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Actopan',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Apan',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Atotonilco de Tula',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Ciudad Sahagún',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Huejutla',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Tepeji del Río',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Tlahuelilpan',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Tizayuca',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Escuela Superior de Zimapán',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Instituto de Artes',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Instituto de Ciencias Básicas e Ingeniería',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Instituto de Ciencias Agropecuarias',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Instituto de Ciencias de la Salud',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Instituto de Ciencias Económico Administrativas',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'UAEH',
-    institucion: 'Instituto de Ciencias Sociales y Humanidades',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad Nacional Autónoma de México (UNAM)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Instituto Tecnológico y de Estudios Superiores de Monterrey (ITESM)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad Autónoma Metropolitana (UAM)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad Iberoamericana (UIA)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Benemérita Universidad Autónoma de Puebla (BUAP)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad Autónoma de Nuevo León (UANL)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad de Guadalajara (UDG)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad Autónoma del Estado de México (UAEM)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Instituto Politécnico Nacional (IPN)',
-    edicion: 'Editar',
-  },
-  {
-    escuela: 'OTRAS',
-    institucion: 'Universidad Autónoma de Querétaro (UAQ)',
-    edicion: 'Editar',
-  },
-];
+let data = [];
 
 const CenteredModal = styled(Modal)`
   display: flex;
@@ -217,7 +91,7 @@ const SendButton = styled(Button)`
 
 const TablaEscuelas = ({ title }) => {
   const [selectedOption, setSelectedOption] = useState('');
-  const [selectedRow, setSelectedRow] = useState(null);
+  const [selectedRow, setSelectedRow] = useState();
   const [showModal, setShowModal] = useState(false);
   const [fileSelected, setFileSelected] = useState(false);
   const [editedData, setEditedData] = useState({
@@ -226,26 +100,93 @@ const TablaEscuelas = ({ title }) => {
   });
   const [formChanged, setFormChanged] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [keyForRerender, setKeyForRerender] = useState(0);
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
+  const handleAddPlantel = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/agregarUniversidadPlantel', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Puedes agregar otros encabezados si es necesario
+        },
+        body: JSON.stringify({
+          // Aquí puedes enviar los datos necesarios para agregar un nuevo plantel
+          // Por ejemplo, puedes enviar un objeto con propiedades como nombre, institución, etc.
+        }),
+      });
+  
+      if (response.ok) {
+        // La solicitud fue exitosa, puedes realizar acciones adicionales si es necesario
+        console.log('Nuevo plantel agregado con éxito.');
+      } else {
+        // Manejar otros códigos de estado si es necesario
+        console.error('Error al agregar nuevo plantel:', response.statusText);
+      }
+    } catch (error) {
+      // Manejar errores de red u otros errores
+      console.error('Error en la solicitud para agregar nuevo plantel:', error.message);
+    }
+  };
+  
   const handleShow = (index) => {
+      const plantelSeleccionado = planteles.find((plantel) => plantel.id_plantel === index);
+
+
+    setEditedData({
+      escuela: plantelSeleccionado ? plantelSeleccionado.universidad : '',
+      institucion: plantelSeleccionado ? plantelSeleccionado.plantel : '',
+    });
     setSelectedRow(index);
     setShowModal(true);
   };
+  
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (selectedRow !== null) {
-      const newData = [...data];
-      newData[selectedRow] = { ...data[selectedRow], ...editedData };
-      Swal.fire({
-        icon: 'success',
-        title: 'Edición exitosa',
-        text: 'La información ha sido editada correctamente.',
-      });
-      handleClose();
+      const plantelSeleccionado = planteles.find((plantel) => plantel.id_plantel === selectedRow);
+      const plantelNombre = plantelSeleccionado.plantel;
+      const { escuela, institucion } = editedData;
+      //console.log(plantelNombre);
+      //console.log(institucion);
+      try {
+        const response = await fetch(`http://127.0.0.1:5000/plantelEditar`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            plantel: plantelNombre,
+            nuevo_plantel: institucion,
+          }),
+        });
+        setKeyForRerender(prevKey => prevKey + 1);        
+        if (response.ok) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Edición exitosa',
+            text: 'La información ha sido editada correctamente.',
+          }).then(() => {
+            window.location.reload();
+          });
+          
+          handleClose();
+        } else {
+          throw new Error('Error en la solicitud PATCH a plantelEditar');
+        }
+      } catch (error) {
+        console.error('Error al editar el plantel:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Edición fallida',
+          text: 'No se logró editar la información.',
+        });
+        handleClose();
+      }
     }
   };
 
@@ -276,8 +217,38 @@ const TablaEscuelas = ({ title }) => {
     setShowModal(false);
   };
 
+  const handleFileChange = (e) => {
+    setFileSelected(e.target.files[0]);
+    setFormChanged(true); // Indica que se han realizado cambios en el formulario
+  };
+  const [planteles, setPlanteles] = useState();
+  let plantelSeleccionado = null;
+  const fetchPlanteles = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/planteles');
+  
+      // Verificar si la respuesta es exitosa (código de estado 200)
+      console.log(response);
+      if (response.ok) {
+        // Convertir la respuesta a formato JSON
+        const data = await response.json();
+        // Almacenar los datos en el estado
+        setPlanteles(data);
+      } else {
+        // Si la respuesta no es exitosa, lanzar un error
+        throw new Error('Error en la solicitud GET a planteles');
+      }
+    } catch (error) {
+      console.error('Error al obtener datos de planteles:', error);
+    }
+  };
+  // Efecto para realizar la solicitud cuando el componente se monta
+  useEffect(() => {
+    fetchPlanteles();
+  }, []);
+
   return (
-    <div>
+    <div key={keyForRerender}>
       <TableWrapper>
         <h2>{title}</h2>
         <input
@@ -289,32 +260,35 @@ const TablaEscuelas = ({ title }) => {
         <select value={selectedOption} onChange={handleOptionChange}>
           <option value="">Todas las instituciones</option>
           <option value="UAEH">UAEH</option>
-          <option value="OTRAS">Otra Institución</option>
+          <option value="SEMSyS">SEMSyS</option>
         </select>
+        <LiberacionButton variant="primary" onClick={() => handleAddPlantel()}>
+          Agregar Nuevo Plantel
+        </LiberacionButton>
 
         <StyledTable>
           <thead>
             <tr>
               <StyledTh>Escuela</StyledTh>
-              <StyledTh>Institución</StyledTh>
+              <StyledTh>Plantel</StyledTh>
               <StyledTh>Editar</StyledTh>
             </tr>
           </thead>
           <tbody>
-            {data
+            {planteles && planteles
               .filter(
                 (item) =>
-                  (!selectedOption || item.escuela === selectedOption) &&
-                  (item.escuela.toLowerCase().includes(searchText.toLowerCase()) ||
-                    item.institucion.toLowerCase().includes(searchText.toLowerCase()))
+                  (!selectedOption || item.universidad === selectedOption) &&
+                  (item.universidad.toLowerCase().includes(searchText.toLowerCase()) ||
+                    item.plantel.toLowerCase().includes(searchText.toLowerCase()))
               )
               .map((item, index) => (
-                <tr key={index}>
-                  <StyledTd isEven={index % 2 !== 0}>{item.escuela}</StyledTd>
-                  <StyledTd isEven={index % 2 !== 0}>{item.institucion}</StyledTd>
+                <tr key={item.id_plantel}>
+                  <StyledTd isEven={index % 2 !== 0}>{item.universidad}</StyledTd>
+                  <StyledTd isEven={index % 2 !== 0}>{item.plantel}</StyledTd>
                   <StyledTd isEven={index % 2 !== 0}>
-                    <LiberacionButton variant="primary" onClick={() => handleShow(index)}>
-                      Edit
+                    <LiberacionButton variant="primary" onClick={() => handleShow(item.id_plantel)}>
+                      Editar
                     </LiberacionButton>
                   </StyledTd>
                 </tr>
@@ -335,7 +309,9 @@ const TablaEscuelas = ({ title }) => {
                   <Form.Label>Escuela:</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder={editedData.escuela}
                     value={editedData.escuela}
+                    readOnly={true}
                     onChange={(e) => handleEditChange(e, 'escuela')}
                   />
                 </Form.Group>
@@ -344,6 +320,7 @@ const TablaEscuelas = ({ title }) => {
                   <Form.Label>Institución:</Form.Label>
                   <Form.Control
                     type="text"
+                    placeholder="Ingrese la nueva institución"
                     value={editedData.institucion}
                     onChange={(e) => handleEditChange(e, 'institucion')}
                   />
@@ -353,7 +330,7 @@ const TablaEscuelas = ({ title }) => {
           </Modal.Body>
           <Modal.Footer>
             <SendButton variant="primary" onClick={handleSend} disabled={!formChanged}>
-              Enviar
+              Guardar
             </SendButton>
             <CloseButton variant="primary" onClick={handleCancel}>
               Cerrar

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
@@ -204,7 +204,31 @@ function TablaSecretarias  ({ title })  {
     setShowModal(true);
   };
 
- 
+  const [planteles, setPlanteles] = useState();
+  let plantelSeleccionado = null;
+  const fetchPlanteles = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/planteles');
+  
+      // Verificar si la respuesta es exitosa (código de estado 200)
+      console.log(response);
+      if (response.ok) {
+        // Convertir la respuesta a formato JSON
+        const data = await response.json();
+        // Almacenar los datos en el estado
+        setPlanteles(data);
+      } else {
+        // Si la respuesta no es exitosa, lanzar un error
+        throw new Error('Error en la solicitud GET a planteles');
+      }
+    } catch (error) {
+      console.error('Error al obtener datos de planteles:', error);
+    }
+  };
+  // Efecto para realizar la solicitud cuando el componente se monta
+  useEffect(() => {
+    fetchPlanteles();
+  }, []);
 
 
   const handleSend = () => {
@@ -257,6 +281,7 @@ const handleClose = () => {
 const handleSearch = (e) => {
   setSearchText(e.target.value);
 };
+
 
     return (
 <div>
