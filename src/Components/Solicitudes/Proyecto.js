@@ -222,6 +222,8 @@ function ProyectoIntervencion ({ title }) {
       proyecto: '',
       clave:'',
       horas: '',
+      asesor:'',
+      objetivo:'',
       ver_carta:'',
       actividadesDesarrollar: [''],
     });
@@ -279,7 +281,7 @@ function ProyectoIntervencion ({ title }) {
                                                   Carta de Aceptación de Proyecto de Intervención
 
 
-                                                                                                                                                   A-SS-00${datosSolicitud}`;
+                                                                                                                                                   A-PI-00${datosSolicitud}`;
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
 const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
 // Agregar las líneas al PDF
@@ -290,7 +292,7 @@ pdf.setFont('Montserrat-Regular');
 pdf.setFontSize(11);
 yPosition += 30;                                                                                                                                                 
 const fecha =`                                                                                                                                                     
-                                                                                           Pachuca de Soto,Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
+                                                                                          Pachuca de Soto, Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
 
 
 
@@ -319,7 +321,7 @@ const fecha =`
    pdf.setFontSize(11);
    yPosition += 20;
   const cuerpo =`
-  Por medio del presente informo a usted que el C.${datosAlumno}, con número de control ${datosMatricula}, alumno/a de la Licenciatura en ${datosCarrera}, ha sido aceptado/a para realizar su Proyecto de Intervención en la Oficialia Mayor, cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al  ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, de lunes a viernes en un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., siendo asignado/a en la ${selectedDependencia}, bajo el Programa: “${selectedProyecto}” clave:${selectedProyectoId}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+  Por medio del presente informo a usted que el(la) C.${datosAlumno}, con número de matricula ${datosMatricula}, alumno(a) de la ${datosCarrera}, ha sido aceptado(a) para realizar su Proyecto de Intervención en la Oficialia Mayor, siendo asignado(a) en la ${selectedSecretaria}, y como asesor el(la) ${modalData.asesor}, cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al  ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, de lunes a viernes con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: “${selectedProyecto}”, el cual tiene como objetivo principal ${modalData.objetivo}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
   `;
    // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
    const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -366,7 +368,7 @@ const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.widt
 // Agregar las líneas al PDF
 pdf.text(piePaginaLines, xPosition, yPosition);
 
-pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
+pdf.addImage(datosQr, 'PNG', 140, 200, 50, 50);
 pdf.addImage(datosFirma, 'PNG', 10,215, 50, 20);
 
 pdf.setFont('Montserrat-Regular');
@@ -826,7 +828,17 @@ const direccion=`
         type="text"
         value={modalData.cargo}
         onChange={(e) => handleChange('cargo', e.target.value)}
+      /> 
+
+</Form.Group>
+    <Form.Group controlId="asesor" className="mb-3">
+      <Form.Label>Asesor </Form.Label>
+      <Form.Control
+        type="text"
+        value={modalData.asesor}
+        onChange={(e) => handleChange('asesor', e.target.value)}
       />
+
     </Form.Group>
   
           <Form.Group controlId="secretaria" className="mb-3">
@@ -870,6 +882,16 @@ const direccion=`
       </Form.Select>
     </Form.Group>
 
+    
+    <Form.Group controlId="objetivo" className="mb-3">
+      <Form.Label>Objetiivo </Form.Label>
+      <Form.Control
+        type="text"
+        value={modalData.objetivo}
+        onChange={(e) => handleChange('objetivo', e.target.value)}
+      />
+
+    </Form.Group>
         
   
   

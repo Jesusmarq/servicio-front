@@ -279,10 +279,10 @@ function ServicioSocialUAEH ({ title }) {
    const textoPDF = `
 
    
-                                                    Carta de Aceptación de Servicio Social
+                                                    Carta de Terminación de Servicio Social
 
 
-                                                                                                                                                     A-SS-00${datosSolicitud}`;
+                                                                                                                                                     T-SS-00${datosSolicitud}`;
     // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const linest = pdf.splitTextToSize(textoPDF, pdf.internal.pageSize.width - 2 * xPosition);
   // Agregar las líneas al PDF
@@ -326,7 +326,7 @@ function ServicioSocialUAEH ({ title }) {
   pdf.setFontSize(11);
   yPosition += 30;
  const cuerpo =`
- Por medio del presente informo a usted que el C.${datosAlumno}, con número de cuenta: ${datosMatricula}, estudiante de la Licenciatura en ${datosCarrera}, del ${datosPlantel}, ha sido aceptado/a, para realizar su Servicio Social en la ${selectedSecretaria}, siendo asignado/a en la ${selectedDependencia} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: ${selectedProyecto}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
+ Por medio del presente informo a usted que el(la) C.${datosAlumno}, con número de cuenta: ${datosMatricula}, estudiante de la ${datosCarrera}, del(la) ${datosPlantel}, ha concluido su Servicio Social en la Oficialía Mayor, siendo asignado(a) en el(la) ${selectedSecretaria} cubriendo el periodo del ${format(new Date(modalData.periodo_inicio), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })} al ${format(new Date(modalData.periodo_termino), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}, con un horario de ${modalData.horarioInicio} a ${modalData.horarioFin} hrs., bajo el Proyecto: ${selectedProyecto}, cubriendo un total de ${modalData.horas} horas, realizando las siguientes actividades:
  `;
   // Dividir el texto en líneas de un ancho específico (ancho de la página - márgenes)
   const lines2 = pdf.splitTextToSize(cuerpo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -343,7 +343,7 @@ function ServicioSocialUAEH ({ title }) {
    // Agregar las líneas al PDF
    pdf.text(actividadLines, xPosition, yPosition);
  });
-  const saludo =` Sin otro particular por el momento, le envío un cordial saludo.`;
+  const saludo =` Sin otro particular por el momento, le reitero mi más distinguida consideración y respeto.`;
   yPosition += 30;
   // Dividir el texto del pie de página en líneas
 const saludolines = pdf.splitTextToSize(saludo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -372,7 +372,7 @@ const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.widt
 // Agregar las líneas al PDF
 pdf.text(piePaginaLines, xPosition, yPosition);
 
-pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
+pdf.addImage(datosQr, 'PNG', 140, 200, 50, 50);
 pdf.addImage(datosFirma, 'PNG', 10, 215, 50, 20);
 
 pdf.setFont('Montserrat-Regular');
