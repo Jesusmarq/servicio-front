@@ -171,7 +171,7 @@ const TablaEscuelas = ({ title }) => {
             title: 'Edición exitosa',
             text: 'La información ha sido editada correctamente.',
           }).then(() => {
-            window.location.reload();
+            //window.location.reload();
           });
           
           handleClose();
@@ -246,6 +246,10 @@ const TablaEscuelas = ({ title }) => {
   useEffect(() => {
     fetchPlanteles();
   }, []);
+
+  useEffect(() => {
+    fetchPlanteles();
+  }, [keyForRerender]);
 
   return (
     <div key={keyForRerender}>

@@ -53,96 +53,6 @@ const LiberacionButton = styled.button`
   }
 `;
 
-const data = [
-    
-    {
-        "secretaria": "SECRETARÍA DE AGRICULTURA Y DESARROLLO RURAL",
-        "area_de_adscripcion": "Agricultura Sostenible",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE BIENESTAR E INCLUSIÓN SOCIAL",
-        "area_de_adscripcion": "Bienestar Social",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE CONTRALORÍA",
-        "area_de_adscripcion": "Control Interno",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE CULTURA",
-        "area_de_adscripcion": "Promoción Cultural",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE DESARROLLO ECONÓMICO",
-        "area_de_adscripcion": "Fomento Económico",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE EDUCACIÓN PÚBLICA DE HIDALGO",
-        "area_de_adscripcion": "Educación Básica",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE GOBIERNO",
-        "area_de_adscripcion": "Asuntos Jurídicos",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE HACIENDA",
-        "area_de_adscripcion": "Finanzas Públicas",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE INFRAESTRUCTURA PÚBLICA Y DESARROLLO URBANO SOSTENIBLE",
-        "area_de_adscripcion": "Infraestructura Urbana",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE MEDIO AMBIENTE Y RECURSOS NATURALES",
-        "area_de_adscripcion": "Conservación Ambiental",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE MOVILIDAD Y TRANSPORTE",
-        "area_de_adscripcion": "Movilidad Urbana",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE SALUD",
-        "area_de_adscripcion": "Salud Pública",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE SEGURIDAD PÚBLICA",
-        "area_de_adscripcion": "Seguridad Ciudadana",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DE TURISMO",
-        "area_de_adscripcion": "Promoción Turística",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "SECRETARÍA DEL TRABAJO Y PREVISION SOCIAL",
-        "area_de_adscripcion": "Trabajo y Empleo",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "OFICIALÍA MAYOR",
-        "area_de_adscripcion": "Administración Interna",
-        "edicion": "Editar"
-      },
-      {
-        "secretaria": "UNIDAD DE PLANEACIÓN Y PROSPECTIVA",
-        "area_de_adscripcion": "Planeación Estratégica",
-        "edicion": "Editar"
-      }
-      
-]
-
 const CenteredModal = styled(Modal)`
   display: flex;
   align-items: center;
@@ -187,68 +97,97 @@ function TablaSecretarias  ({ title })  {
     setSelectedOption(event.target.value);
   };
 
-
+  const [keyForRerender, setKeyForRerender] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [fileSelected, setFileSelected] = useState(false);
   const [editedData, setEditedData] = useState({
     secretaria: '',
-    area_de_adscripcion: '',
+    dependencia: '',
   });
   const [formChanged, setFormChanged] = useState(false);
   const [searchText, setSearchText] = useState('');
 
+  //let selected='';
   const handleShow = (index) => {
-    setSelectedRow(index);
-    setShowModal(true);
-  };
+    const dependenciaSelec = dependencias.find((dependencia) => dependencia.id_dependencia === index);
+    console.log("Dependencia a mostrar en el modal", dependenciaSelec);
 
-  const [planteles, setPlanteles] = useState();
-  let plantelSeleccionado = null;
-  const fetchPlanteles = async () => {
+  setEditedData({
+    secretaria: dependenciaSelec ? dependenciaSelec.secretaria : '',
+    dependencia: dependenciaSelec ? dependenciaSelec.dependencia : '',
+  });
+  setSelectedRow(index);
+  setShowModal(true);
+};
+
+
+  const [dependencias, setDependencias] = useState([]);
+  const [secretariasUnicas, setSecretariasUnicas] = useState([]);
+  // Función para obtener dependencias
+  const fetchDependencias = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/planteles');
-  
-      // Verificar si la respuesta es exitosa (código de estado 200)
-      console.log(response);
+      const response = await fetch('http://127.0.0.1:5000/dependencias');
+
       if (response.ok) {
-        // Convertir la respuesta a formato JSON
-        const data = await response.json();
-        // Almacenar los datos en el estado
-        setPlanteles(data);
+        const depen = await response.json();
+        setDependencias(depen);
+
+        const secretariasUnicasSet = new Set(depen.map((item) => item.secretaria));
+          const secretariasUnicasArray = Array.from(secretariasUnicasSet);
+          setSecretariasUnicas(secretariasUnicasArray);
+
+        //console.log(secretariasUnicasArray);
+
       } else {
-        // Si la respuesta no es exitosa, lanzar un error
-        throw new Error('Error en la solicitud GET a planteles');
+        console.error('Error al obtener datos de dependencias:', response.statusText);
       }
     } catch (error) {
-      console.error('Error al obtener datos de planteles:', error);
+      console.error('Error en la solicitud para obtener datos de dependencias:', error.message);
     }
   };
-  // Efecto para realizar la solicitud cuando el componente se monta
-  useEffect(() => {
-    fetchPlanteles();
-  }, []);
 
-
-  const handleSend = () => {
+  const handleSend = async () => {
     if (selectedRow !== null) {
       // Aplica los cambios de edición a la fila seleccionada
-      const newData = [...data];
-      newData[selectedRow] = { ...data[selectedRow], ...editedData };
-      // Aquí puedes realizar cualquier lógica de actualización o enviar los datos editados al servidor
+      const dependenciaSelec = dependencias.find((dependencia) => dependencia.id_dependencia === selectedRow);
+      const id = dependenciaSelec.id_dependencia;
+      //console.log(dependencias)
+      try {
+        const newData = { nombre: editedData.dependencia, dependencia: id };
   
-      // Muestra la alerta de éxito
-      Swal.fire({
-        icon: 'success',
-        title: 'Edición exitosa',
-        text: 'La información ha sido editada correctamente.',
-      });
+        const response = await fetch(`http://127.0.0.1:5000/dependenciaEditar`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(newData),
+        });
   
-      // Cierra la ventana emergente
-      handleClose();
+        if (response.ok) {
+          setKeyForRerender(prevKey => prevKey + 1);        
+          Swal.fire({
+            icon: 'success',
+            title: 'Edición exitosa',
+            text: 'La información ha sido editada correctamente.',
+          });
+          handleClose();
+        } else {
+          throw new Error(`Error en la solicitud PATCH a dependenciaEditar: ${response.statusText}`);
+        }
+      } catch (error) {
+        console.error('Error al actualizar dependencia:', error);
+  
+        Swal.fire({
+          icon: 'error',
+          title: 'Edición fallida',
+          text: 'No se logró editar la información.',
+        });
+      }
     }
   };
+  
 
   const handleCancel = () => {
     // Muestra la alerta de error
@@ -282,6 +221,13 @@ const handleSearch = (e) => {
   setSearchText(e.target.value);
 };
 
+useEffect(() => {
+  fetchDependencias();
+}, []);
+
+useEffect(() => {
+  fetchDependencias();
+}, [keyForRerender]);
 
     return (
 <div>
@@ -293,27 +239,16 @@ const handleSearch = (e) => {
           value={searchText}
           onChange={handleSearch}
         />
-{/* Agregar el select con las opciones */}
+{console.log(secretariasUnicas)}
 <select value={selectedOption} onChange={handleOptionChange}>
   <option value="">Todas las secretarias</option>
-  <option value="SECRETARÍA DE AGRICULTURA Y DESARROLLO RURAL">SECRETARÍA DE AGRICULTURA Y DESARROLLO RURAL</option>
-  <option value="SECRETARÍA DE BIENESTAR E INCLUSIÓN SOCIAL">SECRETARÍA DE BIENESTAR E INCLUSIÓN SOCIAL</option>
-  <option value="SECRETARÍA DE CONTRALORÍA">SECRETARÍA DE CONTRALORÍA</option>
-  <option value="SECRETARÍA DE CULTURA">SECRETARÍA DE CULTURA</option>
-  <option value="SECRETARÍA DE DESARROLLO ECONÓMICO">SECRETARÍA DE DESARROLLO ECONÓMICO</option>
-  <option value="SECRETARÍA DE EDUCACIÓN PÚBLICA DE HIDALGO">SECRETARÍA DE EDUCACIÓN PÚBLICA DE HIDALGO</option>
-  <option value="SECRETARÍA DE GOBIERNO">SECRETARÍA DE GOBIERNO</option>
-  <option value="SECRETARÍA DE HACIENDA">SECRETARÍA DE HACIENDA</option>
-  <option value="SECRETARÍA DE INFRAESTRUCTURA PÚBLICA Y DESARROLLO URBANO SOSTENIBLE">SECRETARÍA DE INFRAESTRUCTURA PÚBLICA Y DESARROLLO URBANO SOSTENIBLE</option>
-  <option value="SECRETARÍA DE MEDIO AMBIENTE Y RECURSOS NATURALES">SECRETARÍA DE MEDIO AMBIENTE Y RECURSOS NATURALES</option>
-  <option value="SECRETARÍA DE MOVILIDAD Y TRANSPORTE">SECRETARÍA DE MOVILIDAD Y TRANSPORTE</option>
-  <option value="SECRETARÍA DE SALUD">SECRETARÍA DE SALUD</option>
-  <option value="SECRETARÍA DE SEGURIDAD PÚBLICA">SECRETARÍA DE SEGURIDAD PÚBLICA</option>
-  <option value="SECRETARÍA DE TURISMO">SECRETARÍA DE TURISMO</option>
-  <option value="SECRETARÍA DEL TRABAJO Y PREVISION SOCIAL">SECRETARÍA DEL TRABAJO Y PREVISION SOCIAL</option>
-  <option value="OFICIALÍA MAYOR">OFICIALÍA MAYOR</option>
-  <option value="UNIDAD DE PLANEACIÓN Y PROSPECTIVA">UNIDAD DE PLANEACIÓN Y PROSPECTIVA</option>
+  {secretariasUnicas.map((secretaria, index) => (
+    <option key={index} value={secretaria}>
+      {secretaria}
+    </option>
+  ))}
 </select>
+
 
 <StyledTable>
           <thead>
@@ -324,19 +259,19 @@ const handleSearch = (e) => {
             </tr>
           </thead>
           <tbody>
-            {data
+            {dependencias
               .filter((item) => !selectedOption || item.secretaria === selectedOption)
               .filter((item) =>
                 item.secretaria.toLowerCase().includes(searchText.toLowerCase()) ||
-                item.area_de_adscripcion.toLowerCase().includes(searchText.toLowerCase())
+                item.dependencia.toLowerCase().includes(searchText.toLowerCase())
               )
               .map((item, index) => (
                 <tr key={index}>
                   <StyledTd isEven={index % 2 !== 0}>{item.secretaria}</StyledTd>
-                  <StyledTd isEven={index % 2 !== 0}>{item.area_de_adscripcion}</StyledTd>
+                  <StyledTd isEven={index % 2 !== 0}>{item.dependencia}</StyledTd>
                   <StyledTd isEven={index % 2 !== 0}>
-                    <LiberacionButton variant="primary" onClick={() => handleShow(index)}>
-                      {item.edicion}
+                    <LiberacionButton variant="primary" onClick={() => handleShow(item.id_dependencia)}>
+                      {"Editar"}
                     </LiberacionButton>
                   </StyledTd>
                 </tr>
@@ -368,8 +303,8 @@ const handleSearch = (e) => {
         <Form.Label>Area de Adscripcion:</Form.Label>
         <Form.Control
           type="text"
-          value={editedData.area_de_adscripcion}
-          onChange={(e) => handleEditChange(e, 'area_de_adscripcion')}
+          value={editedData.dependencia}
+          onChange={(e) => handleEditChange(e, 'dependencia')}
         />
       </Form.Group>
 
