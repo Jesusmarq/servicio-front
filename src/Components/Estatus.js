@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';useState
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';
 import backgroundImg from '../Img/fondo.png'; 
