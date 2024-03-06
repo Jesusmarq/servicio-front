@@ -39,7 +39,7 @@ const TitleWrapper = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 3em;
+font-size: clamp(12px, 4vw, 52px);
   margin: 10px;
   color: #bc955b;
   position: relative;
