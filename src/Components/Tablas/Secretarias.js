@@ -91,6 +91,44 @@ const SendButton = styled(Button)`
   width: 10vw;
 `;
 
+// Define los estilos para el área de búsqueda y el select
+const SearchWrapper = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+`;
+
+const StyledInput = styled.input`
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+const StyledSelect = styled.select`
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white; /* Color de fondo del select */
+  color: #333; /* Color del texto */
+`;
+
+
+
+const StyledAddButton = styled(Button)`
+  background-color: #9E2343;
+  color: white;
+  border-radius: 5px;
+  border-color: #9E2343;
+  margin-left: auto;
+
+  &:hover {
+    background-color: #bc955b;
+    border-color: #bc955b;
+  }
+`;
+
+
 function TablaSecretarias  ({ title })  {
  
   const handleOptionChange = (event) => {
@@ -294,21 +332,25 @@ const handleCloseAddModal = () => {
 <div>
 <TableWrapper>
 <h2>{title}</h2>
-<input
+<SearchWrapper>
+<StyledInput
           type="text"
           placeholder="Buscar..."
           value={searchText}
           onChange={handleSearch}
         />
 {console.log(secretariasUnicas)}
-<select value={selectedOption} onChange={handleOptionChange}>
+<StyledSelect value={selectedOption} onChange={handleOptionChange}>
   <option value="">Todas las secretarias</option>
   {secretariasUnicas.map((secretaria, index) => (
     <option key={index} value={secretaria}>
       {secretaria}
     </option>
   ))}
-</select>
+</StyledSelect>
+
+<StyledAddButton onClick={ShowModal}>Agregar Nueva Dependencia</StyledAddButton>
+</SearchWrapper>
 
 
 <StyledTable>
@@ -317,7 +359,7 @@ const handleCloseAddModal = () => {
               <StyledTh>Secretaria</StyledTh>
               <StyledTh>Área de Adscripción</StyledTh>
               <StyledTh>Editar</StyledTh>
-              <StyledTh>Agregar Nueva</StyledTh>
+             
             </tr>
           </thead>
           <tbody>
@@ -334,12 +376,6 @@ const handleCloseAddModal = () => {
                   <StyledTd isEven={index % 2 !== 0}>
                     <LiberacionButton variant="primary" onClick={() => handleShow(item.id_dependencia)}>
                       {"Editar"}
-                    </LiberacionButton>
-                  </StyledTd>
-
-                  <StyledTd isEven={index % 2 !== 0}>
-                  <LiberacionButton variant="primary" onClick={ShowModal}>
-                      Agregar Nuevo Plantel
                     </LiberacionButton>
                   </StyledTd>
 

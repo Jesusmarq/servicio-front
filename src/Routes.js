@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch, Redirect, Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -10,6 +10,8 @@ import Preregistro from './Pages/Prueba';
 import Usuario from './Pages/Usuario';
 import Validador from './Pages/Validador';
 import ADMI from './Pages/Admi';
+import Table from './Pages/QR';
+
 
 
 console.log(localStorage.getItem('dataUser'))
@@ -65,14 +67,21 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 const Routes = () => {
   return (
     <Router>
+
+      <Link to="/tabla?datos=Juan,25,juan@example.com">
+        Tabla component
+      </Link>
+
       <Switch>
         {/* Define las rutas y los componentes asociados */}
         <Route path="/" exact component={Login} />
         <Route path="/registro" component={Preregistro} />
+        <Route path="/tabla" component={Table} />
         {/* Utiliza PrivateRoute para proteger las rutas que requieren autenticación */}
         <PrivateRoute path="/usuario" component={Usuario} />
         <PrivateRoute path="/validador" component={Validador} />
         <PrivateRoute path="/administrador" component={ADMI} />
+       
         {/* Agrega más rutas según sea necesario */}
        
        

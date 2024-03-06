@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 
+
 const TableWrapper = styled.div`
   margin: 20px auto;
   width: 80%;
@@ -87,6 +88,43 @@ const SendButton = styled(Button)`
   margin: 10px;
   height: 40px;
   width: 10vw;
+`;
+
+// Define los estilos para el área de búsqueda y el select
+const SearchWrapper = styled.div`
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+`;
+
+const StyledInput = styled.input`
+  margin-right: 10px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+`;
+
+const StyledSelect = styled.select`
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white; /* Color de fondo del select */
+  color: #333; /* Color del texto */
+`;
+
+
+
+const StyledAddButton = styled(Button)`
+  background-color: #9E2343;
+  color: white;
+  border-radius: 5px;
+  border-color: #9E2343;
+  margin-left: auto;
+
+  &:hover {
+    background-color: #bc955b;
+    border-color: #bc955b;
+  }
 `;
 
 const TablaEscuelas = ({ title }) => {
@@ -292,17 +330,21 @@ const TablaEscuelas = ({ title }) => {
     <div key={keyForRerender}>
       <TableWrapper>
         <h2>{title}</h2>
-        <input
-          type="text"
-          placeholder="Buscar..."
-          value={searchText}
-          onChange={handleSearch}
-        />
-        <select value={selectedOption} onChange={handleOptionChange}>
-          <option value="">Todas las instituciones</option>
-          <option value="UAEH">UAEH</option>
-          <option value="SEMSyS">SEMSyS</option>
-        </select>
+        <SearchWrapper>
+          <StyledInput
+            type="text"
+            placeholder="Buscar..."
+            value={searchText}
+            onChange={handleSearch}
+          />
+          <StyledSelect value={selectedOption} onChange={handleOptionChange}>
+            <option value="">Todas las instituciones</option>
+            <option value="UAEH">UAEH</option>
+            <option value="SEMSyS">SEMSyS</option>
+          </StyledSelect>
+         
+          <StyledAddButton onClick={ShowModal}>Agregar Nuevo Plantel</StyledAddButton>
+        </SearchWrapper>
 
         <StyledTable>
           <thead>
@@ -310,7 +352,7 @@ const TablaEscuelas = ({ title }) => {
               <StyledTh>Escuela</StyledTh>
               <StyledTh>Plantel</StyledTh>
               <StyledTh>Editar </StyledTh>
-              <StyledTh>Agregar </StyledTh>
+              
             </tr>
           </thead>
           <tbody>
@@ -332,11 +374,7 @@ const TablaEscuelas = ({ title }) => {
               
                   </StyledTd>
                   
-                  <StyledTd isEven={index % 2 !== 0}>
-                    <LiberacionButton variant="primary" onClick={ShowModal}>
-                      Agregar Nuevo Plantel
-                    </LiberacionButton>
-                  </StyledTd>
+                  
                 </tr>
               ))}
           </tbody>
