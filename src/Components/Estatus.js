@@ -124,12 +124,12 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 
     //console.log("localStorage.getItem('dataUser')")
 
-    console.log(localStorage.getItem('dataUser'))
+    //console.log(localStorage.getItem('dataUser'))
     var dataUser = localStorage.getItem('dataUser')
     var parsedDataUser = JSON.parse(dataUser);
     
     // Acceder a la propiedad 'id'
-    console.log(parsedDataUser.id);
+    //console.log(parsedDataUser.id);
 
     const handleSolicitarLiberacion = async () => {
       try {
@@ -249,7 +249,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
                           </>
                   ) : (
                     <>
-                      <StyledTd>Aún no disponible</StyledTd>
+                      <StyledTd>No disponible</StyledTd>
                     </>
                   )}
                 <StyledTd isEven={true}>{data.fechaLiberacion}</StyledTd>
