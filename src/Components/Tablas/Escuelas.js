@@ -98,6 +98,7 @@ const TablaEscuelas = ({ title }) => {
     escuela: '',
     institucion: '',
   });
+
   const [formChanged, setFormChanged] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [keyForRerender, setKeyForRerender] = useState(0);
@@ -114,10 +115,7 @@ const TablaEscuelas = ({ title }) => {
           'Content-Type': 'application/json',
           // Puedes agregar otros encabezados si es necesario
         },
-        body: JSON.stringify({
-          // Aquí puedes enviar los datos necesarios para agregar un nuevo plantel
-          // Por ejemplo, puedes enviar un objeto con propiedades como nombre, institución, etc.
-        }),
+        body: JSON.stringify(formData),
       });
   
       if (response.ok) {
@@ -251,6 +249,45 @@ const TablaEscuelas = ({ title }) => {
     fetchPlanteles();
   }, [keyForRerender]);
 
+
+
+  
+  
+  const initialState = {
+    id_universidad: "",
+    universidad_nombre: "",
+    plantel_nombre: "",
+    direccion: "",
+  };
+
+  const [formData, setFormData] = useState(initialState);
+  const [showAddModal, setShowAddModal] = useState(false);
+  console.log(formData)
+
+
+  const handleOptionChange2 = (event) => {
+    const id_universidad = event.target.value;
+    const universidad_nombre = event.target.options[event.target.selectedIndex].text; // Obtén el nombre de la universidad seleccionada
+    setFormData({ ...formData, id_universidad, universidad_nombre }); // Actualiza el estado con el id y el nombre de la universidad
+  };
+
+  const handleInputChange = (event, fieldName) => {
+    const value = event.target.value;
+    setFormData({ ...formData, [fieldName]: value });
+  };
+
+
+
+  const ShowModal = () => {
+    setShowAddModal(true);
+  };
+
+  const handleCloseAddModal = () => {
+    setShowAddModal(false);
+  };
+
+
+
   return (
     <div key={keyForRerender}>
       <TableWrapper>
@@ -266,16 +303,14 @@ const TablaEscuelas = ({ title }) => {
           <option value="UAEH">UAEH</option>
           <option value="SEMSyS">SEMSyS</option>
         </select>
-        <LiberacionButton variant="primary" onClick={() => handleAddPlantel()}>
-          Agregar Nuevo Plantel
-        </LiberacionButton>
 
         <StyledTable>
           <thead>
             <tr>
               <StyledTh>Escuela</StyledTh>
               <StyledTh>Plantel</StyledTh>
-              <StyledTh>Editar</StyledTh>
+              <StyledTh>Editar </StyledTh>
+              <StyledTh>Agregar </StyledTh>
             </tr>
           </thead>
           <tbody>
@@ -293,6 +328,13 @@ const TablaEscuelas = ({ title }) => {
                   <StyledTd isEven={index % 2 !== 0}>
                     <LiberacionButton variant="primary" onClick={() => handleShow(item.id_plantel)}>
                       Editar
+                    </LiberacionButton>
+              
+                  </StyledTd>
+                  
+                  <StyledTd isEven={index % 2 !== 0}>
+                    <LiberacionButton variant="primary" onClick={ShowModal}>
+                      Agregar Nuevo Plantel
                     </LiberacionButton>
                   </StyledTd>
                 </tr>
@@ -342,6 +384,96 @@ const TablaEscuelas = ({ title }) => {
           </Modal.Footer>
         </ModalContent>
       </CenteredModal>
+
+
+         <CenteredModal show={showModal} onHide={handleClose}>
+        <ModalContent>
+          <Modal.Header closeButton>
+            <Modal.Title>Editar Información</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {selectedRow !== null && (
+              <Form>
+                <Form.Group controlId="formEscuela">
+                  <Form.Label>Escuela:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder={editedData.escuela}
+                    value={editedData.escuela}
+                    readOnly={true}
+                    onChange={(e) => handleEditChange(e, 'escuela')}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formInstitucion">
+                  <Form.Label>Institución:</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Ingrese la nueva institución"
+                    value={editedData.institucion}
+                    onChange={(e) => handleEditChange(e, 'institucion')}
+                  />
+                </Form.Group>
+              </Form>
+            )}
+          </Modal.Body>
+          <Modal.Footer>
+            <SendButton variant="primary" onClick={handleSend} disabled={!formChanged}>
+              Guardar
+            </SendButton>
+            <CloseButton variant="primary" onClick={handleCancel}>
+              Cerrar
+            </CloseButton>
+          </Modal.Footer>
+        </ModalContent>
+      </CenteredModal>
+
+    
+      <CenteredModal show={showAddModal} onHide={handleCloseAddModal}>
+      <ModalContent>
+        <Modal.Header closeButton>
+          <Modal.Title>Agregar Nuevo Plantel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formEscuela">
+              <Form.Label>Escuela:</Form.Label>
+              <Form.Control as="select" value={formData.id_universidad} onChange={handleOptionChange2}>
+                <option value="">Todas las instituciones</option>
+                <option value="1">UAEH</option>
+                <option value="2">SEMSyS</option>
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group controlId="formInstitucion">
+              <Form.Label>Institución:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingrese la nueva institución"
+                value={formData.plantel_nombre}
+                onChange={(e) => handleInputChange(e, 'plantel_nombre')}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="formDireccion">
+              <Form.Label>Dirección:</Form.Label>
+              <Form.Control
+                type="text"
+                placeholder="Ingrese la dirección"
+                value={formData.direccion}
+                onChange={(e) => handleInputChange(e, 'direccion')}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <LiberacionButton variant="primary" onClick={handleAddPlantel}>
+            Guardar
+          </LiberacionButton>
+        </Modal.Footer>
+      </ModalContent>
+    </CenteredModal>
+
     </div>
   );
 };

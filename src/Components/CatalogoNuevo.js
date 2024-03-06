@@ -71,9 +71,7 @@ function Catalogo2({ title }) {
           <Tab eventKey="instituciones_educativas" title="Instituciones educativas">
             <TablaEscuelas />
           </Tab>
-          <Tab eventKey="usuarios" title="Usuarios">
-            <TablaUsuarios />
-          </Tab>
+          
         </Tabs>
       </div>
     </div>
