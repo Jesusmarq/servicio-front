@@ -644,6 +644,57 @@ console.log('Selected Dependencia:', selectedDependencia);
     setSelectedDependencia('');
   };
 
+  //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------traer Proyectos----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+  const [proyectos, setProyectos] = useState([]);
+  const [selectedProyecto, setSelectedProyecto] = useState('');
+  const [selectedProyectoId, setSelectedProyectoId] = useState(null); // Nueva constante para almacenar la ID del proyecto seleccionado
+  const [proyectosData, setProyectosData] = useState([]);
+
+  
+  const handleDependenciaChange = async (e) => {
+    const selectedDep = e.target.value;
+    console.log(selectedDep);
+  
+    // Actualizar selectedDependencia
+    setSelectedDependencia(selectedDep);
+  
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/consultaProyectos`);
+      const data = await response.json();
+      console.log(data);
+  
+      // Filtrar los proyectos para la dependencia seleccionada
+      const proyectosDependencia = data.filter(entry => entry.dependencia === selectedDep).map(entry => entry.proyecto);
+  
+      // Actualizar el estado de los proyectos y su información asociada
+      setProyectos(proyectosDependencia);
+      setProyectosData(data);
+      setSelectedProyecto('');
+      setSelectedProyectoId(null); // También reiniciar la ID del proyecto seleccionado
+    } catch (error) {
+      console.error('Error al obtener los proyectos:', error);
+    }
+  };
+
+  
+  console.log()
+  const handleProyectoChange = (e) => {
+    const selectedProj = e.target.value;
+    console.log("Proyecto seleccionado:", selectedProj);
+    console.log("Dependencia seleccionada:", selectedDependencia);
+  
+    // Buscar la ID del proyecto seleccionado
+    const proyectoSeleccionado = proyectosData.find(entry => entry.proyecto === selectedProj && entry.dependencia === selectedDependencia);
+    console.log("Proyecto seleccionado encontrado:", proyectoSeleccionado);
+  
+    if (proyectoSeleccionado) {
+      console.log("ID del proyecto seleccionado:", proyectoSeleccionado.id);
+      setSelectedProyectoId(proyectoSeleccionado.id);
+    }
+  
+    setSelectedProyecto(selectedProj);
+  };
+
     //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------Datos MOdal----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
     const [datosAlumno, setDatosAlumno] = useState('');
     const [datosCarrera, setDatosCarrera] = useState('');
@@ -687,49 +738,7 @@ console.log('Selected Dependencia:', selectedDependencia);
       fetchDatosModal(solicitudId); // Llamar a la función fetchDatosModal con el solicitudId como argumento
     };  
     
-    //{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{----------traer Proyectos----------}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
-    const [proyectos, setProyectos] = useState([]);
-    const [selectedProyecto, setSelectedProyecto] = useState('');
-    const [selectedProyectoId, setSelectedProyectoId] = useState(null); // Nueva constante para almacenar la ID del proyecto seleccionado
-    const [proyectosData, setProyectosData] = useState([]);
   
-    console.log('Proyectos:', proyectos);
-    console.log('Selected Proyecto:', selectedProyecto);
-    console.log('Selected Proyecto ID:', selectedProyectoId); // Agregamos un log para la ID del proyecto
-  
-    const traerDatos2 = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:5000/consultaProyectos');
-        const data = await response.json();
-        console.log(data);
-  
-        // Obtener proyectos únicos
-        const proyectosUnicos = [...new Set(data.map(entry => entry.proyecto))];
-  
-        setProyectos(proyectosUnicos);
-        setProyectosData(data);
-        setSelectedProyecto('');
-      } catch (error) {
-        console.error('Error al obtener los datos:', error);
-      }
-    };
-  
-    useEffect(() => {
-      traerDatos2();
-    }, []);
-  
-    const handleProyectoChange = (e) => {
-      const selectedProj = e.target.value;
-      console.log(selectedProj);
-  
-      // Buscar la ID del proyecto seleccionado
-      const proyectoSeleccionado = proyectosData.find(entry => entry.proyecto === selectedProj);
-      if (proyectoSeleccionado) {
-        setSelectedProyectoId(proyectoSeleccionado.id);
-      }
-  
-      setSelectedProyecto(selectedProj);
-    };
 
 
 
@@ -826,17 +835,17 @@ console.log('Selected Dependencia:', selectedDependencia);
 
       {dependencias.length > 0 && (
         <Form.Group controlId="dependencia" className="mb-3">
-          <Form.Label>Dependencia</Form.Label>
-          <Form.Select
-            value={selectedDependencia}
-            onChange={(e) => setSelectedDependencia(e.target.value)}
-          >
-            <option value="">Selecciona una dependencia</option>
-            {dependencias.map(dependencia => (
-              <option key={dependencia} value={dependencia}>{dependencia}</option>
-            ))}
-          </Form.Select>
-        </Form.Group>
+        <Form.Label>Dependencia</Form.Label>
+        <Form.Select
+          value={selectedDependencia}
+          onChange={handleDependenciaChange} // Asigna la función handleDependenciaChange al evento onChange
+        >
+          <option value="">Selecciona una dependencia</option>
+          {dependencias.map(dependencia => (
+            <option key={dependencia} value={dependencia}>{dependencia}</option>
+          ))}
+        </Form.Select>
+      </Form.Group>
       )}
 
 <Form.Group controlId="proyecto" className="mb-3">
@@ -851,7 +860,6 @@ console.log('Selected Dependencia:', selectedDependencia);
         ))}
       </Form.Select>
     </Form.Group>
-
       
 
 

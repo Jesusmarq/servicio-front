@@ -69,7 +69,7 @@ const Routes = () => {
     <Router>
 
       <Link to="/tabla?datos=Juan,25,juan@example.com">
-        Tabla component
+   
       </Link>
 
       <Switch>

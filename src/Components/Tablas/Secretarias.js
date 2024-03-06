@@ -10,7 +10,7 @@ import Button from 'react-bootstrap/Button';
 
 const TableWrapper = styled.div`
   margin: 20px auto;
-  width: 80%;
+  width: 90%;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
