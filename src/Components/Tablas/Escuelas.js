@@ -158,12 +158,25 @@ const TablaEscuelas = ({ title }) => {
   
       if (response.ok) {
         // La solicitud fue exitosa, puedes realizar acciones adicionales si es necesario
-        console.log('Nuevo plantel agregado con éxito.');
-      } else {
-        // Manejar otros códigos de estado si es necesario
-        console.error('Error al agregar nuevo plantel:', response.statusText);
+        Swal.fire({
+          icon: 'success',
+          title: '¡Agregado con éxito!',
+          text: 'La información ha sido guardada correctamente.',
+        }).then(() => {
+          setKeyForRerender(keyForRerender + 1);
+        });
+        
+      } else{
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se logró agregar la información.',
+        }).then(() => {
+          window.location.reload();
+        });
       }
-    } catch (error) {
+      }
+     catch (error) {
       // Manejar errores de red u otros errores
       console.error('Error en la solicitud para agregar nuevo plantel:', error.message);
     }
