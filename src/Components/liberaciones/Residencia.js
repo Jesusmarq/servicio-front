@@ -366,7 +366,7 @@ const piePaginaLines = pdf.splitTextToSize(piePagina, pdf.internal.pageSize.widt
 // Agregar las líneas al PDF
 pdf.text(piePaginaLines, xPosition, yPosition);
 
-pdf.addImage(datosQr, 'PNG', 140, 190, 50, 50);
+pdf.addImage(datosQr, 'PNG', 140, 200, 50, 50);
 pdf.addImage(datosFirma, 'PNG', 10,215, 50, 20);
 
 pdf.setFont('Montserrat-Regular');

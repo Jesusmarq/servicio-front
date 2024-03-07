@@ -16,6 +16,8 @@ const LineColor = "#BC955B";
 const SelectedColor = "#9E2343";
 const SidebarBackgroundColor = "white";
 
+
+
 const SidebarWrapper = styled.div`
   width: ${({ expanded }) => (expanded ? "350px" : "100px")};
   height: 100vh;
@@ -188,6 +190,8 @@ const ADMI = ({ title }) => {
 
   return (
     <div>
+     
+
       <SidebarWrapper
         expanded={expanded}
         onMouseEnter={() => setExpanded(true)}
@@ -284,6 +288,7 @@ const ADMI = ({ title }) => {
           {selectedItem === "Section8" && <p></p>}
         </Content>
       </DashboardWrapper>
+      
     </div>
   );
 };

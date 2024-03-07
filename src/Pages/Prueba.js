@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import "../Styles/preregistro.css"
-import '../Styles/responsive.css';
+
 import { useHistory } from "react-router-dom"; 
 import { Tag } from "keep-react";
 
@@ -26,6 +26,7 @@ function Preregistro() {
 
 
   const [formData, setFormData] = useState(initialState);
+  
   const [plantelOptions, setPlantelOptions] = useState(
     ["Escuela Superior de Actopan",
       "Escuela Superior de Apan",
