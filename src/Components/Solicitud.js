@@ -227,7 +227,7 @@ function Solicitud({ title }) {
     e.preventDefault();
   
     axios
-      .post(`http://127.0.0.1:5000/subirCarta`, formDataObj)
+      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/subirCarta`, formDataObj)
       .then((response) => {
         
         if (response.status == 201) {

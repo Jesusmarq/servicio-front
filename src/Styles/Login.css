@@ -104,9 +104,14 @@ img {
 
 }
 
-@media (max-width: 768px) {
+/* Media query para pantallas de laptops y escritorios */
+@media screen and (min-width: 1024px) {
+  .login-container {
+    max-width: 50%; /* Ajusta el tamaño máximo del contenedor para pantallas más grandes */
+    height: 70vh; /* Reducir la altura del contenedor para pantallas más grandes */
+  }
 
-  
-
+  .left-side, .right-side {
+    width: 25%; /* Ajusta el ancho de los lados para pantallas más grandes */
+  }
 }
-         

@@ -47,13 +47,58 @@ const isAuthenticated = () => {
   }
 };
 
+const allowedRole = (allowed) =>{
+  const dataUser = localStorage.getItem('dataUser');
+
+// Convertir el JSON a un objeto JavaScript
+const userData = JSON.parse(dataUser);
+
+// Acceder a la propiedad rol
+const rol = userData.rol;
+if (rol !== allowed) {
+  return false
+} else {
+  return true
+}
+}
+
+const redirectToRole = () => {
+  const dataUser = localStorage.getItem('dataUser');
+
+// Convertir el JSON a un objeto JavaScript
+const userData = JSON.parse(dataUser);
+
+// Acceder a la propiedad rol
+const rol = userData.rol;
+
+  var redirectTo =''
+  if (rol === 'admin') {
+    redirectTo = '/administrador'
+  }
+
+  if (rol === 'verificador') {
+    redirectTo = '/verificador'
+  }
+
+  if (rol === 'alumno') {
+    redirectTo = '/usuario'
+  }
+
+  return <Redirect to={redirectTo} />;
+};
+
 // Componente para proteger las rutas que requieren autenticación
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const PrivateRoute = ({ component: Component, allowed, ...rest }) => (
   <Route
     {...rest}
     render={(props) =>
       isAuthenticated() ? (
-        <Component {...props} />
+        allowedRole(allowed) ? (
+          <Component {...props} />
+        ) : (
+          // Redirige al usuario según su rol
+          redirectToRole()
+        )
       ) : (
         // Redirige al componente de inicio de sesión si el usuario no está autenticado
         <Redirect to="/" />
@@ -78,9 +123,9 @@ const Routes = () => {
         <Route path="/registro" component={Preregistro} />
         <Route path="/tabla" component={Table} />
         {/* Utiliza PrivateRoute para proteger las rutas que requieren autenticación */}
-        <PrivateRoute path="/usuario" component={Usuario} />
-        <PrivateRoute path="/validador" component={Validador} />
-        <PrivateRoute path="/administrador" component={ADMI} />
+        <PrivateRoute path="/usuario" component={Usuario} allowed = "alumno"/>
+        <PrivateRoute path="/validador" component={Validador} allowed = "verificador"/>
+        <PrivateRoute path="/administrador" component={ADMI} allowed = "admin" />
        
         {/* Agrega más rutas según sea necesario */}
        

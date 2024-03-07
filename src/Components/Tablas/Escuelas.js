@@ -147,7 +147,7 @@ const TablaEscuelas = ({ title }) => {
 
   const handleAddPlantel = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/agregarUniversidadPlantel', {
+      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregarUniversidadPlantel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -203,7 +203,7 @@ const TablaEscuelas = ({ title }) => {
       //console.log(plantelNombre);
       //console.log(institucion);
       try {
-        const response = await fetch(`http://127.0.0.1:5000/plantelEditar`, {
+        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/plantelEditar`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -274,7 +274,7 @@ const TablaEscuelas = ({ title }) => {
   let plantelSeleccionado = null;
   const fetchPlanteles = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/planteles');
+      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
   
       // Verificar si la respuesta es exitosa (código de estado 200)
       console.log(response);
