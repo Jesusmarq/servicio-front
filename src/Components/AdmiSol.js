@@ -5,7 +5,7 @@ import 'sweetalert2/src/sweetalert2.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import '../Styles/responsive.css';
 import ServicioSocial from './Solicitudes/ServicioSocial';
 import Estadia from './Solicitudes/Estadias';
 import Estancia from './Solicitudes/Estancia';

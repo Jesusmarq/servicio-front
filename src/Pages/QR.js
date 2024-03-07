@@ -1,7 +1,6 @@
-// Table.js
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { withRouter } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const TableContainer = styled.div`
   margin: 20px;
@@ -32,15 +31,29 @@ const StyledTd = styled.td`
   padding: 10px;
 `;
 
-function Table({ location }) {
+function Table() {
   const [filas, setFilas] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const datos = searchParams.get("datos");
     const filas = datos ? datos.split("|") : [];
     setFilas(filas);
-  }, [location.search]);
+  }, [location]);
+
+  // Esta función se ejecutará cada cierto intervalo de tiempo para verificar si los datos deben actualizarse
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const searchParams = new URLSearchParams(location.search);
+      const datos = searchParams.get("datos");
+      const filas = datos ? datos.split("|") : [];
+      setFilas(filas);
+    }, 5000); // Cambia este valor al intervalo de tiempo deseado en milisegundos (por ejemplo, 5000 para 5 segundos)
+
+    // Limpia el intervalo cuando el componente se desmonta para evitar fugas de memoria
+    return () => clearInterval(interval);
+  }, [location]);
 
   return (
     <section id="section_pre">
@@ -80,4 +93,4 @@ function Table({ location }) {
   );
 }
 
-export default withRouter(Table);
+export default Table;

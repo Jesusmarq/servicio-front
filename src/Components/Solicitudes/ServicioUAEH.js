@@ -7,7 +7,7 @@ import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet';
 import axios from "axios";
-import '../../Styles/responsive.css';
+
 import { jsPDF } from 'jspdf';
 import { format } from 'date-fns';
 import esLocale from 'date-fns/locale/es';
@@ -20,6 +20,8 @@ import { font2 } from '../Fuentes/Montserrat-Bold-normal';
 
 
 const TableContainer = styled.div`
+width: 98%;
+table-layout: fixed;
   margin: 20px;
   border-radius: 15px;
   overflow: hidden;

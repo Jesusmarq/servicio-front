@@ -10,28 +10,28 @@
 }
 
 .form-container {
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 20px;
+    max-width: 50%;
+    margin: 5% auto;
+    padding: 2%;
     border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgb(255, 255, 255);
 }
 
 .form-group {
-    width: 45%;
-    margin: 10px;
+    width: 48%;
+    margin: 1%;
     box-sizing: border-box;
     display: inline-block;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 1%;
 }
 
 .cuadros {
-    width: calc(100% - 10px);
+    width: calc(100% - 2%);
     border-color: #9E2343;
     border-radius: 10px;
     height: 30px; /* Ajusta la altura según tus necesidades */
@@ -86,4 +86,48 @@
     margin-bottom: 20px;
   }
 
- 
+ /* Para dispositivos móviles */
+@media screen and (max-width: 767px) {
+    /* Estilos específicos para dispositivos móviles */
+
+    .form-container {
+        max-width: 80%;
+    
+        margin: 10% auto;
+        padding: 2%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .form-group {
+        width: 98%;
+        max-height: 98%;
+        margin: 1%;
+        box-sizing: border-box;
+        display: inline-block;
+    }
+
+  }
+  
+  /* Para tabletas */
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    /* Estilos específicos para tabletas */
+    .form-container {
+        max-width: 80%;
+      
+        margin: 10% auto;
+        padding: 2%;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, 0.8);
+    }
+
+    .form-group {
+        width: 98%;
+        max-height: 98%;
+        margin: 1%;
+        box-sizing: border-box;
+        display: inline-block;
+    }
+  }

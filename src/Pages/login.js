@@ -3,7 +3,7 @@ import { Link, useHistory } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "../Styles/Login.css";
-import "../Styles/responsive.css";
+
 
 const Login = () => {
   const initialState = {
@@ -94,12 +94,11 @@ const Login = () => {
           />
 
           {/* Encabezado */}
-          <h2 className="h2">
-            Bienvenido al Sistema de Servicio Social, Prácticas Profesionales,
-            Estancias y Estadías.
-          </h2>
+          <p className="titulo">
+            Bienvenido al Sistema de Servicio Social, Prácticas Profesionales, Estancias y Estadías.
+          </p>
           <br></br>
-          <h4>Por favor ingresa tus datos...</h4>
+          <p className="texto">Por favor ingresa tus datos...</p>
 
           {/* Formulario de Login */}
           <form onSubmit={handleSubmit} className="form1">
@@ -137,8 +136,8 @@ const Login = () => {
           </form>
 
           {/* Opción para registrarse */}
-          <p style={{ textAlign: "right" }}>
-            ¿No tienes una cuenta?{" "}
+          <p className="texto2">
+            ¿No tienes una cuenta?{" "}<br></br>
             <Link to="/registro" style={{ color: "#9E2343" }}>
               Registrarse
             </Link>
