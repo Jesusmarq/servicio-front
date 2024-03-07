@@ -21,7 +21,7 @@ const Login = () => {
     e.preventDefault();
 
     axios
-      .post(`http://127.0.0.1:5000/login`, formData)
+      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/login`, formData)
       .then((response) => {
         //console.log(response.data);
         // Acceder y guardar solo las propiedades necesarias
