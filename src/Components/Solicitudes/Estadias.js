@@ -92,6 +92,15 @@ const SendButton = styled(Button)`
   width: 10vw;
 `;
 
+const StyledSelect = styled.select`
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white; /* Color de fondo del select */
+  color: #333; /* Color del texto */
+  margin: 20px;
+  text-align: left; /* Alineación a la izquierda */
+`;
 
 
 function Estadia ({ title }) {
@@ -135,31 +144,42 @@ function Estadia ({ title }) {
   };
 
   //peticion datos de la tabla  ------------------
-  const fetchDataTabla = async () => {
-    try {
-        const response = await fetch('http://127.0.0.1:5000/consultaSolicitudes?filtro=Pendiente&limite=100');
 
-        if (!response.ok) {
-            throw new Error('Error al obtener las solicitudes');
-        }
+const fetchDataTabla = async (filtroSeleccionado) => {
+  try {
+      let filtroURL;
+      if (filtroSeleccionado === '') {
+          filtroURL = ''; // Si es 'todos', dejar filtroURL vacío
+      } else {
+          filtroURL = `&filtro=${filtroSeleccionado}`; // De lo contrario, establecer el filtro según la selección
+      }
 
-        const responseData = await response.json();
-        console.log(responseData);
+      const response = await fetch(`http://127.0.0.1:5000/consultaSolicitudes?limite=100${filtroURL}`);
 
-        // Filtrar responseData.solicitudes para obtener solo las de tipo "servicio social" y universidad "UAEH"
-        const solicitudesFiltradas = responseData.solicitudes.filter(solicitud => solicitud.tipo === 'Estadía' && solicitud.universidad === 'SEMSyS');
+      if (!response.ok) {
+          throw new Error('Error al obtener las solicitudes');
+      }
 
-        // Asegúrate de que solicitudesFiltradas es un array antes de asignarlo a data
-        if (Array.isArray(solicitudesFiltradas)) {
-            setData(solicitudesFiltradas);
-        } else {
-            throw new Error('La propiedad solicitudes_json de la respuesta de la API no es un array');
-        }
-    } catch (error) {
-        console.error(error);
-    }
+      const responseData = await response.json();
+      console.log(responseData);
+
+      // Filtrar responseData.solicitudes para obtener solo las de tipo "servicio social" y universidad "UAEH"
+      const solicitudesFiltradas = responseData.solicitudes.filter(solicitud => solicitud.tipo === 'Estadía' && solicitud.universidad === 'SEMSyS');
+      // Asegúrate de que solicitudesFiltradas es un array antes de asignarlo a data
+      if (Array.isArray(solicitudesFiltradas)) {
+          setData(solicitudesFiltradas);
+      } else {
+          throw new Error('La propiedad solicitudes_json de la respuesta de la API no es un array');
+      }
+  } catch (error) {
+      console.error(error);
+  }
 };
-  
+
+const handleFiltroChange = (event) => {
+  const filtroSeleccionado = event.target.value;
+  fetchDataTabla(filtroSeleccionado);
+};
 //------------------------   mada hacer los los cambios -------------
   useEffect(() => {
       //fetchData()

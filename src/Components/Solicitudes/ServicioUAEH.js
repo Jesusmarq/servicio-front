@@ -93,7 +93,15 @@ const SendButton = styled(Button)`
   height: 40px;
   width: 10vw;
 `;
-
+const StyledSelect = styled.select`
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: white; /* Color de fondo del select */
+  color: #333; /* Color del texto */
+  margin: 20px;
+  text-align: left; /* Alineación a la izquierda */
+`;
 
 
 function ServicioSocialUAEH ({ title }) {
@@ -139,9 +147,16 @@ function ServicioSocialUAEH ({ title }) {
   
 
   //peticion datos de la tabla  ------------------
-  const fetchDataTabla = async () => {
+  const fetchDataTabla = async (filtroSeleccionado) => {
     try {
-        const response = await fetch('http://127.0.0.1:5000/consultaSolicitudes?filtro=Pendiente&limite=100');
+        let filtroURL;
+        if (filtroSeleccionado === '') {
+            filtroURL = ''; // Si es 'todos', dejar filtroURL vacío
+        } else {
+            filtroURL = `&filtro=${filtroSeleccionado}`; // De lo contrario, establecer el filtro según la selección
+        }
+
+        const response = await fetch(`http://127.0.0.1:5000/consultaSolicitudes?limite=100${filtroURL}`);
 
         if (!response.ok) {
             throw new Error('Error al obtener las solicitudes');
@@ -150,7 +165,7 @@ function ServicioSocialUAEH ({ title }) {
         const responseData = await response.json();
         console.log(responseData);
 
-        // Filtrar responseData.solicitudes para obtener solo las de tipo "servicio social" y universidad "UAEH"
+        // Filtrar responseData.solicitudes para obtener solo las de tipo "Servicio Social" y universidad "UAEH"
         const solicitudesFiltradas = responseData.solicitudes.filter(solicitud => solicitud.tipo === 'Servicio Social' && solicitud.universidad === 'UAEH');
 
         // Asegúrate de que solicitudesFiltradas es un array antes de asignarlo a data
@@ -163,7 +178,13 @@ function ServicioSocialUAEH ({ title }) {
         console.error(error);
     }
 };
-  
+
+
+const handleFiltroChange = (event) => {
+  const filtroSeleccionado = event.target.value;
+  fetchDataTabla(filtroSeleccionado);
+};
+
 //------------------------   mada hacer los los cambios -------------
   useEffect(() => {
       //fetchData()
@@ -743,7 +764,16 @@ console.log(jsonData)
 
   return (
     <div>
+
+      <StyledSelect onChange={handleFiltroChange}>
+      <option value=" ">Seleccionar estado de la solicitud</option>
+        <option value="todos">Todas las solicitudes</option>
+        <option value="Pendiente">Pendientes</option>
+        <option value="Aceptado">Aceptados</option>
+        <option value="Rechazado">Rechazados</option>
+      </StyledSelect>
       <TableContainer>
+
         <StyledTable>
           <thead>
             <tr>
