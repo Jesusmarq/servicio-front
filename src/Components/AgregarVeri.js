@@ -109,7 +109,7 @@ const AgregarVal = ({ title }) => {
   useEffect(() => {
     const traerDatos = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/dependencias');
+        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
         const datos = await response.json();
         console.log(datos);
 
@@ -154,7 +154,7 @@ const AgregarVal = ({ title }) => {
       formData.id_secretaria = idSecretaria;
       console.log(JSON.stringify(formData))
       // Enviar la solicitud POST a la URL
-      const response = await fetch('http://127.0.0.1:5000/registroValidador', {
+      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
         method: 'POST', // Método de la solicitud HTTP
         headers: {
           'Content-Type': 'application/json', // Tipo de contenido que se está enviando (en este caso, JSON)

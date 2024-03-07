@@ -59,8 +59,8 @@ const Login = () => {
         console.error("Error al enviar el formulario:", error);
         Swal.fire({
           icon: "error",
-          title: "Error al enviar el formulario",
-          text: "Hubo un problema al enviar el formulario.",
+          title: "Error al iniciar sesión",
+          text: "Hubo un problema al iniciar sesión.",
         });
       });
   };

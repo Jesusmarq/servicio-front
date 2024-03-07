@@ -138,7 +138,7 @@ function Reportes({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:5000/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
+        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
   
         setDatosTabla(data.solicitudes);
@@ -184,7 +184,7 @@ function Reportes({ title }) {
       formDataObj.append('JSON', JSON.stringify(formData));
       formDataObj.append('pdf', pdfFile);
 
-      const response = await axios.post("http://127.0.0.1:5000/subirReporte", formDataObj);
+      const response = await axios.post("https://servicioypracticas.hidalgo.gob.mx:3002/subirReporte", formDataObj);
 
       if (response.status === 201) {
         Swal.fire({

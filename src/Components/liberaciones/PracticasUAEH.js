@@ -115,7 +115,7 @@ function PracticasUAEH ({ title }) {
   const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
     console.log(solicitudId)
     try {
-      const response = await fetch(`http://127.0.0.1:5000/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
+      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
       console.log(data);
@@ -136,7 +136,7 @@ function PracticasUAEH ({ title }) {
   //peticion datos de la tabla  ------------------
   const fetchDataTabla = async () => {
     try {
-        const response = await fetch('http://127.0.0.1:5000/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
+        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
 
         if (!response.ok) {
             throw new Error('Error al obtener las solicitudes');
@@ -433,7 +433,7 @@ console.log(jsonData)
   
     // Realizar la solicitud Axios
     axios
-    .patch(`http://127.0.0.1:5000/AceptarRechazarLiberacion`, formData)
+    .patch(`https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarLiberacion`, formData)
     .then((response) => {
   fetchDataTabla()
 
@@ -479,7 +479,7 @@ console.log(jsonData)
     
       // Realizar la solicitud Axios
       axios
-      .patch(`http://127.0.0.1:5000/AceptarRechazarLiberacion`, formData)
+      .patch(`https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarLiberacion`, formData)
       .then((response) => {
     fetchDataTabla()
   
@@ -600,14 +600,11 @@ console.log(jsonData)
   const [selectedDependencia, setSelectedDependencia] = useState('');
   const [datos, setDatos] = useState([]);
 
-console.log('Secretarias:', secretarias);
-console.log('Dependencias:', dependencias);
-console.log('Selected Secretaria:', selectedSecretaria);
-console.log('Selected Dependencia:', selectedDependencia);
+
 
   const traerDatos = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/dependencias');
+      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
       const datos = await response.json();
       console.log(datos);
 
@@ -651,18 +648,14 @@ console.log('Selected Dependencia:', selectedDependencia);
     const [datosPlantel, setDatosPlantel] = useState('');
     const [datosSolicitud, setDatosSolicitud] = useState('');
 
-    console.log('Alumno:', datosAlumno);
-    console.log('Carrera:', datosCarrera);
-    console.log('Matricula:', datosMatricula);
-    console.log('Plantel:', datosPlantel);
-    console.log('Solicitud:', datosSolicitud);
+   
    
     
     // Función para realizar la solicitud y obtener los datos del nuevo endpoint
     const fetchDatosModal = async (solicitudId) => {
       console.log(solicitudId)
       try {
-        const response = await fetch(`http://127.0.0.1:5000/datosAceptacion?solicitud=${solicitudId}`);
+        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
         const data = await response.json();
         console.log(data);
     
@@ -693,13 +686,11 @@ console.log('Selected Dependencia:', selectedDependencia);
     const [selectedProyectoId, setSelectedProyectoId] = useState(null); // Nueva constante para almacenar la ID del proyecto seleccionado
     const [proyectosData, setProyectosData] = useState([]);
   
-    console.log('Proyectos:', proyectos);
-    console.log('Selected Proyecto:', selectedProyecto);
-    console.log('Selected Proyecto ID:', selectedProyectoId); // Agregamos un log para la ID del proyecto
+
   
     const traerDatos2 = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/consultaProyectos');
+        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos');
         const data = await response.json();
         console.log(data);
   

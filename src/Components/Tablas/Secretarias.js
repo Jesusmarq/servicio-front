@@ -166,7 +166,7 @@ function TablaSecretarias  ({ title })  {
   // Función para obtener dependencias
   const fetchDependencias = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/dependencias');
+      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
 
       if (response.ok) {
         const depen = await response.json();
@@ -195,7 +195,7 @@ function TablaSecretarias  ({ title })  {
       try {
         const newData = { nombre: editedData.dependencia, dependencia: id };
   
-        const response = await fetch(`http://127.0.0.1:5000/dependenciaEditar`, {
+        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/dependenciaEditar`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -270,7 +270,7 @@ useEffect(() => {
 //-{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{POST AGREGAR DEPENDENCIA}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 const handleAddPlantel = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:5000/agregarUniversidadPlantel', {
+    const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregarUniversidadPlantel', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

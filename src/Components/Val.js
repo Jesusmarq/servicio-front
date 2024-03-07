@@ -89,7 +89,7 @@ function ValidarSolicitud({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:5000/consultaReportesTodos?tipo=todos');
+        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesTodos?tipo=todos');
         const responseData = await response.json();
         
 
@@ -137,7 +137,7 @@ function ValidarSolicitud({ title }) {
         horas: horas.toString(),
       };
 
-      const response = await fetch('http://127.0.0.1:5000/AceptarRechazarReporte', {
+      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarReporte', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
