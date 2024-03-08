@@ -113,9 +113,9 @@ const Routes = () => {
   return (
     <Router>
 
-      {/*<Link to="/tabla?datos=JesusAdolfo,25,juan@example.com">
-              
-  </Link>*/}
+    <Link to="/tabla?datos=JesusAdolfo,25,juan@example.com">
+             aa 
+  </Link>
 
       <Switch>
         {/* Define las rutas y los componentes asociados */}

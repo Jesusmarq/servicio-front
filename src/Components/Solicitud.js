@@ -154,12 +154,12 @@ function Solicitud({ title }) {
   //const dataUser = JSON.parse(localStorage.getItem('dataUser'));
   
     
-  console.log(localStorage.getItem('dataUser'))
+  //console.log(localStorage.getItem('dataUser'))
   var dataUser = localStorage.getItem('dataUser')
   var parsedDataUser = JSON.parse(dataUser);
   
   // Acceder a la propiedad 'id'
-  console.log(parsedDataUser.id);
+ // console.log(parsedDataUser.id);
   
 
   const initialState = {
@@ -222,7 +222,7 @@ function Solicitud({ title }) {
     formDataObj.append('pdf', formData.pdf)
     // Obtener el objeto JSON desde localStorage
 
-    console.log(formDataObj)
+    //console.log(formDataObj)
     
     e.preventDefault();
   

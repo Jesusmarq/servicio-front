@@ -121,12 +121,12 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 
 function Reportes({ title }) {
 
-  console.log(localStorage.getItem('dataUser'))
+ // console.log(localStorage.getItem('dataUser'))
   var dataUser = localStorage.getItem('dataUser')
   var parsedDataUser = JSON.parse(dataUser);
   
   // Acceder a la propiedad 'id'
-  console.log(parsedDataUser.id);
+  //console.log(parsedDataUser.id);
 
   const initialState = {
     alumno: parsedDataUser.id,
