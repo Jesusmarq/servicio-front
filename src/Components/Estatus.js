@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/Oficialia.png';
+import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import backgroundImg from '../Img/fondo.png'; 
 import Swal from "sweetalert2";
 import { Worker, Viewer } from '@react-pdf-viewer/core';
@@ -9,7 +9,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { TRUE } from 'sass';
 
 const EstatusWrapper = styled.div`
-  background-image: url(${backgroundImg});
+  //  background-image: url(${backgroundImg});  por veda se comenta imagen
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
@@ -40,12 +40,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h1`
 font-size: clamp(12px, 4vw, 52px);
   margin: 0px;
-  color: #BC955B;
+  color: #ccc; // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Seguimiento de Solicitud:';
-    color: #9E2343;
+    color: #98989a; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
@@ -70,7 +70,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #9E2343;
+  background-color: #98989a; // por veda #9E2343
   color: white;
   padding: 20px;
   text-align: center;
@@ -86,7 +86,7 @@ const StyledTd = styled.td`
 `;
 
 const LiberacionButton = styled.button`
-  background-color: #9E2343;
+  background-color: #98989a;  // por veda #9E2343
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -96,7 +96,7 @@ const LiberacionButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #7a1c33;
+    background-color: #ccc; // por veda #7a1c33
   }
 `;
 function base64toBlob(base64Data, contentType = '', sliceSize = 512) {

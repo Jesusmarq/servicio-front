@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/Oficialia.png';
+import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import '../Styles/responsive.css';
 
 const Header = styled.div`

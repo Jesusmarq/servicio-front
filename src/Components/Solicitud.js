@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import Logo2 from '../Img/Oficialia.png';
+import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import imagecar from '../Img/00.jpg';
 import imagecar2 from '../Img/06.jpg';
 import imagecar3 from '../Img/02.jpg';
@@ -37,12 +37,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
 font-size: clamp(12px, 4vw, 52px);
   margin: 0;
-  color: #BC955B;
+  color: #ccc;    // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Explora Oportunidades:';
-    color: #9E2343;
+    color: #98989a; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
@@ -62,21 +62,21 @@ const CardsContainer = styled.div`
 const StyledCard = styled(Card)`
   width: 18rem;
   border-radius: 15px;
-  background-color: #9E2343 !important;
+  background-color: #98989a !important; // por veda #9E2343 
   position: relative ;
-  margin: 10px;
-  padding: 0;
+  margin: 1%;
+
 `;
 
 const CardImage = styled(Card.Img)`
   border-radius: 15px 15px 0 0;
-  width: 100%;
+  width: auto !important; 
   height: auto;
   margin: 0;
 `;
 
 const CardBody = styled(Card.Body)`
-  margin: 10px;
+  margin: 0px;
   position: relative;
   text-align: center;
 `;
@@ -96,17 +96,22 @@ const CardText = styled(Card.Text)`
 const Line = styled.div`
   width: 100%;
   height: 10px;
-  background-color: #BC955B;
+  background-color: #ccc; // por veda #BC955B
   margin: 0;
 `;
 
 const StyledButton = styled(Button)`
-  background-color: #BC955B !important;
+  background-color: #ccc; // por veda #BC955B
   color: white !important;
-  border-color: #BC955B !important;
+  border-color: #ccc; // por veda #BC955B
   border-radius: 10px !important;
   margin: 10px !important;
   height: 40px !important;
+
+  &:hover {
+    background-color: #ddd ;/*#BC955B; VEDA */
+    border-color: #ddd ;/*#BC955B; VEDA */
+  }
 `;
 
 const CenteredModal = styled(Modal)`
@@ -129,18 +134,18 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #BC955B !important;
+  background-color: #98989a !important; // por veda #BC955B
   color: white !important;
-  border-color: #BC955B !important;
+  border-color: #98989a !important; // por veda #BC955B
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
 `;
 const SendButton = styled(Button)`
-  background-color: #BC955B !important;
+  background-color: #98989a !important; // por veda #BC955B
   color: white !important;
-  border-color: #BC955B !important;
+  border-color: #98989a !important; // por veda #BC955B
   border-radius: 10px;
   margin: 10px;
   height: 40px;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/Oficialia.png';
+import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import '../Styles/responsive.css';
@@ -24,12 +24,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
 font-size: clamp(12px, 4vw, 52px);
   margin: 0;
-  color: #bc955b;
+  color: #ccc;  //
   position: relative;
 
   &::before {
     content: 'Validación de Documentos:';
-    color: #9e2343;
+    color: #98989a;  // #9e2343 por veda
     position: absolute;
     z-index: 1;
   }
@@ -44,7 +44,7 @@ const FormContainer = styled.div`
   max-width: 400px;
   margin: 20px auto;
   padding: 20px;
-  border: 2px solid #9e2343;
+  border: 2px solid #98989a; // #9e2343 por veda  
   border-radius: 10px;
 `;
 
@@ -59,7 +59,7 @@ const FormGroup = styled.div`
 
 const StyledField = styled.input`
   height: 40px;
-  border: 2px solid #9e2343;
+  border: 2px solid #98989a; // #9e2343 por veda  
   border-radius: 5px;
   padding: 5px;
   width: 100%;
@@ -67,13 +67,13 @@ const StyledField = styled.input`
 `;
 
 const ErrorMessageStyled = styled.div`
-  color: #bc955b;
+  color: #bc955b;  
   font-size: 14px;
   margin-top: 5px;
 `;
 
 const SubmitButton = styled.button`
-  background-color: ${(props) => (props.disabled ? '#9e2343' : '#bc955b')};
+  background-color: ${(props) => (props.disabled ? '#98989a' : '#98989a')}; // por veda '#9e2343' : '#bc955b'
   color: white;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border-radius: 5px;
@@ -153,7 +153,7 @@ const AgregarVal = ({ title }) => {
       // Agregar el ID de la secretaría a los valores antes de enviar la solicitud
       formData.id_secretaria = idSecretaria;
      // console.log(JSON.stringify(formData))
-     
+
       // Enviar la solicitud POST a la URL
       const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
         method: 'POST', // Método de la solicitud HTTP
