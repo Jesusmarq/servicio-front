@@ -2,7 +2,7 @@
 
 /* Estilos para imágenes responsivas */
 img {
-  max-width: 100%;
+  max-width: 80%;
   height: auto;
 }
 
@@ -14,7 +14,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url('/public/Images/1.png'); /* Ajusta la ruta de la imagen según tu estructura de carpetas */
+   /*  background-image: url('/public/Images/1.png'); Imagen comentada modo veda*/
     background-size: cover;
     background-position: center;
   }
@@ -30,6 +30,7 @@ img {
   padding: 20px;
   border-radius: 10px;
   height: 80vh; /* Abarca el 80% de la altura de la página */
+  
 }
 
 .left-side {
@@ -50,16 +51,19 @@ img {
   padding: 3%;
   height: 80vh;
   width: 20%;
+  overflow-y: auto;
+ 
 }
 
 .top-image {
-  max-width: 100%;
+  max-width: 60%; /* cambio tamaño de 100 a 60 por veda*/
   margin-bottom: 5%;
 }
 
 .form1 {
   display: flex;
   flex-direction: column;
+  
 }
 
 .label1 {
@@ -70,16 +74,16 @@ img {
 .input1 {
   margin-bottom: 0.5%;
   padding: 2%;
-  border: 2px solid #9E2343;
+  border: 2px solid  #98989A ;/*#9E2343; VEDA */
   border-radius: 10px;
   background-color: transparent;
-  color: #9E2343;
+  color:  #98989A ;/*#9E2343; VEDA */
 }
 
 .button1 {
   font-size: clamp(12px, 2vw, 20px);
   padding: 2%;
-  background-color: #9E2343;
+  background-color: #98989A ;/*#9E2343; VEDA */
   color: #fff;
   cursor: pointer;
   border-radius: 10px;

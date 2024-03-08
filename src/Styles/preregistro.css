@@ -2,7 +2,7 @@
     height: 100vh;
     width: 100vw;
     margin: 0;
-    background-image: url('/public/Images/1.png');
+    /*background-image: url('/public/Images/1.png');  Imagen comentado por VEDA*/
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -32,14 +32,14 @@
 
 .cuadros {
     width: calc(100% - 2%);
-    border-color: #9E2343;
+    border-color: #98989A ;/*#9E2343; VEDA */
     border-radius: 10px;
     height: 30px; /* Ajusta la altura según tus necesidades */
 }
 
 .botonchido {
     color: white;
-    background-color: #9E2343;
+    background-color: #98989A ;/*#9E2343; VEDA */
     border: none;
     border-radius: 20px;
     transition: background-color 0.3s ease;
@@ -50,12 +50,12 @@
 }
 
 .botonchido:hover {
-    background-color: #BC955B;
+    background-color: #f4f4f4 ;/*#BC955B; VEDA */
 }
 
 .botonchido2 {
     color: white;
-    background-color: #9E2343;
+    background-color: #98989A ;/*#9E2343; VEDA */
     border: none;
     border-radius: 20px;
     transition: background-color 0.3s ease;
@@ -66,11 +66,11 @@
 }
 
 .botonchido2:hover {
-    background-color: #BC955B;
+    background-color: #f4f4f4 ;/*#BC955B; VEDA */
 }
 
 .alerta{
-    color:red;
+    color:gray;  /* cabia de rojo a gris por veda*/
     font-size: 20px;
     text-align: center;
     font-weight: bold; /* Agregando negrita */
@@ -82,7 +82,7 @@
     margin-bottom: 20px;
 }
 .imagenlogo {
-    max-width: 50%;
+    max-width: 30%;
     margin-bottom: 20px;
   }
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/Oficialia.png';
+import Logo2 from '../Img/333.jpeg';  //POR VEDA Oficialia.png
 import 'sweetalert2/src/sweetalert2.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -16,7 +16,7 @@ import ProyectoIntervencion from './Solicitudes/Proyecto';
 import ServicioSocialUAEH from './Solicitudes/ServicioUAEH';
 import PracticasUAEH from './Solicitudes/PracticasUAEH';
 
-import '../Styles/responsive.css';
+
 
 
 
@@ -41,12 +41,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
 font-size: clamp(12px, 4vw, 52px);
   margin: 10px;
-  color: #bc955b;
+  color: #CCC;  // POR VEDA bc955b
   position: relative;
 
   &::before {
     content: 'Validación de Solicitudes:';
-    color: #9e2343;
+    color: #98989A; //por veda 9e2343
     position: absolute;
     z-index: 1;
   }

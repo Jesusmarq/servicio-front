@@ -31,19 +31,19 @@ const Login = () => {
           "dataUser",
           JSON.stringify({ exp, rol, id, nombre, token })
         );
-        console.log( exp, rol, id, nombre, token );
+        //console.log( exp, rol, id, nombre, token );
 
         localStorage.setItem(
           "token",
           JSON.stringify({ token })
         );
-        console.log(  token );
+        //console.log(  token );
 
         localStorage.setItem(
           "exp",
           JSON.stringify({ exp })
         );
-        console.log(  exp );
+        //console.log(  exp );
 
         // Verifica la respuesta de la API y redirige según el usuario
         if (rol === "admin") {
@@ -72,7 +72,7 @@ const Login = () => {
         <div
           className="left-side"
           style={{
-            backgroundColor: "#9E2343",
+            backgroundColor: "#98989A ",     /* #9E2343; VEDA */
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -88,7 +88,7 @@ const Login = () => {
         {/* Lado Derecho */}
         <div className="right-side">
           <img
-            src="./Images/logotipo-09.png"
+            src="./Images/333.jpeg"    /* logotipo-09.png   cambio por veda */
             alt="Imagen Superior"
             className="top-image"
           />
@@ -138,7 +138,7 @@ const Login = () => {
           {/* Opción para registrarse */}
           <p className="texto2">
             ¿No tienes una cuenta?{" "}<br></br>
-            <Link to="/registro" style={{ color: "#9E2343" }}>
+            <Link to="/registro" style={{ color: "#98989A" }}>   {/* #9E2343; VEDA */}
               Registrarse
             </Link>
           </p>

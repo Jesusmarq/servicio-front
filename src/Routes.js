@@ -113,15 +113,14 @@ const Routes = () => {
   return (
     <Router>
 
-    <Link to="/tabla?datos=JesusAdolfo,25,juan@example.com">
-             aa 
-  </Link>
+  
 
       <Switch>
         {/* Define las rutas y los componentes asociados */}
         <Route path="/" exact component={Login} />
         <Route path="/registro" component={Preregistro} />
-        <Route path="/tabla" component={Table} />
+        <Route path="/:param1/:param2/:param3/:param4/:param5" exact component={Table} />
+
         {/* Utiliza PrivateRoute para proteger las rutas que requieren autenticación */}
         <PrivateRoute path="/usuario" component={Usuario} allowed = "alumno"/>
         <PrivateRoute path="/validador" component={Validador} allowed = "verificador"/>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import LogoImage from '../Img/Logo_escudo_blanco.png';
+import LogoImage from '../Img/333.jpeg'; // se cambnio la imagen Logo_escudo_blanco.png por veda
 import Solicitud from '../Components/Solicitud';
 import Estatus from '../Components/Estatus';
 import Reportes from '../Components/Reportes';
@@ -10,9 +10,9 @@ import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
 import '../Styles/responsive.css';
 
-const BrighterColor = '#9E2343';
-const LineColor = '#BC955B';
-const SelectedColor = '#9E2343';
+const BrighterColor = '#98989A';  //#9E2343; VEDA 
+const LineColor = '#ccc';// #BC955B  veda
+const SelectedColor = '#98989A';  //#9E2343; VEDA 
 const SidebarBackgroundColor = 'white';
 
 const SidebarWrapper = styled.div`
@@ -44,7 +44,7 @@ const SidebarHeader = styled.div`
 const SidebarImage = styled.img`
   width: 100%;
   height: auto;
-  border-radius: 50%;
+  border-radius: 0%; // se cambio de 50 a 0 por veda
   object-fit: cover;
   transition: width 0.3s ease;
 `;
@@ -111,7 +111,7 @@ const Content = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  background-color: #9E2343;
+  background-color: #98989A ; //#9E2343; VEDA 
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -121,7 +121,7 @@ const LogoutButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #7a1c33;
+    background-color: #ccc ;/*#BC955B; VEDA */
   }
 `;
 
@@ -198,7 +198,7 @@ const Usuario = ({ title }) => {
         <LineDivider />
         <SidebarItem isSelected={selectedItem === 'Section1'} onClick={() => handleMenuItemClick('Section1')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Solicitante.png')} alt='ImageSolicitante' />
+            <IcoImage src={require('../Img/Solicitante-veda.png')} alt='ImageSolicitante' />
             Solicitud
           </IcoContainer>
           <LineDivider />
@@ -206,7 +206,7 @@ const Usuario = ({ title }) => {
 
         <SidebarItem isSelected={selectedItem === 'Section2'} onClick={() => handleMenuItemClick('Section2')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Aval.png')} alt='ImagePadres' />
+            <IcoImage src={require('../Img/Aval-veda.png')} alt='ImagePadres' />
             Estatus y Liberación
           </IcoContainer>
           <LineDivider />
@@ -214,7 +214,7 @@ const Usuario = ({ title }) => {
 
         <SidebarItem isSelected={selectedItem === 'Section3'} onClick={() => handleMenuItemClick('Section3')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Documentacion.png')} alt='ImageInstitucion' />
+            <IcoImage src={require('../Img/Documentacion-veda.png')} alt='ImageInstitucion' />
             Reportes
           </IcoContainer>
           <LineDivider />

@@ -95,7 +95,7 @@ function Preregistro() {
   const handleSubmit = (e) => {
     // Previene el comportamiento predeterminado del formulario, que es el envío normal.
     e.preventDefault();
-    console.log(formData)
+
     // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
     axios
       .post(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, formData)
@@ -214,7 +214,7 @@ const handleConfirmation = () => {
   return (
     <section id="section_pre">
       <div className="form-container">
-        <img src="./Images/logotipo-09.png" alt="Imagen Superior" className="imagenlogo" />
+        <img src="./Images/333.jpeg" alt="Imagen Superior" className="imagenlogo" />
         <h2 className="encabezado">Registro de Usuario</h2>
         
         

@@ -22,12 +22,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
 font-size: clamp(12px, 4vw, 52px);
   margin: 0;
-  color: #bc955b;
+  color: #ccc; // por veda #bc955b
   position: relative;
 
   &::before {
     content: 'Validación de Documentos:';
-    color: #9e2343;
+    color: #98989a;  // por veda #9e2343
     position: absolute;
     z-index: 1;
   }
@@ -52,7 +52,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #9e2343;
+  background-color: #98989a; // por veda  #9e2343
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -68,13 +68,13 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#9e2343' : '#bc955b')};
+  background-color: ${(props) => (props.validar ? '#98989a' : '#98989a')}; // por veda '#9e2343' : '#bc955b'
   color: white;
   cursor: ${(props) => (props.validar ? 'not-allowed' : 'pointer')};
   border-radius: 15px;
   &:disabled {
     cursor: not-allowed;
-    background-color:#9e2343;
+    background-color:#98989a; // por veda #9e2343
   }
 `;
 
