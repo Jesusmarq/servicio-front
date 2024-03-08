@@ -111,7 +111,7 @@ const AgregarVal = ({ title }) => {
       try {
         const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
         const datos = await response.json();
-        console.log(datos);
+        //console.log(datos);
 
         // Filtrar las secretarías únicas
         const secretariasUnicas = [...new Set(datos.map(entry => entry.secretaria))];
@@ -130,13 +130,13 @@ const AgregarVal = ({ title }) => {
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(formData);
+   // console.log(formData);
   };
 
   const handleSecretariaChange = (e) => {
     const selectedSec = e.target.value;
     const selectedSecId = datos.find(entry => entry.secretaria === selectedSec)?.id_secretaria || '';
-    console.log(selectedSec, selectedSecId);
+    //console.log(selectedSec, selectedSecId);
     setSelectedSecretaria(selectedSec);
     setIdSecretaria(selectedSecId);
     setFormData(prevState => ({
@@ -144,7 +144,7 @@ const AgregarVal = ({ title }) => {
       dependencia: selectedSecId
     }));
 
-    console.log(formData)
+    //console.log(formData)
   };
 
   const handleSubmit = async (e) => {
@@ -152,7 +152,8 @@ const AgregarVal = ({ title }) => {
     try {
       // Agregar el ID de la secretaría a los valores antes de enviar la solicitud
       formData.id_secretaria = idSecretaria;
-      console.log(JSON.stringify(formData))
+     // console.log(JSON.stringify(formData))
+     
       // Enviar la solicitud POST a la URL
       const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
         method: 'POST', // Método de la solicitud HTTP

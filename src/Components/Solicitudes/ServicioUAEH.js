@@ -116,21 +116,21 @@ function ServicioSocialUAEH ({ title }) {
   const [datosFirmaE, setDatosFirmaE] =useState('');
   const[numChange,setNumChange] = useState(0)
 
-  console.log(localStorage.getItem('dataUser'))
+  //console.log(localStorage.getItem('dataUser'))
   var dataUser = localStorage.getItem('dataUser')
   var parsedDataUser = JSON.parse(dataUser);
   
   // Acceder a la propiedad 'id'
-  console.log(parsedDataUser.id);
+ // console.log(parsedDataUser.id);
 
   //peticion para el qr  y los demas datos
   const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
-    console.log(solicitudId)
+    //console.log(solicitudId)
     try {
       const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
-      console.log(data);
+      //console.log(data);
   
       // Verifica si la respuesta contiene las propiedades 'qr_image_base64' y 'firma_image_base64'
       if (data.qr_image_base64 && data.firma_base64) {
@@ -163,7 +163,7 @@ function ServicioSocialUAEH ({ title }) {
         }
 
         const responseData = await response.json();
-        console.log(responseData);
+        //console.log(responseData);
 
         // Filtrar responseData.solicitudes para obtener solo las de tipo "Servicio Social" y universidad "UAEH"
         const solicitudesFiltradas = responseData.solicitudes.filter(solicitud => solicitud.tipo === 'Servicio Social' && solicitud.universidad === 'UAEH');
@@ -209,7 +209,7 @@ const handleFiltroChange = (event) => {
         }
     
         const blob = new Blob(byteArrays, { type: contentType });
-        console.log(blob)
+       // console.log(blob)
         return blob;
       } catch (error) {
         console.error('Error al convertir la cadena base64 a Blob:', error);
@@ -219,7 +219,7 @@ const handleFiltroChange = (event) => {
 //-----------------para que se muestre en la tabla------------------------
     function handleDownloadPDF(pdfBase64, fileName) {
       try {
-        console.log(pdfBase64)
+       // console.log(pdfBase64)
         const blob = base64toBlob(pdfBase64, 'application/pdf');
         const blobUrl = URL.createObjectURL(blob);
   
@@ -281,7 +281,8 @@ const handleFiltroChange = (event) => {
 
     const pdf = new jsPDF();
 
-    console.log(selectedSecretaria)
+    //console.log(selectedSecretaria)
+
   // Cargar Montserrat Bold
   pdf.addFileToVFS('Montserrat-Bold-normal.ttf', font2);
   pdf.addFont('Montserrat-Bold-normal.ttf', 'Montserrat-Bold', 'normal')
@@ -447,16 +448,16 @@ const direccion=`
   const sendRequest = async() => {
     // Crear FormData y agregar el PDF
     const pdfFile = await generatePDF();
-    console.log(pdfFile)
+    //console.log(pdfFile)
     const formData = new FormData();
     formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
-  console.log(numChange)
+ // console.log(numChange)
     // Agregar el JSON al FormData
     const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id, "ver_pdf":modalData.ver_carta,}; 
-console.log(jsonData)
+   //console.log(jsonData)
     formData.append('JSON', JSON.stringify(jsonData));
   
-    console.log('FormData antes de la solicitud:', formData);
+    //console.log('FormData antes de la solicitud:', formData);
   
     // Realizar la solicitud Axios
     axios
@@ -497,13 +498,13 @@ console.log(jsonData)
      
       const formData = new FormData();
     
-    console.log(numChange)
+    //console.log(numChange)
       // Agregar el JSON al FormData
       const jsonData = {"solicitud": numChange,"estatus":"Rechazado","validador":parsedDataUser.id}; 
-  console.log(jsonData)
+     //console.log(jsonData)
       formData.append('JSON', JSON.stringify(jsonData));
     
-      console.log('FormData antes de la solicitud:', formData);
+     // console.log('FormData antes de la solicitud:', formData);
     
       // Realizar la solicitud Axios
       axios
@@ -636,7 +637,7 @@ console.log(jsonData)
     try {
       const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
       const datos = await response.json();
-      console.log(datos);
+      //console.log(datos);
 
       // Filtrar las secretarías únicas
       const secretariasUnicas = [...new Set(datos.map(entry => entry.secretaria))];
@@ -658,7 +659,7 @@ console.log(jsonData)
 
   const handleSecretariaChange = (e) => {
     const selectedSec = e.target.value;
-    console.log(selectedSec)
+   // console.log(selectedSec)
     setSelectedSecretaria(selectedSec);
 
     // Filtrar las dependencias correspondientes a la secretaría seleccionada
@@ -680,7 +681,7 @@ console.log(jsonData)
     
     const handleDependenciaChange = async (e) => {
       const selectedDep = e.target.value;
-      console.log(selectedDep);
+     // console.log(selectedDep);
     
       // Actualizar selectedDependencia
       setSelectedDependencia(selectedDep);
@@ -688,7 +689,7 @@ console.log(jsonData)
       try {
         const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos`);
         const data = await response.json();
-        console.log(data);
+        //console.log(data);
     
         // Filtrar los proyectos para la dependencia seleccionada
         const proyectosDependencia = data.filter(entry => entry.dependencia === selectedDep).map(entry => entry.proyecto);
@@ -707,15 +708,15 @@ console.log(jsonData)
     console.log()
     const handleProyectoChange = (e) => {
       const selectedProj = e.target.value;
-      console.log("Proyecto seleccionado:", selectedProj);
-      console.log("Dependencia seleccionada:", selectedDependencia);
+     // console.log("Proyecto seleccionado:", selectedProj);
+     // console.log("Dependencia seleccionada:", selectedDependencia);
     
       // Buscar la ID del proyecto seleccionado
       const proyectoSeleccionado = proyectosData.find(entry => entry.proyecto === selectedProj && entry.dependencia === selectedDependencia);
-      console.log("Proyecto seleccionado encontrado:", proyectoSeleccionado);
+      //console.log("Proyecto seleccionado encontrado:", proyectoSeleccionado);
     
       if (proyectoSeleccionado) {
-        console.log("ID del proyecto seleccionado:", proyectoSeleccionado.id);
+        //console.log("ID del proyecto seleccionado:", proyectoSeleccionado.id);
         setSelectedProyectoId(proyectoSeleccionado.id);
       }
     
@@ -734,11 +735,11 @@ console.log(jsonData)
     
     // Función para realizar la solicitud y obtener los datos del nuevo endpoint
     const fetchDatosModal = async (solicitudId) => {
-      console.log(solicitudId)
+      //console.log(solicitudId)
       try {
         const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
         const data = await response.json();
-        console.log(data);
+       // console.log(data);
     
         // Verifica si la respuesta contiene las propiedades necesarias
         if (data.alumno && data.carrera && data.matricula && data.plantel && data.solicitud && data.universidad) {
