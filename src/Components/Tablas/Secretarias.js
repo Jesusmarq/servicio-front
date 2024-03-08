@@ -23,7 +23,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #9E2343;
+background-color: #98989a;  // por veda #9E2343
   color: white;
   padding: 15px;
   text-align: center;
@@ -39,17 +39,15 @@ const StyledTd = styled.td`
 `;
 
 const LiberacionButton = styled.button`
-  background-color: #9E2343;
+  background-color: #98989a;   // por veda #9E2343
   color: white;
   padding: 5px;
-  
   border: none;
   cursor: pointer;
   border-radius: 5px;
 
-
   &:hover {
-    background-color: #7a1c33;
+    background-color: #ccc;   // por veda #7a1c33
   }
 `;
 
@@ -73,18 +71,19 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #BC955B !important;
+  background-color: #98989a !important;  //por veda  BC955B
   color: white !important;
-  border-color: #BC955B !important;
+  border-color: #98989a !important;  //por veda  BC955B
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
 `;
+
 const SendButton = styled(Button)`
-  background-color: #BC955B !important;
+  background-color: #98989a !important;  //por veda  BC955B
   color: white !important;
-  border-color: #BC955B !important;
+  border-color: #98989a !important;  //por veda  BC955B
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -116,15 +115,15 @@ const StyledSelect = styled.select`
 
 
 const StyledAddButton = styled(Button)`
-  background-color: #9E2343;
+  background-color: #98989a;  // por veda #9E2343
   color: white;
   border-radius: 5px;
-  border-color: #9E2343;
+  border-color: #98989a;  // por veda #9E2343
   margin-left: auto;
 
   &:hover {
-    background-color: #bc955b;
-    border-color: #bc955b;
+    background-color: #ccc; // por veda #bc955b
+    border-color: #ccc;
   }
 `;
 

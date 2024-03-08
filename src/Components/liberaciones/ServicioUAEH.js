@@ -20,6 +20,8 @@ import { font2 } from '../Fuentes/Montserrat-Bold-normal';
 
 
 const TableContainer = styled.div`
+width: 98%;
+table-layout: fixed;
   margin: 20px;
   border-radius: 15px;
   overflow: hidden;
@@ -33,7 +35,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #9e2343;
+  background-color: #98989a;  // por veda #9e2343
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -49,7 +51,7 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#9e2343' : '#bc955b')};
+  background-color: ${(props) => (props.validar ? '#98989a' : '#98989a')}; //por veda '#9e2343' : '#bc955b'
   color: white;
   cursor: pointer;
   border-radius: 15px;
@@ -74,23 +76,24 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #bc955b !important;
+  background-color: #98989a !important; //por veda #bc955b
   color: white !important;
-  border-color: #bc955b !important;
+  border-color: #98989a !important; //por veda #bc955b
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
 `;
 const SendButton = styled(Button)`
-  background-color: #bc955b !important;
+  background-color: #98989a !important; //por veda #bc955b
   color: white !important;
-  border-color: #bc955b !important;
+  border-color: #98989a !important; //por veda #bc955b
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
 `;
+
 
 
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';import styled from 'styled-components';
-import Logo2 from '../Img/Oficialia.png';
+import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faFileUpload } from '@fortawesome/free-solid-svg-icons';
@@ -27,12 +27,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
 font-size: clamp(12px, 4vw, 52px);
   margin: 0;
-  color: #BC955B;
+  color: #ccc;  // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Portal de Reportes:';
-    color: #9E2343;
+    color: #98989a;  // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
@@ -54,7 +54,7 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  background-color: #9E2343;
+  background-color: #98989a;  // por veda #9E2343
   color: white;
   padding: 15px;
   text-align: center;
@@ -68,17 +68,17 @@ const Td = styled.td`
 
   &:hover {
     text-decoration: underline;
-    color: #BC955B;
+    color: #ccc;  // por veda  #BC955B
   }
 `;
 
 const TrashIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
-  color: #9E2343;
+  color: #98989a;  // #9E2343
 `;
 
 const UploadButton = styled.label`
-  background-color: #9E2343;
+  background-color: #98989a;   // por veda  #9E2343 
   color: white;
   padding: 15px; /* Controla la altura del botón */
   width: 8%; /* Ajusta el ancho del botón */
@@ -91,7 +91,7 @@ const UploadButton = styled.label`
   margin-bottom: 40px;
 
   &:hover {
-    background-color: #7a1c33;
+    background-color: #ccc;   // por veda #7a1c33
   }
 
   input {
