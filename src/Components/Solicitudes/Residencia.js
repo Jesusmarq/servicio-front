@@ -782,6 +782,7 @@ const direccion=`
                 <StyledTh>Escuela</StyledTh>
                 <StyledTh>Tipo de Solicitud</StyledTh>
                 <StyledTh>Carta de Presentación</StyledTh>
+                <StyledTh>Carta de Aceptación</StyledTh>
                 <StyledTh>Fecha</StyledTh>
                 <StyledTh>Cambiar Estatus</StyledTh>
               </tr>
@@ -799,6 +800,12 @@ const direccion=`
                           PDF
                         </button>
                   </StyledTd>
+                  <StyledTd>
+                <button
+                        onClick={() => handleDownloadPDF(item.pdf_aceptacion, 'aceptacion2.pdf')}>
+                        Carta de aceptación
+                      </button>
+                </StyledTd>
                   <StyledTd>{item.fecha}</StyledTd>
                   <StyledTd>
                     <StyledButton

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import LogoImage from "../Img/Logo_escudo_blanco.png";
+import LogoImage from '../Img/333.jpeg'; // se cambnio la imagen Logo_escudo_blanco.png por veda
 import { IoMdExit } from "react-icons/io";
 import { MdError } from "react-icons/md";
 import ReactDOM from "react-dom"; // Agrega esta línea
@@ -11,9 +11,9 @@ import AgregarVal from "../Components/AgregarVeri";
 import Catalogo2 from "../Components/CatalogoNuevo";
 import "../Styles/responsive.css";
 
-const BrighterColor = "#9E2343";
-const LineColor = "#BC955B";
-const SelectedColor = "#9E2343";
+const BrighterColor = '#98989A';  //#9E2343; VEDA 
+const LineColor = '#ccc';// #BC955B  veda
+const SelectedColor = '#98989A';  //#9E2343; VEDA 
 const SidebarBackgroundColor = "white";
 
 
@@ -47,7 +47,7 @@ const SidebarHeader = styled.div`
 const SidebarImage = styled.img`
   width: 100%;
   height: auto;
-  border-radius: 50%;
+  border-radius: 0%; // se cambio de 50 a 0 por veda
   object-fit: cover;
   transition: width 0.3s ease;
 `;
@@ -114,7 +114,7 @@ const Content = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  background-color: #9e2343;
+background-color: #98989A ; //#9E2343; VEDA
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -124,7 +124,7 @@ const LogoutButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #7a1c33;
+    background-color: #ccc ;/*#BC955B; VEDA */
   }
 `;
 
@@ -208,7 +208,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/Solicitante.png")}
+              src={require("../Img/Solicitante-veda.png")}
               alt="ImageSolicitante"
             />
             Solicitud
@@ -222,7 +222,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/Documentacion.png")}
+              src={require("../Img/Documentacion-veda.png")}
               alt="Reportes"
             />
             Reportes
@@ -236,7 +236,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/Liberacion.png")}
+              src={require("../Img/Liberacion-veda.png")}
               alt="ImageLiberacion"
             />
             Liberación
@@ -249,7 +249,7 @@ const ADMI = ({ title }) => {
           onClick={() => handleMenuItemClick("Section4")}
         >
           <IcoContainer>
-            <IcoImage src={require("../Img/Aval.png")} alt="ImageVerificador" />
+            <IcoImage src={require("../Img/Aval-veda.png")} alt="ImageVerificador" />
             Agregar Verificador
           </IcoContainer>
           <LineDivider />
@@ -261,7 +261,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/catalogo.png")}
+              src={require("../Img/catalogo-veda.png")}
               alt="ImageCatalogo"
             />
             Administrar Catalogos

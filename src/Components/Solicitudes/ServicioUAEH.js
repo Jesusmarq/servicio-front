@@ -35,7 +35,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #9e2343;
+  background-color: #98989a;  // por veda #9e2343
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -51,7 +51,7 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#9e2343' : '#bc955b')};
+  background-color: ${(props) => (props.validar ? '#98989a' : '#98989a')}; //por veda '#9e2343' : '#bc955b'
   color: white;
   cursor: pointer;
   border-radius: 15px;
@@ -76,18 +76,18 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #bc955b !important;
+  background-color: #98989a !important; //por veda #bc955b
   color: white !important;
-  border-color: #bc955b !important;
+  border-color: #98989a !important; //por veda #bc955b
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
 `;
 const SendButton = styled(Button)`
-  background-color: #bc955b !important;
+  background-color: #98989a !important; //por veda #bc955b
   color: white !important;
-  border-color: #bc955b !important;
+  border-color: #98989a !important; //por veda #bc955b
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -218,8 +218,9 @@ const handleFiltroChange = (event) => {
     }
 //-----------------para que se muestre en la tabla------------------------
     function handleDownloadPDF(pdfBase64, fileName) {
+      console.log(data)
       try {
-       // console.log(pdfBase64)
+       console.log(pdfBase64)
         const blob = base64toBlob(pdfBase64, 'application/pdf');
         const blobUrl = URL.createObjectURL(blob);
   
@@ -232,7 +233,7 @@ const handleFiltroChange = (event) => {
         console.error('Error al descargar el PDF:', error);
       }
     }
-  
+    
   ////---------------para  almacenar los datos del modal-----------------
     const [modalData, setModalData] = useState({
       numeroArchivo: '',
@@ -713,10 +714,10 @@ const direccion=`
     
       // Buscar la ID del proyecto seleccionado
       const proyectoSeleccionado = proyectosData.find(entry => entry.proyecto === selectedProj && entry.dependencia === selectedDependencia);
-      //console.log("Proyecto seleccionado encontrado:", proyectoSeleccionado);
+      console.log("Proyecto seleccionado encontrado:", proyectoSeleccionado);
     
       if (proyectoSeleccionado) {
-        //console.log("ID del proyecto seleccionado:", proyectoSeleccionado.id);
+        console.log("ID del proyecto seleccionado:", proyectoSeleccionado.id);
         setSelectedProyectoId(proyectoSeleccionado.id);
       }
     
@@ -735,11 +736,11 @@ const direccion=`
     
     // Función para realizar la solicitud y obtener los datos del nuevo endpoint
     const fetchDatosModal = async (solicitudId) => {
-      //console.log(solicitudId)
+      console.log(solicitudId)
       try {
         const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
         const data = await response.json();
-       // console.log(data);
+        console.log(data);
     
         // Verifica si la respuesta contiene las propiedades necesarias
         if (data.alumno && data.carrera && data.matricula && data.plantel && data.solicitud && data.universidad) {
@@ -758,9 +759,6 @@ const direccion=`
     };
     
     // Función para manejar el clic del botón
-    const sendRequest2 = (solicitudId) => {
-      fetchDatosModal(solicitudId); // Llamar a la función fetchDatosModal con el solicitudId como argumento
-    };  
     
 
   return (
@@ -783,6 +781,7 @@ const direccion=`
               <StyledTh>Escuela</StyledTh>
               <StyledTh>Tipo de Solicitud</StyledTh>
               <StyledTh>Carta de Presentación</StyledTh>
+              <StyledTh>Carta de Aceptación</StyledTh>
               <StyledTh>Fecha</StyledTh>
               <StyledTh>Cambiar Estatus</StyledTh>
             </tr>
@@ -798,6 +797,12 @@ const direccion=`
                 <button
                         onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
                         PDF
+                      </button>
+                </StyledTd>
+                <StyledTd>
+                <button
+                        onClick={() => handleDownloadPDF(item.pdf_aceptacion, 'aceptacion2.pdf')}>
+                        Carta de aceptación
                       </button>
                 </StyledTd>
                 <StyledTd>{item.fecha}</StyledTd>

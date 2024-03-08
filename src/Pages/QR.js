@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 
@@ -32,28 +32,10 @@ const StyledTd = styled.td`
 `;
 
 function Table() {
-  const [filas, setFilas] = useState([]);
   const location = useLocation();
+  const params = location.pathname.split('/').slice(1);
 
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const datos = searchParams.get("datos");
-    const filas = datos ? datos.split("|") : [];
-    setFilas(filas);
-  }, [location]);
-
-  // Esta función se ejecutará cada cierto intervalo de tiempo para verificar si los datos deben actualizarse
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const searchParams = new URLSearchParams(location.search);
-      const datos = searchParams.get("datos");
-      const filas = datos ? datos.split("|") : [];
-      setFilas(filas);
-    }, 5000); // Cambia este valor al intervalo de tiempo deseado en milisegundos (por ejemplo, 5000 para 5 segundos)
-
-    // Limpia el intervalo cuando el componente se desmonta para evitar fugas de memoria
-    return () => clearInterval(interval);
-  }, [location]);
+  const [param1, param2, param3, param4, param5] = params;
 
   return (
     <section id="section_pre">
@@ -64,33 +46,17 @@ function Table() {
           className="imagenlogo"
         />
         <h2 className="encabezado">Tabla de Usuarios</h2>
-
-        <TableContainer>
-          <StyledTable border="1">
-            <thead>
-              <tr>
-                <StyledTh>Nombre</StyledTh>
-                <StyledTh>Edad</StyledTh>
-                <StyledTh>Correo</StyledTh>
-              </tr>
-            </thead>
-            <tbody>
-              {filas.map((fila, index) => {
-                const [nombre, edad, correo] = fila.split(",");
-                return (
-                  <StyledTr key={index}>
-                    <StyledTd>{nombre}</StyledTd>
-                    <StyledTd>{edad}</StyledTd>
-                    <StyledTd>{correo}</StyledTd>
-                  </StyledTr>
-                );
-              })}
-            </tbody>
-          </StyledTable>
-        </TableContainer>
+        <div>
+          <p>Param1: {param1}</p>
+          <p>Param2: {param2}</p>
+          <p>Param3: {param3}</p>
+          <p>Param4: {param4}</p>
+          <p>Param5: {param5}</p>
+        </div>
       </div>
     </section>
   );
 }
 
 export default Table;
+

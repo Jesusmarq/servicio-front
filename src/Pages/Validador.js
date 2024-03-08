@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import LogoImage from '../Img/Logo_escudo_blanco.png';
+import LogoImage from '../Img/333.jpeg'; // se cambnio la imagen Logo_escudo_blanco.png por veda
 import { IoMdExit } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
 import ValidarSolicitud from '../Components/Val';
 import '../Styles/responsive.css';
 
-const BrighterColor = '#9E2343';
-const LineColor = '#BC955B';
-const SelectedColor = '#9E2343';
+
+const BrighterColor = '#98989A';  //#9E2343; VEDA 
+const LineColor = '#ccc';// #BC955B  veda
+const SelectedColor = '#98989A';  //#9E2343; VEDA 
 const SidebarBackgroundColor = 'white';
 
 const SidebarWrapper = styled.div`
@@ -41,7 +42,7 @@ const SidebarHeader = styled.div`
 const SidebarImage = styled.img`
   width: 100%;
   height: auto;
-  border-radius: 50%;
+  border-radius: 0%; // se cambio de 50 a 0 por veda
   object-fit: cover;
   transition: width 0.3s ease;
 `;
@@ -108,7 +109,7 @@ const Content = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  background-color: #9E2343;
+background-color: #98989A ; //#9E2343; VEDA 
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -118,8 +119,8 @@ const LogoutButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #7a1c33;
-  }
+    background-color: #ccc ;/*#7a1c33; VEDA */
+
 `;
 
 const AlertContainer = styled.div`
@@ -192,7 +193,7 @@ const Validador = ({ title }) => {
         <LineDivider />
         <SidebarItem isSelected={selectedItem === 'Section1'} onClick={() => handleMenuItemClick('Section1')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Solicitante.png')} alt='ImageSolicitante' />
+            <IcoImage src={require('../Img/Solicitante-veda.png')} alt='ImageSolicitante' />
             Validar Reportes
           </IcoContainer>
           <LineDivider />
