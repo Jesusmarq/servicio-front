@@ -1,62 +1,75 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import LogoImage from '../Img/333.jpeg';
 
-const TableContainer = styled.div`
-  margin: 20px;
+const CardContainer = styled.div`
+  background-color: #ccc;
+  padding: 20px;
   border-radius: 15px;
-  overflow: hidden;
+  width: 40vw;
+  margin-top: 13%;
+  margin-left: 30%;
   text-align: center;
-`;
-
-const StyledTable = styled.table`
-  border-collapse: collapse;
-  width: 100%;
-  border-radius: 15px;
-`;
-
-const StyledTh = styled.th`
-  background-color: #9e2343;
-  color: white;
-  padding: 10px;
+  color: #333;
+  font-weight: bold;
   font-size: 20px;
-`;
+  border: 10px solid #ddd;
 
-const StyledTr = styled.tr`
-  background-color: ${(props) => (props.even ? "#f0f0f0" : "white")};
-  height: 40px;
-`;
+  @media screen and (max-width: 768px) {
+    width: 80vw;
+    border-radius: 10px;
+    margin-left: 10%;
+  }
 
-const StyledTd = styled.td`
-  padding: 10px;
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    width: 60vw;
+  }
 `;
 
 function Table() {
-  const location = useLocation();
-  const params = location.pathname.split('/').slice(1);
+  const { param1 } = useParams();
+//  console.log(param1)
+  const [solicitudData, setSolicitudData] = useState(null);
+ //console.log(solicitudData)
+ const fetchSolicitudData = async () => {
+      try {
+        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaQR?solicitud=${param1}`);
 
-  const [param1, param2, param3, param4, param5] = params;
+        if (!response.ok) {
+          throw new Error('Error al obtener las solicitudes');
+        }
+
+        const responseData = await response.json();
+        setSolicitudData(responseData);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  useEffect(() => {
+    
+
+    fetchSolicitudData();
+  }, [param1]);
 
   return (
-    <section id="section_pre">
-      <div className="form-container">
-        <img
-          src="./Images/logotipo-09.png"
-          alt="Imagen Superior"
-          className="imagenlogo"
-        />
-        <h2 className="encabezado">Tabla de Usuarios</h2>
-        <div>
-          <p>Param1: {param1}</p>
-          <p>Param2: {param2}</p>
-          <p>Param3: {param3}</p>
-          <p>Param4: {param4}</p>
-          <p>Param5: {param5}</p>
-        </div>
-      </div>
-    </section>
+    <CardContainer>
+      <img src={LogoImage} alt="Imagen Superior" className="imagenlogo" />
+      <h2 className="encabezado">Datos de tu Solicitud</h2>
+    { solicitudData ? (
+  <div>
+    <p>Estado: {solicitudData[0].estado}</p>
+    <p>Fecha de Liberación: {solicitudData[0].fecha_liberacion}</p>
+    <p>Fecha de Solicitud: {solicitudData[0].fecha_solicitud}</p>
+    <p>Firma: {solicitudData[0].firma}</p>
+    <p>Nombre: {solicitudData[0].nombre}</p>
+    <p>Tipo: {solicitudData[0].tipo}</p>
+  </div>
+) : (
+  <p>Cargando...</p>
+)}
+    </CardContainer>
   );
 }
 
 export default Table;
-

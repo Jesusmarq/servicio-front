@@ -119,7 +119,8 @@ const Routes = () => {
         {/* Define las rutas y los componentes asociados */}
         <Route path="/" exact component={Login} />
         <Route path="/registro" component={Preregistro} />
-        <Route path="/:param1/:param2/:param3/:param4/:param5" exact component={Table} />
+        
+        <Route path="/datosQR/:param1" component={Table} />
 
         {/* Utiliza PrivateRoute para proteger las rutas que requieren autenticación */}
         <PrivateRoute path="/usuario" component={Usuario} allowed = "alumno"/>
