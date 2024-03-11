@@ -19,39 +19,86 @@ import ServicioSocialUAEH2 from './liberaciones/ServicioUAEH';
 
 
 const Header = styled.div`
-  height: 100px;
+  height: 5%;
   background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0px;
+  
+  //align-items: center;
+  //justify-content: center;
+
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 40px;
+
+  @media screen and (max-width: 768px) {
+    
+    grid-template-columns: 1fr; // 
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    grid-template-columns: 1fr;
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  
 `;
 
+
+
 const TitleWrapper = styled.div`
-  text-align: left;
-  color: black;
-  margin-left: auto;
+  //text-align: left;
+
+  margin-left: 0%;
+  
 `;
 
 const Title = styled.h2`
-font-size: clamp(12px, 4vw, 52px);
+  font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #ccc;  // por la veda #bc955b
+  color: #98989a;    // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Validación de Documentos:';
-    color: #98989a;  // por veda #9e2343
+    color: #666666; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
 `;
 
-const Image = styled.img`
-  width: 30vh;
-  margin: 20px;
+const Text = styled.h4`
+font-size: clamp(10px, 2vw, 52px);
+  margin-top: 2%;
+  color: #000000;
+  text-align: justify;
+  }
 `;
+
+const Image = styled.img`
+
+  width: clamp(5%, 30vh, 100%);
+  margin-left: 40%;
+  margin-top: 2%;
+  align-items: right;
+
+  @media screen and (max-width: 768px) {
+    order: -1; // Cambia el orden del elemento cuando el ancho de la pantalla sea menor o igual a 768px
+    margin-left: 10%
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    order: -1; 
+    margin-left: 25%
+  }
+
+`;
+
 
 
 
@@ -66,7 +113,7 @@ function Liberar({ title }) {
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
       </Header>
-      <br></br><h2>Bienvenido al Centro de Validación y Liberacion de Usuarios. Aquí, encontrarás una interfaz intuitiva para liberar usuarios de manera eficiente. Simplificamos el proceso para que puedas verificar la fecha de solicitud y liberar usuarios de manera rápida. ¡Explora y toma decisiones informadas con facilidad!</h2>
+      <br></br><Text>Bienvenido al Centro de Validación y Liberacion de Usuarios. Aquí, encontrarás una interfaz intuitiva para liberar usuarios de manera eficiente. Simplificamos el proceso para que puedas verificar la fecha de solicitud y liberar usuarios de manera rápida. ¡Explora y toma decisiones informadas con facilidad!</Text>
 
       <Tabs
           defaultActiveKey="secretarias"

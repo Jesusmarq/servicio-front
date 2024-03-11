@@ -10,10 +10,13 @@ import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
 import '../Styles/responsive.css';
 
-const BrighterColor = '#98989A';  //#9E2343; VEDA 
-const LineColor = '#ccc';// #BC955B  veda
-const SelectedColor = '#98989A';  //#9E2343; VEDA 
+const BrighterColor = '#666666';  //#9E2343; VEDA 
+const LineColor = '#98989a';// #BC955B  veda
+const SelectedColor = '#666666';  //#9E2343; VEDA 
 const SidebarBackgroundColor = 'white';
+
+
+
 
 const SidebarWrapper = styled.div`
   width: ${({ expanded }) => (expanded ? '350px' : '100px')};
@@ -30,6 +33,14 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease, height 0.3s ease;
   overflow: hidden;
   box-sizing: border-box;
+
+  @media screen and (max-width: 768px) {
+    width: 100px;
+
+    
+  }
+
+
 `;
 
 const SidebarHeader = styled.div`
@@ -83,6 +94,20 @@ const IcoContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media screen and (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0px;
+    font-size:15px;
+
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    
+    
+  }
 `;
 
 const IcoImage = styled.img`
@@ -103,6 +128,12 @@ const LineDivider = styled.div`
 const DashboardWrapper = styled.div`
   margin-left: ${({ expanded }) => (expanded ? '350px' : '100px')};
   transition: margin-left 0.3s ease;
+
+  @media screen and (max-width: 768px) {
+    margin-left:100px;
+
+    
+  }
 `;
 
 
@@ -111,7 +142,7 @@ const Content = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  background-color: #98989A ; //#9E2343; VEDA 
+  background-color: #666666 ; //#9E2343; VEDA 
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -121,7 +152,7 @@ const LogoutButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #ccc ;/*#BC955B; VEDA */
+    background-color: #98989a ;/*#BC955B; VEDA */
   }
 `;
 
@@ -131,7 +162,7 @@ const AlertContainer = styled.div`
   left: 10%;
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: #BC955B;
+  background-color: #666666; // por veda #BC955B
   color: white;
   border-radius: 10px;
   display: flex;
@@ -190,6 +221,7 @@ const Usuario = ({ title }) => {
 
   return (
     <div>
+  
       <SidebarWrapper expanded={expanded} onMouseEnter={() => setExpanded(true)} onMouseLeave={() => setExpanded(false)}>
         <SidebarHeader>
           <SidebarImage src={LogoImage} alt="Logo" />
@@ -198,7 +230,7 @@ const Usuario = ({ title }) => {
         <LineDivider />
         <SidebarItem isSelected={selectedItem === 'Section1'} onClick={() => handleMenuItemClick('Section1')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Solicitante-veda.png')} alt='ImageSolicitante' />
+            <IcoImage src={require('../Img/Solicitante-veda2.png')} alt='ImageSolicitante' />
             Solicitud
           </IcoContainer>
           <LineDivider />
@@ -206,7 +238,7 @@ const Usuario = ({ title }) => {
 
         <SidebarItem isSelected={selectedItem === 'Section2'} onClick={() => handleMenuItemClick('Section2')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Aval-veda.png')} alt='ImagePadres' />
+            <IcoImage src={require('../Img/Aval-veda2.png')} alt='ImagePadres' />
             Estatus y Liberación
           </IcoContainer>
           <LineDivider />
@@ -214,7 +246,7 @@ const Usuario = ({ title }) => {
 
         <SidebarItem isSelected={selectedItem === 'Section3'} onClick={() => handleMenuItemClick('Section3')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Documentacion-veda.png')} alt='ImageInstitucion' />
+            <IcoImage src={require('../Img/Documentacion-veda2.png')} alt='ImageInstitucion' />
             Reportes
           </IcoContainer>
           <LineDivider />
@@ -240,6 +272,7 @@ const Usuario = ({ title }) => {
           {selectedItem === 'Section8' && <p></p>}
         </Content>
       </DashboardWrapper>
+   
     </div>
   );
 };

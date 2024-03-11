@@ -14,67 +14,139 @@ const EstatusWrapper = styled.div`
   background-repeat: no-repeat;
   background-position: center center;
   min-height: 100vh;
-  display: flex;
+ // display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+ // padding: 20px;
   box-sizing: border-box;
+ 
+ 
+
 `;
 
 const Header = styled.div`
-  height: 100px;
-  background-color: transparent;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  height: 5%;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0px;
+  
+  //align-items: center;
+  //justify-content: center;
+
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 40px;
+
+  @media screen and (max-width: 768px) {
+    
+    grid-template-columns: 1fr; // 
+    padding-left: 0px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    grid-template-columns: 1fr;
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  
 `;
+
+
 
 const TitleWrapper = styled.div`
-  text-align: left;
-  color: black;
-  margin-left: auto;
+  //text-align: left;
+
+  margin-left: 0%;
+  
 `;
 
-const Title = styled.h1`
-font-size: clamp(12px, 4vw, 52px);
-  margin: 0px;
-  color: #ccc; // por veda #BC955B
+const Title = styled.h2`
+  font-size: clamp(15px, 4vw, 52px);
+  margin: 0;
+  color: #98989a;    // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Seguimiento de Solicitud:';
-    color: #98989a; // por veda #9E2343
+    color: #666666; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
 `;
 
+const Text = styled.h4`
+font-size: clamp(12px, 2vw, 52px);
+  margin: 0px;
+  color: #000000;
+  text-align: justify;
+  }
+`;
+
 const Image = styled.img`
-  width: 30vh;
-  margin: 30px;
+
+  width: clamp(5%, 30vh, 100%);
+  margin-left: 40%;
+  margin-top: 2%;
+  align-items: right;
+
+  @media screen and (max-width: 768px) {
+    order: -1; // Cambia el orden del elemento cuando el ancho de la pantalla sea menor o igual a 768px
+    margin-left: 10%
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    order: -1; 
+    margin-left: 25%
+  }
+
 `;
 
 const TableWrapper = styled.div`
-  margin: 20px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  overflow: hidden;
+  margin: 0px;
+
+ 
+  
   background-color: rgba(255, 255, 255, 0.8);
+
+  @media screen and (max-width: 768px) {
+    overflow-x: auto !important;
+  }
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    overflow-x: auto !important;
+  }
 `;
 
+
+
 const StyledTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
+
+width: 100%;
+border-collapse: collapse;
+margin-top: 20px;
+
+  
 `;
 
 const StyledTh = styled.th`
-  background-color: #98989a; // por veda #9E2343
+  background-color: #666666; // por veda #9E2343
   color: white;
   padding: 20px;
   text-align: center;
   font-size: 30px;
+
+  @media screen and (max-width: 768px) {
+    padding: 10px;
+    font-size: clamp(10px, 4vw, 52px);
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 10px;
+    font-size: clamp(10px, 4vw, 52px);
+  }
 `;
 
 const StyledTd = styled.td`
@@ -83,10 +155,19 @@ const StyledTd = styled.td`
   font-size: 20px;
   border-bottom: 3px solid #ddd;
   background-color: ${(props) => (props.isEven ? '#f9f9f9' : '#e6e6e6')};
+
+  @media screen and (max-width: 768px) {
+    padding: 15px;
+    font-size: clamp(10px, 3vw, 52px);
+  }
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 15px;
+    font-size: clamp(10px, 3vw, 52px);
+  }
 `;
 
 const LiberacionButton = styled.button`
-  background-color: #98989a;  // por veda #9E2343
+  background-color: #666666;  // por veda #9E2343
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -96,7 +177,20 @@ const LiberacionButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #ccc; // por veda #7a1c33
+    background-color: #98989a; // por veda #7a1c33
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 1vw, 52px);
+    padding: 3%; /* Controla la altura del botón */
+    width: 40%; /* Ajusta el ancho del botón */
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 2%; /* Controla la altura del botón */
+    width: 30%; /* Ajusta el ancho del botón */
+    border-radius: 5px;
   }
 `;
 function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
@@ -208,15 +302,18 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
       <Header>
         <TitleWrapper>
           <Title>{title}Seguimiento de Solicitud: Estado, Horas Acumuladas y Liberación</Title>
+        
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
       </Header>
       <br></br><br></br>
-      <h2>Explora tu Progreso: En este espacio dedicado, visualiza el estado actual de tu solicitud, las horas acumuladas y la liberación
-         de manera clara y organizada. Mantén un control total sobre tu trayectoria.</h2>
+      <Text>Explora tu Progreso: En este espacio dedicado, visualiza el estado actual de tu solicitud, las horas acumuladas y la liberación
+         de manera clara y organizada. Mantén un control total sobre tu trayectoria.</Text>
       <br></br><br></br>
+      
       {datosTabla.map((data, index) => (
         <TableWrapper key={index}>
+          
           <StyledTable>
             <thead>
               <tr>
@@ -264,7 +361,9 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
               </tr>
             </tbody>
           </StyledTable>
+          
         </TableWrapper>
+        
       ))}
 
       <LiberacionButton onClick={handleSolicitarLiberacion}>
