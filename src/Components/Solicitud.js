@@ -16,41 +16,87 @@ import imagecar5 from '../Img/01.jpg';
 import imagecar6 from '../Img/04.jpg';
 import imagecar7 from '../Img/03.jpg';
 import axios from "axios";
-import '../Styles/responsive.css';
+
 
 const Header = styled.div`
-  height: 100px;
+  height: 5%;
   background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0px;
+  
+  //align-items: center;
+  //justify-content: center;
+
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 40px;
+
+  @media screen and (max-width: 768px) {
+    
+    grid-template-columns: 1fr; // 
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    grid-template-columns: 1fr;
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  
 `;
 
+
+
 const TitleWrapper = styled.div`
-  text-align: left;
-  color: black;
-  margin-left: auto;
+  //text-align: left;
+
+  margin-left: 0%;
+  
 `;
 
 const Title = styled.h2`
-font-size: clamp(12px, 4vw, 52px);
+  font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #ccc;    // por veda #BC955B
+  color: #98989a;    // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Explora Oportunidades:';
-    color: #98989a; // por veda #9E2343
+    color: #666666; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
 `;
 
+const Text = styled.h4`
+font-size: clamp(12px, 2vw, 52px);
+  margin: 0;
+  color: #000000;
+  text-align: justify;
+  }
+`;
+
 const Image = styled.img`
-  width: 30vh;
-  margin: 20px;
+
+  width: clamp(5%, 30vh, 100%);
+  margin-left: 40%;
+  margin-top: 2%;
+  align-items: right;
+
+  @media screen and (max-width: 768px) {
+    order: -1; // Cambia el orden del elemento cuando el ancho de la pantalla sea menor o igual a 768px
+    margin-left: 10%
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    order: -1; 
+    margin-left: 25%
+  }
+
 `;
 
 const CardsContainer = styled.div`
@@ -62,33 +108,42 @@ const CardsContainer = styled.div`
 const StyledCard = styled(Card)`
   width: 18rem;
   border-radius: 15px;
-  background-color: #98989a !important; // por veda #9E2343 
-  position: relative ;
+  background-color: #666666 !important; // por veda #9E2343 
+  //position: relative ;
   margin: 1%;
 
 `;
 
+
+
 const CardImage = styled(Card.Img)`
-  border-radius: 15px 15px 0 0;
-  width: auto !important; 
+  width: 100%;
   height: auto;
-  margin: 0;
+  margin: 0 !important;
+  border-radius: 15px 15px 0 0;
+  &.img-fluid {
+    width: 100%;
+    height: auto;
+  }
 `;
+
+
 
 const CardBody = styled(Card.Body)`
   margin: 0px;
-  position: relative;
+  
   text-align: center;
 `;
 
 const CardTitle = styled(Card.Title)`
   color: white !important;
-  font-size: 20px !important;
-  text-align: center !important;
-  font-weight: bold !important;
+  font-size: 20px 
+  text-align: center 
+  font-weight: bold 
 `;
 
 const CardText = styled(Card.Text)`
+
   color: white;
   text-align: justify ;
 `;
@@ -96,21 +151,21 @@ const CardText = styled(Card.Text)`
 const Line = styled.div`
   width: 100%;
   height: 10px;
-  background-color: #ccc; // por veda #BC955B
+  background-color: #98989a; // por veda #BC955B
   margin: 0;
 `;
 
 const StyledButton = styled(Button)`
-  background-color: #ccc; // por veda #BC955B
+  background-color: #98989a; // por veda #BC955B
   color: white !important;
   border-color: #ccc; // por veda #BC955B
-  border-radius: 10px !important;
-  margin: 10px !important;
-  height: 40px !important;
+  border-radius: 10px ;
+  margin: 10px ;
+  height: 40px ;
 
   &:hover {
-    background-color: #ddd ;/*#BC955B; VEDA */
-    border-color: #ddd ;/*#BC955B; VEDA */
+    background-color: #ccc ;/*#BC955B; VEDA */
+    border-color: #ccc ;/*#BC955B; VEDA */
   }
 `;
 
@@ -131,26 +186,65 @@ const ModalContent = styled.div`
   font-weight: bold;
   font-size: 20px;
   border: 10px solid #ddd;
+
+  @media screen and (max-width: 768px) {
+    padding: 40px;
+    width: 80vw;
+    border-radius: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 60px;
+    width: 60vw;
+  }
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important; // por veda #BC955B
+  background-color: #98989a !important;
   color: white !important;
-  border-color: #98989a !important; // por veda #BC955B
+  border-color: #98989a !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 3vw, 24px);
+    padding: 10px;
+    width: 60vw;
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 5px;
+    width: 40vw;
+    border-radius: 5px;
+  }
 `;
+
 const SendButton = styled(Button)`
-  background-color: #98989a !important; // por veda #BC955B
+  background-color: #98989a !important;
   color: white !important;
-  border-color: #98989a !important; // por veda #BC955B
+  border-color: #98989a !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 3vw, 24px);
+    padding: 10px;
+    width: 60vw;
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 5px;
+    width: 40vw;
+    border-radius: 5px;
+  }
 `;
+
 
 
 
@@ -278,12 +372,14 @@ function Solicitud({ title }) {
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
       </Header><br></br><br></br>
-      <h2>Bienvenido. A continuación, se presentan todas las opciones disponibles. Selecciona la que se adapte a tus necesidades.</h2><br></br><br></br>
+         <Text>Bienvenido. A continuación, se presentan todas las opciones disponibles. Selecciona la que se adapte a tus necesidades.</Text><br></br><br></br>
 
       <CardsContainer>
         {/* Tarjeta 1 */}
         <StyledCard>
-          <CardImage src={imagecar} alt="imagecar" />
+   
+        <CardImage src={imagecar} alt="imagecar" className="img-fluid" />
+
           <Line />
           <CardBody>
             <CardTitle>Servicio Social</CardTitle>
@@ -296,7 +392,7 @@ function Solicitud({ title }) {
 
         {/* Tarjeta 2 */}
         <StyledCard>
-          <CardImage src={imagecar2} alt="imagecar" />
+          <CardImage src={imagecar2} alt="imagecar" className="img-fluid" />
           <Line />
           <CardBody>
             <CardTitle>Practicas Profesionales</CardTitle>
@@ -309,7 +405,7 @@ function Solicitud({ title }) {
 
         {/* Tarjeta 3 */}
         <StyledCard>
-          <CardImage src={imagecar3} alt="imagecar" />
+          <CardImage src={imagecar3} alt="imagecar" className="img-fluid" />
           <Line />
           <CardBody>
             <CardTitle>Estancias</CardTitle>
@@ -322,7 +418,7 @@ function Solicitud({ title }) {
 
         {/* Tarjeta 4 */}
         <StyledCard>
-          <CardImage src={imagecar4} alt="imagecar" />
+          <CardImage src={imagecar4} alt="imagecar" className="img-fluid" />
           <Line />
           <CardBody>
             <CardTitle>Estadías</CardTitle>
@@ -335,7 +431,7 @@ function Solicitud({ title }) {
 
         {/* Tarjeta 5 */}
         <StyledCard>
-          <CardImage src={imagecar5} alt="imagecar" />
+          <CardImage src={imagecar5} alt="imagecar" className="img-fluid" />
           <Line />
           <CardBody>
             <CardTitle>Modelo Dual</CardTitle>
@@ -348,7 +444,7 @@ function Solicitud({ title }) {
 
         {/* Tarjeta 6 */}
         <StyledCard>
-          <CardImage src={imagecar6} alt="imagecar" />
+          <CardImage src={imagecar6} alt="imagecar" className="img-fluid" />
           <Line />
           <CardBody>
             <CardTitle>Residencia Profesional</CardTitle>
@@ -361,7 +457,7 @@ function Solicitud({ title }) {
 
         {/* Tarjeta 7 */}
         <StyledCard>
-          <CardImage src={imagecar7} alt="imagecar" />
+          <CardImage src={imagecar7} alt="imagecar" className="img-fluid"/>
           <Line />
           <CardBody>
             <CardTitle>Proyecto de Intervención</CardTitle>

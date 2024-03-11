@@ -26,6 +26,14 @@ table-layout: fixed;
   border-radius: 15px;
   overflow: hidden;
   text-align: center;
+
+  @media screen and (max-width: 768px) {
+    overflow-x: auto !important;
+    margin-left: 0px;
+  }
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    overflow-x: auto !important;
+  }
 `;
 
 const StyledTable = styled.table`
@@ -35,7 +43,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #98989a;  // por veda #9e2343
+  background-color: #666666;  // por veda #9e2343
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -51,11 +59,12 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#98989a' : '#98989a')}; //por veda '#9e2343' : '#bc955b'
+  background-color: ${(props) => (props.validar ? '#666666' : '#666666')}; //por veda '#9e2343' : '#bc955b'
   color: white;
   cursor: pointer;
   border-radius: 15px;
 `;
+
 const CenteredModal = styled(Modal)`
   display: flex;
   align-items: center;
@@ -73,26 +82,66 @@ const ModalContent = styled.div`
   font-weight: bold;
   font-size: 20px;
   border: 10px solid #ddd;
+
+  @media screen and (max-width: 768px) {
+    padding: 40px;
+    width: 80vw;
+    border-radius: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 60px;
+    width: 60vw;
+  }
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important; //por veda #bc955b
+  background-color: #98989a !important;
   color: white !important;
-  border-color: #98989a !important; //por veda #bc955b
+  border-color: #98989a !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 3vw, 24px);
+    padding: 10px;
+    width: 60vw;
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 5px;
+    width: 40vw;
+    border-radius: 5px;
+  }
 `;
+
 const SendButton = styled(Button)`
-  background-color: #98989a !important; //por veda #bc955b
+  background-color: #98989a !important;
   color: white !important;
-  border-color: #98989a !important; //por veda #bc955b
+  border-color: #98989a !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 3vw, 24px);
+    padding: 10px;
+    width: 60vw;
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 5px;
+    width: 40vw;
+    border-radius: 5px;
+  }
 `;
+
+
 
 
 

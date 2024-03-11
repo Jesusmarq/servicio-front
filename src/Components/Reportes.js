@@ -9,52 +9,111 @@ import '../Styles/responsive.css';
 
 
 const Header = styled.div`
-  height: 100px;
+  height: 5%;
   background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0px;
+  
+  //align-items: center;
+  //justify-content: center;
+
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 40px;
+
+  @media screen and (max-width: 768px) {
+    
+    grid-template-columns: 1fr; // 
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    grid-template-columns: 1fr;
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  
 `;
 
+
+
 const TitleWrapper = styled.div`
-  text-align: left;
-  color: black;
-  margin-left: auto;
+  //text-align: left;
+
+  margin-left: 0%;
+  
 `;
 
 const Title = styled.h2`
-font-size: clamp(12px, 4vw, 52px);
+  font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #ccc;  // por veda #BC955B
+  color: #98989a;    // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Portal de Reportes:';
-    color: #98989a;  // por veda #9E2343
+    color: #666666; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
 `;
 
+const Text = styled.h4`
+font-size: clamp(12px, 2vw, 52px);
+  margin: 0;
+  color: #000000;
+  text-align: justify;
+  }
+`;
+
 const Image = styled.img`
-  width: 30vh;
-  margin: 20px;
+
+  width: clamp(5%, 30vh, 100%);
+  margin-left: 40%;
+  margin-top: 2%;
+  align-items: right;
+
+  @media screen and (max-width: 768px) {
+    order: -1; // Cambia el orden del elemento cuando el ancho de la pantalla sea menor o igual a 768px
+    margin-left: 10%
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    order: -1; 
+    margin-left: 25%
+  }
+
 `;
 
 const Container = styled.div`
   margin: 20px;
+
+  @media screen and (max-width: 768px) {
+   
+    margin: 10px;
+    overflow-x: scroll;
+    
+  }
+
+  
 `;
 
 const Table = styled.table`
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  table-layout:auto;
+
+
+ 
 `;
 
 const Th = styled.th`
-  background-color: #98989a;  // por veda #9E2343
+  background-color: #666666;  // por veda #9E2343
   color: white;
   padding: 15px;
   text-align: center;
@@ -63,24 +122,24 @@ const Th = styled.th`
 const Td = styled.td`
   padding: 15px;
   text-align: center;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #ccc;
   cursor: pointer;
 
   &:hover {
     text-decoration: underline;
-    color: #ccc;  // por veda  #BC955B
+    color: #98989a;  // por veda  #BC955B
   }
 `;
 
 const TrashIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
-  color: #98989a;  // #9E2343
+  color: #666666;  // #9E2343
 `;
 
 const UploadButton = styled.label`
-  background-color: #98989a;   // por veda  #9E2343 
+  background-color: #666666;   // por veda  #9E2343 
   color: white;
-  padding: 15px; /* Controla la altura del botón */
+  padding: 1%; /* Controla la altura del botón */
   width: 8%; /* Ajusta el ancho del botón */
   border: none;
   cursor: pointer;
@@ -91,11 +150,24 @@ const UploadButton = styled.label`
   margin-bottom: 40px;
 
   &:hover {
-    background-color: #ccc;   // por veda #7a1c33
+    background-color: #98989a;   // por veda #7a1c33
   }
 
   input {
     display: none;
+  }
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 1vw, 52px);
+    padding: 3%; /* Controla la altura del botón */
+    width: 40%; /* Ajusta el ancho del botón */
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 2%; /* Controla la altura del botón */
+    width: 30%; /* Ajusta el ancho del botón */
+    border-radius: 5px;
   }
 `;
 

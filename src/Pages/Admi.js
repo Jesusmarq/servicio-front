@@ -11,15 +11,15 @@ import AgregarVal from "../Components/AgregarVeri";
 import Catalogo2 from "../Components/CatalogoNuevo";
 import "../Styles/responsive.css";
 
-const BrighterColor = '#98989A';  //#9E2343; VEDA 
-const LineColor = '#ccc';// #BC955B  veda
-const SelectedColor = '#98989A';  //#9E2343; VEDA 
+const BrighterColor = '#666666';  //#9E2343; VEDA 
+const LineColor = '#98989A';// #BC955B  veda
+const SelectedColor = '#666666';  //#9E2343; VEDA 
 const SidebarBackgroundColor = "white";
 
 
 
 const SidebarWrapper = styled.div`
-  width: ${({ expanded }) => (expanded ? "350px" : "100px")};
+  width: ${({ expanded }) => (expanded ? '350px' : '100px')};
   height: 100vh;
   background-color: ${SidebarBackgroundColor};
   position: fixed;
@@ -33,6 +33,14 @@ const SidebarWrapper = styled.div`
   transition: width 0.3s ease, height 0.3s ease;
   overflow: hidden;
   box-sizing: border-box;
+
+  @media screen and (max-width: 768px) {
+    width: 100px;
+
+    
+  }
+
+
 `;
 
 const SidebarHeader = styled.div`
@@ -64,8 +72,7 @@ const SidebarItem = styled.div`
   padding: 20px;
   color: ${({ isSelected }) => (isSelected ? SelectedColor : BrighterColor)};
   text-align: left;
-  background-color: ${({ isSelected }) =>
-    isSelected ? "transparent" : SidebarBackgroundColor};
+  background-color: ${({ isSelected }) => (isSelected ? 'transparent' : SidebarBackgroundColor)};
   cursor: pointer;
   transition: color 0.3s ease, background-color 0.3s ease, padding 0.3s ease;
 
@@ -87,6 +94,20 @@ const IcoContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  @media screen and (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0px;
+    font-size:15px;
+
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    
+    
+  }
 `;
 
 const IcoImage = styled.img`
@@ -94,6 +115,8 @@ const IcoImage = styled.img`
   height: 50px;
   margin-right: 10px;
 `;
+
+
 
 const LineDivider = styled.div`
   position: absolute;
@@ -105,16 +128,23 @@ const LineDivider = styled.div`
 `;
 
 const DashboardWrapper = styled.div`
-  margin-left: ${({ expanded }) => (expanded ? "350px" : "100px")};
+  margin-left: ${({ expanded }) => (expanded ? '350px' : '100px')};
   transition: margin-left 0.3s ease;
+
+  @media screen and (max-width: 768px) {
+    margin-left:100px;
+
+    
+  }
 `;
+
 
 const Content = styled.div`
   padding: 20px;
 `;
 
 const LogoutButton = styled.button`
-background-color: #98989A ; //#9E2343; VEDA
+  background-color: #666666 ; //#9E2343; VEDA 
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -124,7 +154,7 @@ background-color: #98989A ; //#9E2343; VEDA
   margin-top: 20px;
 
   &:hover {
-    background-color: #ccc ;/*#BC955B; VEDA */
+    background-color: #98989a ;/*#BC955B; VEDA */
   }
 `;
 
@@ -134,7 +164,7 @@ const AlertContainer = styled.div`
   left: 10%;
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: #bc955b;
+  background-color: #666666;  // POR VEDA
   color: white;
   border-radius: 10px;
   display: flex;
@@ -208,7 +238,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/Solicitante-veda.png")}
+              src={require("../Img/Solicitante-veda2.png")}
               alt="ImageSolicitante"
             />
             Solicitud
@@ -222,7 +252,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/Documentacion-veda.png")}
+              src={require("../Img/Documentacion-veda2.png")}
               alt="Reportes"
             />
             Reportes
@@ -236,7 +266,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/Liberacion-veda.png")}
+              src={require("../Img/Liberacion-veda2.png")}
               alt="ImageLiberacion"
             />
             Liberación
@@ -249,7 +279,7 @@ const ADMI = ({ title }) => {
           onClick={() => handleMenuItemClick("Section4")}
         >
           <IcoContainer>
-            <IcoImage src={require("../Img/Aval-veda.png")} alt="ImageVerificador" />
+            <IcoImage src={require("../Img/Aval-veda2.png")} alt="ImageVerificador" />
             Agregar Verificador
           </IcoContainer>
           <LineDivider />
@@ -261,7 +291,7 @@ const ADMI = ({ title }) => {
         >
           <IcoContainer>
             <IcoImage
-              src={require("../Img/catalogo-veda.png")}
+              src={require("../Img/catalogo-veda2.png")}
               alt="ImageCatalogo"
             />
             Administrar Catalogos

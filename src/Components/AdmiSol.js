@@ -22,39 +22,84 @@ import PracticasUAEH from './Solicitudes/PracticasUAEH';
 
 
 const Header = styled.div`
-  height: 100px;
+  height: 5%;
   background-color: white;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  margin-bottom: 40px; 
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 0px;
+  
+  //align-items: center;
+  //justify-content: center;
+
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 40px;
+
+  @media screen and (max-width: 768px) {
+    
+    grid-template-columns: 1fr; // 
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    grid-template-columns: 1fr;
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  
 `;
 
+
+
 const TitleWrapper = styled.div`
-  text-align: left;
-  color: black;
-  margin-left: auto;
+  //text-align: left;
+
+  margin-left: 0%;
+  
 `;
 
 const Title = styled.h2`
-font-size: clamp(12px, 4vw, 52px);
-  margin: 10px;
-  color: #CCC;  // POR VEDA bc955b
+  font-size: clamp(15px, 4vw, 52px);
+  margin: 0;
+  color: #98989a;    // por veda #BC955B
   position: relative;
 
   &::before {
     content: 'Validación de Solicitudes:';
-    color: #98989A; //por veda 9e2343
+    color: #666666; // por veda #9E2343
     position: absolute;
     z-index: 1;
   }
 `;
 
+const Text = styled.h4`
+font-size: clamp(10px, 2vw, 52px);
+  margin-top: 2%;
+  color: #000000;
+  text-align: justify;
+  }
+`;
+
 const Image = styled.img`
-  width: 30vh;
-  margin: 20px;
+
+  width: clamp(5%, 30vh, 100%);
+  margin-left: 40%;
+  margin-top: 2%;
+  align-items: right;
+
+  @media screen and (max-width: 768px) {
+    order: -1; // Cambia el orden del elemento cuando el ancho de la pantalla sea menor o igual a 768px
+    margin-left: 10%
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    order: -1; 
+    margin-left: 25%
+  }
+
 `;
 
 
@@ -73,8 +118,8 @@ function ADMIsol({ title }) {
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
       </Header>
-      <div></div><div></div><h2>Bienvenido al Centro de Validación de Solicitudes. Aquí, encontrarás una interfaz intuitiva para revisar y aceptar o rechazar solicitudes de manera eficiente. 
-        Simplificamos el proceso para que puedas verificar la precisión de los datos de manera rápida. ¡Explora, valida y toma decisiones informadas con facilidad!</h2>
+      <div></div><div></div><Text>Bienvenido al Centro de Validación de Solicitudes. Aquí, encontrarás una interfaz intuitiva para revisar y aceptar o rechazar solicitudes de manera eficiente. 
+        Simplificamos el proceso para que puedas verificar la precisión de los datos de manera rápida. ¡Explora, valida y toma decisiones informadas con facilidad!</Text>
         
         <Tabs
           defaultActiveKey="secretarias"

@@ -9,11 +9,20 @@ import Button from 'react-bootstrap/Button';
 
 const TableWrapper = styled.div`
   margin: 20px auto;
-  width: 80%;
+  width: 90%;
   border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
+
+  @media screen and (max-width: 768px) {
+    overflow-x: auto !important;
+    margin: 0px;
+    width: 100%;
+  }
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    overflow-x: auto !important;
+  }
 `;
 
 const StyledTable = styled.table`
@@ -22,7 +31,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #98989a;  // por veda #9E2343
+background-color: #666666;  // por veda #9E2343
   color: white;
   padding: 15px;
   text-align: center;
@@ -38,7 +47,7 @@ const StyledTd = styled.td`
 `;
 
 const LiberacionButton = styled.button`
-  background-color: #98989a;   // por veda #9E2343
+  background-color: #666666;   // por veda #9E2343
   color: white;
   padding: 5px;
   border: none;
@@ -46,10 +55,9 @@ const LiberacionButton = styled.button`
   border-radius: 5px;
 
   &:hover {
-    background-color: #ccc;   // por veda #7a1c33
+    background-color: #98989a;   // por veda #7a1c33
   }
 `;
-let data = [];
 
 const CenteredModal = styled(Modal)`
   display: flex;
@@ -68,26 +76,63 @@ const ModalContent = styled.div`
   font-weight: bold;
   font-size: 20px;
   border: 10px solid #ddd;
+
+  @media screen and (max-width: 768px) {
+    padding: 40px;
+    width: 80vw;
+    border-radius: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 60px;
+    width: 60vw;
+  }
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important;  //por veda  BC955B
+  background-color: #98989a !important;
   color: white !important;
-  border-color: #98989a !important;  //por veda  BC955B
+  border-color: #98989a !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 3vw, 24px);
+    padding: 10px;
+    width: 60vw;
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 5px;
+    width: 40vw;
+    border-radius: 5px;
+  }
 `;
 
 const SendButton = styled(Button)`
-  background-color: #98989a !important;  //por veda  BC955B
+  background-color: #98989a !important;
   color: white !important;
-  border-color: #98989a !important;  //por veda  BC955B
+  border-color: #98989a !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  @media screen and (max-width: 768px) {
+    font-size: clamp(10px, 3vw, 24px);
+    padding: 10px;
+    width: 60vw;
+    border-radius: 5px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    padding: 5px;
+    width: 40vw;
+    border-radius: 5px;
+  }
 `;
 
 // Define los estilos para el área de búsqueda y el select
@@ -95,6 +140,27 @@ const SearchWrapper = styled.div`
   margin-bottom: 20px;
   display: flex;
   align-items: center;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0px;
+  
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 40px;
+
+  @media screen and (max-width: 768px) {
+    
+    grid-template-columns: 1fr; // 
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    grid-template-columns: 1fr;
+    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    gap: 10px;
+  }
 `;
 
 const StyledInput = styled.input`
@@ -102,6 +168,17 @@ const StyledInput = styled.input`
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
+
+    @media screen and (max-width: 768px) {
+    margin-left: 0px;
+    margin-right: 0%;
+
+   }
+
+    @media screen and (min-width: 768px) and (max-width: 1424px) {
+      margin-left: 0px;
+      margin-right: 0%;
+    }
 `;
 
 const StyledSelect = styled.select`
@@ -110,20 +187,42 @@ const StyledSelect = styled.select`
   border: 1px solid #ccc;
   background-color: white; /* Color de fondo del select */
   color: #333; /* Color del texto */
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0px;
+    margin-right: 0%;
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    margin-left: 0px;
+    margin-right: 0%;
+  }
 `;
 
 
 
 const StyledAddButton = styled(Button)`
-  background-color: #98989a;  // por veda #9E2343
+  background-color: #666666 !important;  // por veda #9E2343
   color: white;
   border-radius: 5px;
-  border-color: #98989a;  // por veda #9E2343
+  border-color: #666666 !important;  // por veda #9E2343
   margin-left: auto;
 
   &:hover {
-    background-color: #ccc; // por veda #bc955b
-    border-color: #ccc;
+    background-color: #98989a !important; // por veda #bc955b
+    border-color: #98989a !important;
+  }
+
+  @media screen and (max-width: 768px) {
+    margin-left: 0px;
+    margin-right: 30%;
+    
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    margin-left: 0px;
+    margin-right: 65%;
   }
 `;
 
