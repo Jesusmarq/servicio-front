@@ -17,10 +17,6 @@ import ServicioSocialUAEH from './Solicitudes/ServicioUAEH';
 import PracticasUAEH from './Solicitudes/PracticasUAEH';
 
 
-
-
-
-
 const Header = styled.div`
   height: 5%;
   background-color: white;
