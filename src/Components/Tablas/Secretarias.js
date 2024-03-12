@@ -232,6 +232,16 @@ function TablaSecretarias  ({ title })  {
  
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
+
+    const selectedValue = event.target.value;
+
+  setSelectedOption(selectedValue);
+
+  // Aquí actualizamos formData.secretaria_id con el valor seleccionado
+  setFormData({
+    ...formData,
+    secretaria_id: selectedValue
+  });
   };
 
   const [keyForRerender, setKeyForRerender] = useState(0);
@@ -391,6 +401,42 @@ const handleAddPlantel = async () => {
   }
 };
 
+const handleAddDependencia = async () => {
+  try {
+    console.log(formData)
+    const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregar_dependencia', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
+    });
+
+    if (response.ok) {
+      // La solicitud fue exitosa, puedes realizar acciones adicionales si es necesario
+      Swal.fire({
+        icon: 'success',
+        title: '¡Agregado con éxito!',
+        text: 'La información ha sido guardada correctamente.',
+      }).then(() => {
+        setKeyForRerender(keyForRerender + 1);
+      });
+      
+    } else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se logró agregar la información.',
+      }).then(() => {
+        //window.location.reload();
+      });
+    }
+    
+  } catch (error) {
+    
+  }
+};
+
 const initialState = {
   id_universidad: "",
   universidad_nombre: "",
@@ -438,7 +484,7 @@ const handleCloseAddModal = () => {
           value={searchText}
           onChange={handleSearch}
         />
-{console.log(secretariasUnicas)}
+{/*console.log(secretariasUnicas)*/}
 <StyledSelect value={selectedOption} onChange={handleOptionChange}>
   <option value="">Todas las secretarias</option>
   {secretariasUnicas.map((secretaria, index) => (
@@ -539,11 +585,15 @@ const handleCloseAddModal = () => {
           <Form>
             <Form.Group controlId="formSecretaria">
               <Form.Label>Secretaria:</Form.Label>
-              <Form.Control as="select" value={formData.id_universidad} onChange={handleOptionChange2}>
-                <option value="">Todas las secretarias</option>
-                <option value="1">UAEH</option>
-                <option value="2">SEMSyS</option>
-              </Form.Control>
+              <StyledSelect value={selectedOption} onChange={handleOptionChange}>
+              <option value="">Todas las secretarias</option>
+              {console.log(secretariasUnicas)}
+              {secretariasUnicas.map((secretaria, index) => (
+                <option key={index} value={secretaria}>
+                  {secretaria}
+                </option>
+              ))}{console.log(secretariasUnicas)}
+            </StyledSelect>
             </Form.Group>
 
             <Form.Group controlId="formDependencia">
@@ -551,24 +601,16 @@ const handleCloseAddModal = () => {
               <Form.Control
                 type="text"
                 placeholder="Ingrese la nueva dependencia"
-                value={formData.plantel_nombre}
-                onChange={(e) => handleInputChange(e, 'plantel_nombre')}
+                value={formData.dependencia}
+                onChange={(e) => handleInputChange(e, 'dependencia')}
               />
             </Form.Group>
 
-            <Form.Group controlId="formDireccion">
-              <Form.Label>Dirección:</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ingrese la dirección"
-                value={formData.direccion}
-                onChange={(e) => handleInputChange(e, 'direccion')}
-              />
-            </Form.Group>
+            
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <LiberacionButton variant="primary" onClick={handleAddPlantel}>
+          <LiberacionButton variant="primary" onClick={handleAddDependencia}>
             Guardar
           </LiberacionButton>
         </Modal.Footer>
