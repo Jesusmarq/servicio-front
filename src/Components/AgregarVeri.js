@@ -210,10 +210,7 @@ const AgregarVal = ({ title }) => {
       });
       // Parsear la respuesta de la API como JSON
       //const data = await response.json();
-
     
- 
-     
       // Mostrar una ventana emergente (SweetAlert) indicando que el validador se agregó correctamente
       if (response.ok) {
       
@@ -224,6 +221,14 @@ const AgregarVal = ({ title }) => {
         timer: 400,// Texto de la ventana emergente
       });
       window.location.reload()
+    } else {
+      const data = await response.text();
+      console.log(data)
+      Swal.fire({
+        icon: "error",
+        title: "Error al agregar Validador",
+        text: `${data}`,
+      });
     }
     } catch (error) {
       console.error("Error al enviar el archivo:", error);

@@ -25,11 +25,11 @@ const Login = () => {
       .then((response) => {
         //console.log(response.data);
         // Acceder y guardar solo las propiedades necesarias
-        const { exp, rol, id, nombre, token } = response.data;
+        const { exp, rol, id, nombre, token, universidad } = response.data;
 
         localStorage.setItem(
           "dataUser",
-          JSON.stringify({ exp, rol, id, nombre, token })
+          JSON.stringify({ exp, rol, id, nombre, token,  })
         );
         //console.log( exp, rol, id, nombre, token );
 
@@ -44,6 +44,12 @@ const Login = () => {
           JSON.stringify({ exp })
         );
         //console.log(  exp );
+
+        localStorage.setItem(
+          "universidad",
+          JSON.stringify({universidad})
+        );
+         console.log(  universidad );
 
         // Verifica la respuesta de la API y redirige según el usuario
         if (rol === "admin") {

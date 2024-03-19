@@ -92,38 +92,50 @@ function Preregistro() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    // Previene el comportamiento predeterminado del formulario, que es el envío normal.
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
-    axios
-      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, formData)
-      .then((response) => {
-        // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
-        Swal.fire({
-          position: "center", // Posición de la ventana emergente en el centro.
-          icon: "success", // Ícono de éxito.
-          title: "Registro Completo.", // Título de la ventana emergente.
-          showConfirmButton: history.push("/login"), // No muestra el botón de confirmación.
-          timer: 4000, // Tiempo de visualización de la ventana emergente (en milisegundos).
-        });
-
-        // Reinicia el estado 'formData' al estado inicial después del envío exitoso.
-        setFormData(initialState);
-      })
-      .catch((error) => {
-        // Maneja cualquier error que ocurra durante la solicitud.
-        console.error("Error al enviar el formulario:", error);
-
-        // Muestra una ventana emergente de error utilizando SweetAlert.
-        Swal.fire({
-          icon: "error", // Ícono de error.
-          title: "Error al enviar el formulario", // Título de la ventana emergente.
-          text: "Hubo un problema al enviar el formulario.", // Texto de la ventana emergente.
-        });
+  
+    try {
+      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       });
+  
+      if (response.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Registro Completo.',
+          showConfirmButton: history.push("/login"),
+          timer: 4000,
+        });
+        setFormData(initialState);
+      } else {
+        const data = await response.text();
+        //console.log(data)
+        Swal.fire({
+          icon: "error",
+          title: "Error al enviar el formulario",
+          text: `${data}`,
+        });
+      }
+    } catch (error) {
+      console.error("Error al enviar el formulario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el formulario",
+        text: "Hubo un problema al enviar el formulario.",
+      });
+    }
   };
+  
+  
+
+ 
+   
+  
 
 
   const [escuelas, setEscuelas] = useState();

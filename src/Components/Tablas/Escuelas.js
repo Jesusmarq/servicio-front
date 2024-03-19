@@ -161,10 +161,12 @@ const SearchWrapper = styled.div`
     padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
     gap: 10px;
   }
+
+  
 `;
 
 const StyledInput = styled.input`
-  margin-right: 10px;
+  margin-right: 10%;
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -187,6 +189,7 @@ const StyledSelect = styled.select`
   border: 1px solid #ccc;
   background-color: white; /* Color de fondo del select */
   color: #333; /* Color del texto */
+  margin-right: 20%;
 
   @media screen and (max-width: 768px) {
     margin-left: 0px;
@@ -224,6 +227,11 @@ const StyledAddButton = styled(Button)`
     margin-left: 0px;
     margin-right: 65%;
   }
+
+  @media screen and (min-width: 1424px) {
+    margin-left: 30%;
+    margin-right: 10%;
+  }
 `;
 
 const TablaEscuelas = ({ title }) => {
@@ -258,18 +266,21 @@ const TablaEscuelas = ({ title }) => {
       if (response.ok) {
         // La solicitud fue exitosa, puedes realizar acciones adicionales si es necesario
         Swal.fire({
-          icon: 'success',
-          title: '¡Agregado con éxito!',
-          text: 'La información ha sido guardada correctamente.',
+          icon: 'success', // Ícono de éxito
+        title: 'Plantel Agregado', // Título de la ventana emergente
+        text: 'Se agregó de manera correcta un nuevo Plantel.',
+        timer: 2000,// Texto de la ventana emergente
         }).then(() => {
           setKeyForRerender(keyForRerender + 1);
         });
         
       } else{
+        const data = await response.text();
+        //console.log(data)
         Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se logró agregar la información.',
+          icon: "error",
+          title: "Error al agregar Dependencia",
+          text: `${data}`,
         }).then(() => {
           window.location.reload();
         });
@@ -433,10 +444,28 @@ const TablaEscuelas = ({ title }) => {
   };
 
   const handleCloseAddModal = () => {
-    setShowAddModal(false);
+    setTimeout(() => {
+      setShowAddModal(false);
+    }, 2000); // Retraso de 4 segundos (4000 milisegundos)
   };
 
 
+  //  funciones modal borrar *********************************************************
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState(null);
+
+  const handleDelete = () => {
+    // Lógica para eliminar la escuela...
+    setShowDeleteModal(false);
+  };
+
+  const handleShowDeleteModal = (rowData) => {
+    //console.log("Datos recibidos en handleShowDeleteModal:", rowData);
+    setSelectedRowData(rowData);
+    setShowDeleteModal(true);
+};
+
+  
 
   return (
     <div key={keyForRerender}>
@@ -464,6 +493,7 @@ const TablaEscuelas = ({ title }) => {
               <StyledTh>Escuela</StyledTh>
               <StyledTh>Plantel</StyledTh>
               <StyledTh>Editar </StyledTh>
+              <StyledTh>Eliminar </StyledTh>
               
             </tr>
           </thead>
@@ -482,16 +512,22 @@ const TablaEscuelas = ({ title }) => {
                   <StyledTd isEven={index % 2 !== 0}>
                     <LiberacionButton variant="primary" onClick={() => handleShow(item.id_plantel)}>
                       Editar
-                    </LiberacionButton>
-              
+                    </LiberacionButton>           
                   </StyledTd>
-                  
+                  <StyledTd isEven={index % 2 !== 0}>
+                  <LiberacionButton variant="primary" onClick={() => handleShowDeleteModal(item)}>
+                      Borrar
+                    </LiberacionButton>           
+                  </StyledTd>
                   
                 </tr>
               ))}
           </tbody>
         </StyledTable>
       </TableWrapper>
+
+
+
 
       <CenteredModal show={showModal} onHide={handleClose}>
         <ModalContent>
@@ -525,7 +561,7 @@ const TablaEscuelas = ({ title }) => {
             )}
           </Modal.Body>
           <Modal.Footer>
-            <SendButton variant="primary" onClick={handleSend} disabled={!formChanged}>
+            <SendButton variant="primary" >
               Guardar
             </SendButton>
             <CloseButton variant="primary" onClick={handleCancel}>
@@ -536,49 +572,7 @@ const TablaEscuelas = ({ title }) => {
       </CenteredModal>
 
 
-         <CenteredModal show={showModal} onHide={handleClose}>
-        <ModalContent>
-          <Modal.Header closeButton>
-            <Modal.Title>Editar Información</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {selectedRow !== null && (
-              <Form>
-                <Form.Group controlId="formEscuela">
-                  <Form.Label>Escuela:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder={editedData.escuela}
-                    value={editedData.escuela}
-                    readOnly={true}
-                    onChange={(e) => handleEditChange(e, 'escuela')}
-                  />
-                </Form.Group>
 
-                <Form.Group controlId="formInstitucion">
-                  <Form.Label>Institución:</Form.Label>
-                  <Form.Control
-                    type="text"
-                    placeholder="Ingrese la nueva institución"
-                    value={editedData.institucion}
-                    onChange={(e) => handleEditChange(e, 'institucion')}
-                  />
-                </Form.Group>
-              </Form>
-            )}
-          </Modal.Body>
-          <Modal.Footer>
-            <SendButton variant="primary" onClick={handleSend} disabled={!formChanged}>
-              Guardar
-            </SendButton>
-            <CloseButton variant="primary" onClick={handleCancel}>
-              Cerrar
-            </CloseButton>
-          </Modal.Footer>
-        </ModalContent>
-      </CenteredModal>
-
-    
       <CenteredModal show={showAddModal} onHide={handleCloseAddModal}>
       <ModalContent>
         <Modal.Header closeButton>
@@ -617,12 +611,40 @@ const TablaEscuelas = ({ title }) => {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <LiberacionButton variant="primary" onClick={handleAddPlantel}>
+          <LiberacionButton variant="primary" onClick={() => {handleAddPlantel(); handleCloseAddModal();}} >
             Guardar
           </LiberacionButton>
         </Modal.Footer>
       </ModalContent>
     </CenteredModal>
+
+
+     {/* Modal de eliminación */}
+     <CenteredModal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <ModalContent>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmar Eliminación</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+    {selectedRowData && (
+        <>
+            <p>Estas a punto de eliminar esta institución:</p>
+            <p>Escuela: {selectedRowData.universidad}</p>
+            <p>Institución: {selectedRowData.plantel}</p>
+            <p>¿Deseas continuar con la eliminación?</p>
+        </>
+    )}
+</Modal.Body>
+          <Modal.Footer>
+            <LiberacionButton variant="primary" onClick={handleDelete}>
+              Continuar
+            </LiberacionButton>
+            <CloseButton variant="primary" onClick={() => setShowDeleteModal(false)}>
+              Cerrar
+            </CloseButton>
+          </Modal.Footer>
+        </ModalContent>
+      </CenteredModal>
 
     </div>
   );

@@ -81,6 +81,29 @@ const IcoContainer = styled.div`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  > * {
+    margin-right: 0; /* Espacio entre elementos */
+  }
+
+  > *:last-child {
+    margin-right: 20px; /* Eliminar margen del último elemento */
+  }
+
+  @media screen and (max-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 0px;
+    font-size: 15px;
+
+    > * {
+      margin-right: 0; /* Eliminar margen entre elementos cuando la pantalla es pequeña */
+    }
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1424px) {
+    /* Estilos adicionales para este rango de ancho */
+  }
 `;
 
 const IcoImage = styled.img`
