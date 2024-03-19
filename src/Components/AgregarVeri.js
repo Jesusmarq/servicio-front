@@ -218,7 +218,7 @@ const AgregarVal = ({ title }) => {
         icon: 'success', // Ícono de éxito
         title: 'Validador Agregado', // Título de la ventana emergente
         text: 'Se agregó de manera correcta un nuevo validador.',
-        timer: 400,// Texto de la ventana emergente
+        timer: 2200,// Texto de la ventana emergente
       });
       window.location.reload()
     } else {
