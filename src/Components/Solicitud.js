@@ -156,7 +156,7 @@ const Line = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  background-color: ${({ disabled }) => (disabled ? '#666666' : '#98989a')};
+  background-color: ${({ disabled }) => (disabled ? '#666666' : '#98989a')} !important;
   color: white !important;
   border-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')} !important;
   border-radius: 10px;
