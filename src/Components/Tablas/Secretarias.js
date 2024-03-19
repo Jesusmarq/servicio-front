@@ -244,6 +244,7 @@ function TablaSecretarias  ({ title })  {
   });
   };
 
+  //const [keyForRerender, setKeyForRerender] = useState(0);
   const [keyForRerender, setKeyForRerender] = useState(0);
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedRow, setSelectedRow] = useState(null);
