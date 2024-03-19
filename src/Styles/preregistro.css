@@ -32,14 +32,14 @@
 
 .cuadros {
     width: calc(100% - 2%);
-    border-color: #98989A ;/*#9E2343; VEDA */
+    border-color: #666666 ;/*#9E2343; VEDA */
     border-radius: 10px;
     height: 30px; /* Ajusta la altura según tus necesidades */
 }
 
 .botonchido {
     color: white;
-    background-color: #98989A ;/*#9E2343; VEDA */
+    background-color: #666666 ;/*#9E2343; VEDA */
     border: none;
     border-radius: 20px;
     transition: background-color 0.3s ease;
@@ -50,12 +50,12 @@
 }
 
 .botonchido:hover {
-    background-color: #f4f4f4 ;/*#BC955B; VEDA */
+    background-color: #98989A ;/*#BC955B; VEDA */
 }
 
 .botonchido2 {
     color: white;
-    background-color: #98989A ;/*#9E2343; VEDA */
+    background-color: #666666 ;/*#9E2343; VEDA */
     border: none;
     border-radius: 20px;
     transition: background-color 0.3s ease;
@@ -66,7 +66,7 @@
 }
 
 .botonchido2:hover {
-    background-color: #f4f4f4 ;/*#BC955B; VEDA */
+    background-color: #98989A ;/*#BC955B; VEDA */
 }
 
 .alerta{

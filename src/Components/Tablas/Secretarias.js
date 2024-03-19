@@ -142,30 +142,33 @@ const SearchWrapper = styled.div`
   display: flex;
   align-items: center;
 
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 0px;
-  
-  padding-right: 20px;
-  padding-bottom: 10px;
-  padding-left: 40px;
-
   @media screen and (max-width: 768px) {
-    
-    grid-template-columns: 1fr; // 
-    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    display: grid;
+    grid-template-columns: 1fr; 
+    padding-left: 10px; 
     gap: 10px;
   }
 
   @media screen and (min-width: 768px) and (max-width: 1424px) {
+    display: grid;
     grid-template-columns: 1fr;
-    padding-left: 10px; // Cambiar el relleno para adaptarse a pantallas más pequeñas
+    padding-left: 10px; 
     gap: 10px;
+  }
+
+  @media screen and (min-width: 1424px) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
   }
 `;
 
 const StyledInput = styled.input`
-  margin-right: 10px;
+  margin-right: 10%;
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
@@ -188,6 +191,7 @@ const StyledSelect = styled.select`
   border: 1px solid #ccc;
   background-color: white; /* Color de fondo del select */
   color: #333; /* Color del texto */
+  margin-right: 20%;
 
   @media screen and (max-width: 768px) {
     margin-left: 0px;
@@ -224,6 +228,11 @@ const StyledAddButton = styled(Button)`
   @media screen and (min-width: 768px) and (max-width: 1424px) {
     margin-left: 0px;
     margin-right: 65%;
+  }
+
+  @media screen and (min-width: 1424px) {
+    margin-left: 0%;
+    margin-right: 20%;
   }
 `;
 
@@ -369,7 +378,7 @@ useEffect(() => {
 //-{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{POST AGREGAR DEPENDENCIA}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 const handleAddPlantel = async () => {
   try {
-    const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregarUniversidadPlantel', {
+    const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregar_dependencia', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -380,10 +389,28 @@ const handleAddPlantel = async () => {
 
     if (response.ok) {
       // La solicitud fue exitosa, puedes realizar acciones adicionales si es necesario
-      console.log('Nuevo plantel agregado con éxito.');
+      Swal.fire({
+        icon: 'success', // Ícono de éxito
+        title: 'Dependencia Agregada', // Título de la ventana emergente
+        text: 'Se agregó de manera correcta una nueva dependencia.',
+        timer: 2000,// Texto de la ventana emergente
+      }).then(() => {
+        setKeyForRerender(keyForRerender + 1);
+      });
+      
+      
     } else {
       // Manejar otros códigos de estado si es necesario
-      console.error('Error al agregar nuevo plantel:', response.statusText);
+      const data = await response.text();
+      //console.log(data)
+      Swal.fire({
+        icon: "error",
+        title: "Error al agregar Dependencia",
+        text: `${data}`,
+      }).then(() => {
+        window.location.reload();
+      });
+      
     }
   } catch (error) {
     // Manejar errores de red u otros errores
@@ -392,10 +419,8 @@ const handleAddPlantel = async () => {
 };
 
 const initialState = {
-  id_universidad: "",
-  universidad_nombre: "",
-  plantel_nombre: "",
-  direccion: "",
+  secretaria_id: "",
+  dependencia: "",
 };
 
 const [formData, setFormData] = useState(initialState);
@@ -404,9 +429,9 @@ console.log(formData)
 
 
 const handleOptionChange2 = (event) => {
-  const id_universidad = event.target.value;
-  const universidad_nombre = event.target.options[event.target.selectedIndex].text; // Obtén el nombre de la universidad seleccionada
-  setFormData({ ...formData, id_universidad, universidad_nombre }); // Actualiza el estado con el id y el nombre de la universidad
+  const secretaria_id = event.target.value;
+ 
+  setFormData({ ...formData, secretaria_id }); // Actualiza el estado con el id y el nombre de la universidad
 };
 
 const handleInputChange = (event, fieldName) => {
@@ -421,10 +446,27 @@ const ShowModal = () => {
 };
 
 const handleCloseAddModal = () => {
-  setShowAddModal(false);
+  setTimeout(() => {
+    setShowAddModal(false);
+  }, 2000); // Retraso de 4 segundos (4000 milisegundos)
 };
 
 
+
+ //  funciones modal borrar *********************************************************
+ const [showDeleteModal, setShowDeleteModal] = useState(false);
+ const [selectedRowData, setSelectedRowData] = useState(null);
+
+ const handleDelete = () => {
+   // Lógica para eliminar la escuela...
+   setShowDeleteModal(false);
+ };
+
+ const handleShowDeleteModal = (rowData) => {
+  // console.log("Datos recibidos en handleShowDeleteModal:", rowData);
+   setSelectedRowData(rowData);
+   setShowDeleteModal(true);
+};
 
 
     return (
@@ -458,6 +500,7 @@ const handleCloseAddModal = () => {
               <StyledTh>Secretaria</StyledTh>
               <StyledTh>Área de Adscripción</StyledTh>
               <StyledTh>Editar</StyledTh>
+              <StyledTh>Eliminar </StyledTh>
              
             </tr>
           </thead>
@@ -476,6 +519,11 @@ const handleCloseAddModal = () => {
                     <LiberacionButton variant="primary" onClick={() => handleShow(item.id_dependencia)}>
                       {"Editar"}
                     </LiberacionButton>
+                  </StyledTd>
+                  <StyledTd isEven={index % 2 !== 0}>
+                  <LiberacionButton variant="primary" onClick={() => handleShowDeleteModal(item)}>
+                      Borrar
+                    </LiberacionButton>           
                   </StyledTd>
 
                 </tr>
@@ -533,16 +581,36 @@ const handleCloseAddModal = () => {
       <CenteredModal show={showAddModal} onHide={handleCloseAddModal}>
       <ModalContent>
         <Modal.Header closeButton>
-          <Modal.Title>Agregar Nuevo Plantel</Modal.Title>
+          <Modal.Title>Agregar Nueva Dependencia</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group controlId="formSecretaria">
               <Form.Label>Secretaria:</Form.Label>
-              <Form.Control as="select" value={formData.id_universidad} onChange={handleOptionChange2}>
+              <Form.Control as="select" value={formData.secretaria_id} onChange={handleOptionChange2}>
                 <option value="">Todas las secretarias</option>
-                <option value="1">UAEH</option>
-                <option value="2">SEMSyS</option>
+                <option value="75">Comisión Ejecutiva de Atención a Víctimas del Estado de Hidalgo</option>
+                <option value="76">Comisión Estatal de Biodiversidad de Hidalgo</option>
+                <option value="77">Comisión Estatal para el Desarrollo Sostenible de los Pueblos Indígenas</option>
+                <option value="78">Consejo de Ciencia, Tecnología e Innovación de Hidalgo</option>
+                <option value="79">Coordinación General del Distrito de Educación, Salud, Ciencia, Tecnología e Innovación</option>
+                <option value="80">Centro de Atención Infantil Burócratas</option>
+                <option value="81">Centro de Justicia para Mujeres del Estado de Hidalgo CJMH</option>
+                <option value="82">Dirección General de Archivo General de Notarías</option>
+                <option value="83">Dirección General de Asuntos Religiosos</option>
+                <option value="84">Instituto de la Defensoría Pública del Estado de Hidalgo</option>
+                <option value="85">Instituto Hidalguense de las Mujeres</option>
+                <option value="86">Instituto de Formación Profesional de la Procuraduría</option>
+                <option value="87">Oficialía Mayor</option>
+                <option value="88">Procuraduría General de Justicia</option>
+                <option value="89">Radio y Televisión de Hidalgo</option>
+                <option value="90">Secretaría de Cultura</option>
+                <option value="91">Secretaría de Contraloría</option>
+                <option value="92">Secretaría de Desarrollo Económico</option>
+                <option value="93">Secretaría de Gobierno (Apoyo a la Defensoría)</option>
+                <option value="94">Secretaría de Gobierno (Centro de Justicia para Mujeres del Estado de Hidalgo)</option>
+
+
               </Form.Control>
             </Form.Group>
 
@@ -551,29 +619,51 @@ const handleCloseAddModal = () => {
               <Form.Control
                 type="text"
                 placeholder="Ingrese la nueva dependencia"
-                value={formData.plantel_nombre}
-                onChange={(e) => handleInputChange(e, 'plantel_nombre')}
+                value={formData.dependencia}
+                onChange={(e) => handleInputChange(e, 'dependencia')}
               />
             </Form.Group>
 
-            <Form.Group controlId="formDireccion">
-              <Form.Label>Dirección:</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Ingrese la dirección"
-                value={formData.direccion}
-                onChange={(e) => handleInputChange(e, 'direccion')}
-              />
-            </Form.Group>
+           
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <LiberacionButton variant="primary" onClick={handleAddPlantel}>
+        <LiberacionButton variant="primary" onClick={() => {handleAddPlantel(); handleCloseAddModal();}}>
             Guardar
           </LiberacionButton>
         </Modal.Footer>
       </ModalContent>
     </CenteredModal>
+
+
+
+
+    {/* Modal de eliminación */}
+    <CenteredModal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <ModalContent>
+          <Modal.Header closeButton>
+            <Modal.Title>Confirmar Eliminación</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+    {selectedRowData && (
+        <>
+            <p>Estas a punto de eliminar esta dependencia:</p>
+            <p>Secretaria: {selectedRowData.secretaria}</p>
+            <p>Dependencia: {selectedRowData.dependencia}</p>
+            <p>¿Deseas continuar con la eliminación?</p>
+        </>
+    )}
+</Modal.Body>
+          <Modal.Footer>
+            <LiberacionButton variant="primary" onClick={handleDelete}>
+              Continuar
+            </LiberacionButton>
+            <CloseButton variant="primary" onClick={() => setShowDeleteModal(false)}>
+              Cerrar
+            </CloseButton>
+          </Modal.Footer>
+        </ModalContent>
+      </CenteredModal>
 
 </div>
     );

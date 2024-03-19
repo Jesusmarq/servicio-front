@@ -156,16 +156,16 @@ const Line = styled.div`
 `;
 
 const StyledButton = styled(Button)`
-  background-color: #98989a; // por veda #BC955B
+  background-color: ${({ disabled }) => (disabled ? '#666666' : '#98989a')};
   color: white !important;
-  border-color: #ccc; // por veda #BC955B
-  border-radius: 10px ;
-  margin: 10px ;
-  height: 40px ;
+  border-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')} !important;
+  border-radius: 10px;
+  margin: 10px;
+  height: 40px;
 
   &:hover {
-    background-color: #ccc ;/*#BC955B; VEDA */
-    border-color: #ccc ;/*#BC955B; VEDA */
+    background-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')};
+    border-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')};
   }
 `;
 
@@ -259,14 +259,17 @@ function Solicitud({ title }) {
   
   // Acceder a la propiedad 'id'
  // console.log(parsedDataUser.id);
-  
+  //
+   console.log(localStorage.getItem('universidad'))
+  var universidad = localStorage.getItem('universidad')
+  var parsedUniversidad = JSON.parse(universidad);
+
 
   const initialState = {
     alumno: parsedDataUser.id, // Reemplazar el número de alumno con parsedDataUser.id
     horas: "", // Nuevo estado para las horas solicitadas
     fecha: new Date().toLocaleDateString(),
     pdf: "",
- 
     tipo: ""
   };
 
@@ -364,6 +367,20 @@ function Solicitud({ title }) {
     handleClose();
   };
 
+ 
+
+  const isSelectButtonEnabled = (index) => {
+    const lowerCaseUniversity = universidad.toLowerCase();
+    if (lowerCaseUniversity.includes("semsys")) {
+      // Para SEMSYS, habilitar el botón de selección para todas las tarjetas
+      return true;
+    } else {
+      // Para la UAEH, habilitar el botón de selección solo para las dos primeras tarjetas
+      return index <= 1;
+    }
+  };
+  
+
   return (
     <div>
       <Header>
@@ -375,98 +392,133 @@ function Solicitud({ title }) {
          <Text>Bienvenido. A continuación, se presentan todas las opciones disponibles. Selecciona la que se adapte a tus necesidades.</Text><br></br><br></br>
 
       <CardsContainer>
-        {/* Tarjeta 1 */}
-        <StyledCard>
-   
-        <CardImage src={imagecar} alt="imagecar" className="img-fluid" />
+          <StyledCard>
+            <CardImage src={imagecar} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Servicio Social</CardTitle>
+              <CardText>
+                Si estás listo para marcar la diferencia a través del servicio social, ¡Únete a nosotros!
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(1); }}
+                disabled={!isSelectButtonEnabled(0)}
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-          <Line />
-          <CardBody>
-            <CardTitle>Servicio Social</CardTitle>
-            <CardText>
-              Si estás listo para marcar la diferencia a través del servicio social, ¡Únete a nosotros!
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(1); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
+          <StyledCard>
+            <CardImage src={imagecar2} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Prácticas Profesionales</CardTitle>
+              <CardText>
+                Explora nuestras prácticas profesionales en el gobierno y da forma a tu futuro. Haz clic abajo para empezar.
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(2); }}
+                disabled={!isSelectButtonEnabled(1)}
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-        {/* Tarjeta 2 */}
-        <StyledCard>
-          <CardImage src={imagecar2} alt="imagecar" className="img-fluid" />
-          <Line />
-          <CardBody>
-            <CardTitle>Practicas Profesionales</CardTitle>
-            <CardText>
-              Explora nuestras prácticas profesionales en el gobierno y da forma a tu futuro. Haz clic abajo para empezar.
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(2); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
+          <StyledCard>
+            <CardImage src={imagecar3} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Estancias</CardTitle>
+              <CardText>
+                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(3); }}
+                disabled={!isSelectButtonEnabled(2)}
+                
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-        {/* Tarjeta 3 */}
-        <StyledCard>
-          <CardImage src={imagecar3} alt="imagecar" className="img-fluid" />
-          <Line />
-          <CardBody>
-            <CardTitle>Estancias</CardTitle>
-            <CardText>
-              Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(3); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
+          <StyledCard>
+            <CardImage src={imagecar4} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Estadías</CardTitle>
+              <CardText>
+                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(4); }}
+                disabled={!isSelectButtonEnabled(3)}
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-        {/* Tarjeta 4 */}
-        <StyledCard>
-          <CardImage src={imagecar4} alt="imagecar" className="img-fluid" />
-          <Line />
-          <CardBody>
-            <CardTitle>Estadías</CardTitle>
-            <CardText>
-              Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(4); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
+          <StyledCard>
+            <CardImage src={imagecar5} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Modelo Dual</CardTitle>
+              <CardText>
+                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(5); }}
+                disabled={!isSelectButtonEnabled(4)}
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-        {/* Tarjeta 5 */}
-        <StyledCard>
-          <CardImage src={imagecar5} alt="imagecar" className="img-fluid" />
-          <Line />
-          <CardBody>
-            <CardTitle>Modelo Dual</CardTitle>
-            <CardText>
-              Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(5); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
+          <StyledCard>
+            <CardImage src={imagecar6} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Residencia Profesional</CardTitle>
+              <CardText>
+                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(6); }}
+                disabled={!isSelectButtonEnabled(5)}
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-        {/* Tarjeta 6 */}
-        <StyledCard>
-          <CardImage src={imagecar6} alt="imagecar" className="img-fluid" />
-          <Line />
-          <CardBody>
-            <CardTitle>Residencia Profesional</CardTitle>
-            <CardText>
-              Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(6); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
+          <StyledCard>
+            <CardImage src={imagecar7} alt="imagecar" className="img-fluid" />
+            <Line />
+            <CardBody>
+              <CardTitle>Proyecto de Intervención</CardTitle>
+              <CardText>
+                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
+              </CardText>
+              <StyledButton
+                variant="primary"
+                onClick={() => { handleSelect(7); }}
+                disabled={!isSelectButtonEnabled(6)}
+              >
+                Seleccionar
+              </StyledButton>
+            </CardBody>
+          </StyledCard>
 
-        {/* Tarjeta 7 */}
-        <StyledCard>
-          <CardImage src={imagecar7} alt="imagecar" className="img-fluid"/>
-          <Line />
-          <CardBody>
-            <CardTitle>Proyecto de Intervención</CardTitle>
-            <CardText>
-              Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-            </CardText>
-            <StyledButton variant="primary" onClick={() => { handleSelect(7); }}>Seleccionar</StyledButton>
-          </CardBody>
-        </StyledCard>
       </CardsContainer>
 
 
@@ -513,3 +565,4 @@ function Solicitud({ title }) {
 }
 
 export default Solicitud;
+
