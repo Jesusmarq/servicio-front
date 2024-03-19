@@ -233,10 +233,12 @@ const handleFiltroChange = (event) => {
   fetchDataTabla(filtroSeleccionado);
 };
 //------------------------   mada hacer los los cambios -------------
-  useEffect(() => {
-      //fetchData()
-      fetchDataTabla()
-    }, []);
+useEffect(() => {
+  // Establecer el estado inicial del interruptor
+  setModalData((prevData) => ({ ...prevData, ver_carta: true }));
+  // Aquí puedes llamar a tu función fetchDataTabla() u otra lógica si es necesario
+  fetchDataTabla();
+}, []);
 
     function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
       try {
@@ -295,17 +297,17 @@ const handleFiltroChange = (event) => {
       horarioFin:'',
       proyecto: '',
       horas: '',
-      ver_carta:'',
+      ver_carta:'true',
       actividadesDesarrollar: [''],
     });
 
   
-   
+ 
+
     const handleChange = (field, value) => {
       // Actualizar el campo de almacenamiento
       setModalData((prevData) => ({ ...prevData, [field]: value }));
-      // Actualizar el campo de visualización (puedes aplicar el formato aquí si es necesario)
-     
+      // Aquí puedes hacer cualquier otra lógica necesaria
     };
       //para crear actividades modAL
     const handleActividadesChange = (index, value) => {
@@ -611,6 +613,7 @@ const direccion=`
       programa: '',
       clave: '',
       horas: '',
+      ver_carta:'',
       actividadesDesarrollar: [''],
     });
   };
@@ -652,7 +655,9 @@ const direccion=`
       programa: '',
       clave: '',
       horas: '',
+      ver_carta:'',
       actividadesDesarrollar: [''],
+      
     });
   };
 

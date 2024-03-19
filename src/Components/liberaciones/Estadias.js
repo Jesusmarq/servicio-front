@@ -209,10 +209,12 @@ function Estadia ({ title }) {
 };
   
 //------------------------   mada hacer los los cambios -------------
-  useEffect(() => {
-      //fetchData()
-      fetchDataTabla()
-    }, []);
+useEffect(() => {
+  // Establecer el estado inicial del interruptor
+  setModalData((prevData) => ({ ...prevData, ver_carta: true }));
+  // Aquí puedes llamar a tu función fetchDataTabla() u otra lógica si es necesario
+  fetchDataTabla();
+}, []);
 
     function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
       try {
@@ -270,7 +272,7 @@ function Estadia ({ title }) {
       proyecto: '',
       clave:'',
       horas: '',
-      ver_carta:'',
+      ver_carta:'true',
       actividadesDesarrollar: [''],
     });
 
@@ -583,6 +585,7 @@ const direccion=`
         programa: '',
         clave: '',
         horas: '',
+        ver_carta:'',
         actividadesDesarrollar: [''],
       });
     };
@@ -625,6 +628,7 @@ const direccion=`
         programa: '',
         clave: '',
         horas: '',
+        ver_carta:'',
         actividadesDesarrollar: [''],
       });
     };
