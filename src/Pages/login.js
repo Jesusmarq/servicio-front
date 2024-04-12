@@ -25,7 +25,7 @@ const Login = () => {
       .then((response) => {
         //console.log(response.data);
         // Acceder y guardar solo las propiedades necesarias
-        const { exp, rol, id, nombre, token, universidad } = response.data;
+        const { exp, rol, id, nombre, token, universidad, plantel } = response.data;
 
         localStorage.setItem(
           "dataUser",
@@ -51,13 +51,25 @@ const Login = () => {
         );
          console.log(  universidad );
 
-        // Verifica la respuesta de la API y redirige según el usuario
-        if (rol === "admin") {
+         localStorage.setItem(
+          "plantel",
+          JSON.stringify({plantel})
+        );
+         console.log(  plantel );
+
+         if (rol === "admin") {
           history.push("/administrador");
-        } else if (rol === "alumno") {
-          history.push("/usuario");
         } else if (rol === "verificador") {
           history.push("/validador");
+        } else if (rol === "alumno") {
+          // Verifica la universidad junto con el rol de alumno
+          if (universidad === "SEMSyS" && plantel === "Universidad Abierta y a Distancia de México") {
+            history.push("/usuario_unadem");
+          } else if (universidad === "SEMSyS") {
+            history.push("/usuario_sempsys");
+          } else if (universidad === "UAEH") {
+            history.push("/usuario_uaeh");
+          }
         }
       })
       .catch((error) => {

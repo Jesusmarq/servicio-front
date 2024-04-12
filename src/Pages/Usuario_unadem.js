@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import LogoImage from '../Img/333.jpeg'; // se cambnio la imagen Logo_escudo_blanco.png por veda
-import Solicitud from '../Components/Solicitud';
+
 import Estatus from '../Components/Estatus';
 import Reportes from '../Components/Reportes';
 import CerrarSesion from '../Components/CerrarSesion';
@@ -9,6 +9,7 @@ import { IoMdExit } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
 import '../Styles/responsive.css';
+import Solicitud_UNADEM from '../Components/Solicitud_unadem';
 
 const BrighterColor = '#666666';  //#9E2343; VEDA 
 const LineColor = '#98989a';// #BC955B  veda
@@ -187,7 +188,7 @@ const AlertMessage = styled.div`
   font-size: 18px;
 `;
 
-const Usuario = ({ title }) => {
+const Usuario_UNADEM = ({ title }) => {
   const [selectedItem, setSelectedItem] = useState('Section1');
   const [expanded, setExpanded] = useState(false);
 
@@ -272,7 +273,7 @@ const Usuario = ({ title }) => {
       
         <Content>
           {/* CONTENIDO FORMULARIOS SIDEBAR */}
-          {selectedItem === 'Section1' && <Solicitud /> }
+          {selectedItem === 'Section1' && <Solicitud_UNADEM /> }
           {selectedItem === 'Section2' && <Estatus />}
           {selectedItem === 'Section3' && <Reportes />}
           {selectedItem === 'Section4' && <CerrarSesion />}
@@ -287,4 +288,4 @@ const Usuario = ({ title }) => {
   );
 };
 
-export default Usuario;
+export default Usuario_UNADEM;

@@ -791,7 +791,7 @@ const direccion=`
                 <StyledTh>Nombre</StyledTh>
                 <StyledTh>Escuela</StyledTh>
                 <StyledTh>Tipo de Solicitud</StyledTh>
-             
+                <StyledTh>Reporte Liberación</StyledTh>
                 <StyledTh>Fecha</StyledTh>
                 <StyledTh>Cambiar Estatus</StyledTh>
               </tr>
@@ -803,7 +803,12 @@ const direccion=`
                   <StyledTd>{item.nombre}</StyledTd>
                   <StyledTd>{"SEMSyS"}</StyledTd>
                   <StyledTd>{item.tipo}</StyledTd>
-                
+                  <StyledTd>
+                  <button
+                          onClick={() => handleDownloadPDF(item.pdfliberacion, 'reporte.pdf')}>
+                          PDF
+                        </button>
+                  </StyledTd>
                   <StyledTd>{item.fechaSolicitud}</StyledTd>
                   <StyledTd>
                     <StyledButton

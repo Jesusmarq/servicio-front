@@ -7,10 +7,7 @@ import { Worker, Viewer } from '@react-pdf-viewer/core';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import { TRUE } from 'sass';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
+
 
 
 const EstatusWrapper = styled.div`
@@ -198,89 +195,6 @@ const LiberacionButton = styled.button`
     border-radius: 5px;
   }
 `;
-
-const CenteredModal = styled(Modal)`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const ModalContent = styled.div`
-  background-color: #ccc;
-  padding: 80px;
-  border-radius: 15px;
-  width: 40vw;
-  margin: 0 auto;
-  text-align: center;
-  color: #333;
-  font-weight: bold;
-  font-size: 20px;
-  border: 10px solid #ddd;
-
-  @media screen and (max-width: 768px) {
-    padding: 40px;
-    width: 80vw;
-    border-radius: 10px;
-  }
-
-  @media screen and (min-width: 768px) and (max-width: 1424px) {
-    padding: 60px;
-    width: 60vw;
-  }
-`;
-
-const CloseButton = styled(Button)`
-  background-color: #98989a !important;
-  color: white !important;
-  border-color: #98989a !important;
-  border-radius: 10px;
-  margin: 10px;
-  height: 40px;
-  width: 10vw;
-
-  @media screen and (max-width: 768px) {
-    font-size: clamp(10px, 3vw, 24px);
-    padding: 10px;
-    width: 60vw;
-    border-radius: 5px;
-  }
-
-  @media screen and (min-width: 768px) and (max-width: 1424px) {
-    padding: 5px;
-    width: 40vw;
-    border-radius: 5px;
-  }
-`;
-
-const SendButton = styled(Button)`
-  background-color: #98989a !important;
-  color: white !important;
-  border-color: #98989a !important;
-  border-radius: 10px;
-  margin: 10px;
-  height: 40px;
-  width: 10vw;
-
-  @media screen and (max-width: 768px) {
-    font-size: clamp(10px, 3vw, 24px);
-    padding: 10px;
-    width: 60vw;
-    border-radius: 5px;
-  }
-
-  @media screen and (min-width: 768px) and (max-width: 1424px) {
-    padding: 5px;
-    width: 40vw;
-    border-radius: 5px;
-  }
-`;
-
-
-
-
-
-
-
 function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   const byteCharacters = atob(base64Data);
   const byteArrays = [];
@@ -301,7 +215,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   return blob;
 }
 
-  function Estatus({ title }) {
+  function Estatus1({ title }) {
     const [datosTabla, setDatosTabla] = useState([]);
 
     //console.log("localStorage.getItem('dataUser')")
@@ -314,16 +228,9 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
     //console.log(parsedDataUser.id);
 
     const handleSolicitarLiberacion = async () => {
-
-      const jsonString = JSON.stringify(formData);
-      const formDataObj =  new FormData()
-    
-      formDataObj.append('JSON',jsonString)
-      formDataObj.append('pdf', formData.pdf)
-
       try {
         // Hacer la primera petición para obtener el id
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/idSolicitud?alumno=${parsedDataUser.id} `, formDataObj);
+        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/idSolicitud?alumno=${parsedDataUser.id}`);
         
         if (!response.ok) {
           throw new Error('Error al obtener el ID de solicitud');
@@ -355,8 +262,6 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
           text: 'No tienes una solicitud aplicable para liberación',
         });
       }
-      // Cierra la ventana emergente
-    handleClose();
     };
 
   function handleDownloadPDF(pdfBase64, fileName) {
@@ -393,58 +298,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   
     fetchData();
   }, [parsedDataUser.id]); // Este efecto se ejecutará cada vez que parsedDataUser.id cambie
-
-
-
-
-  const initialState = {
-    pdf: "",
-  };
   
-  const [showModal, setShowModal] = useState(false);
-  const [fileSelected, setFileSelected] = useState(false);
-  const [formData, setFormData] = useState(initialState);
-
-
-  const handleSelect = (type) => {
-    setFormData({ ...formData, tipo: type });
-    handleShow(); // Muestra el modal después de seleccionar
-  };
-
-const handleClose = () => {
-  setFileSelected(false);
-  setShowModal(false);
-};
-
-const handleShow = () => setShowModal(true);
-
-const handleChangeFile = (e) => {
-  setFileSelected(!!e.target.files.length);
-  // Actualiza el estado formData para incluir el archivo seleccionado
-  setFormData({ ...formData, pdf: e.target.files[0] });
-};
-
-
-
-
- 
-  
-  
-
-
-
-  const handleCancel = () => {
-    // Muestra la alerta de error
-    Swal.fire({
-      icon: 'error',
-      title: 'Carta no enviada',
-      text: 'La carta no fue enviada.',
-    });
-
-    // Cierra la ventana emergente
-    handleClose();
-  };
-
   return (
     <EstatusWrapper>
       <Header>
@@ -514,39 +368,11 @@ const handleChangeFile = (e) => {
         
       ))}
 
-      <LiberacionButton onClick={handleShow}>
+      <LiberacionButton onClick={handleSolicitarLiberacion}>
         Solicitar Liberación
       </LiberacionButton>
-
-      <CenteredModal show={showModal} onHide={handleClose}>
-        <ModalContent>
-          <Modal.Header closeButton>
-            <Modal.Title>Carta de presentación</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>Por favor, adjunta tu carta de presentación y envíala.</p>
-            <Form >
-        
-
-              <Form.Group controlId="formFile" className="mb-3">
-                <Form.Label>Selecciona tu archivo PDF</Form.Label>
-                <Form.Control type="file" accept=".pdf" onChange={handleChangeFile} />
-              </Form.Group>
-              
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <SendButton variant="primary" onClick={handleSolicitarLiberacion} >
-              Enviar
-            </SendButton>
-            <CloseButton variant="primary" onClick={handleCancel}>
-              Cerrar
-            </CloseButton>
-          </Modal.Footer>
-        </ModalContent>
-      </CenteredModal>
     </EstatusWrapper>
   );
 }
 
-export default Estatus;
+export default Estatus1;
