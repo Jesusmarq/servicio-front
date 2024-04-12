@@ -7,12 +7,14 @@ import { jwtDecode } from 'jwt-decode';
 // Importa los componentes que utilizarás en tus rutas
 import Login from './Pages/login';
 import Preregistro from './Pages/Prueba';
-import Usuario from './Pages/Usuario';
+
+
 import Validador from './Pages/Validador';
 import ADMI from './Pages/Admi';
 import Table from './Pages/QR';
-
-
+import Usuario_UAEH from './Pages/Usuario_uaeh';
+import Usuario_SEMPSYS from './Pages/Usuario_sempsys';
+import Usuario_UNADEM from './Pages/Usuario_unadem';
 
 console.log(localStorage.getItem('dataUser'))
   var dataUser = localStorage.getItem('dataUser')
@@ -123,7 +125,9 @@ const Routes = () => {
         <Route path="/datosQR/:param1" component={Table} />
 
         {/* Utiliza PrivateRoute para proteger las rutas que requieren autenticación */}
-        <PrivateRoute path="/usuario" component={Usuario} allowed = "alumno"/>
+        <PrivateRoute path="/usuario_sempsys" component={Usuario_SEMPSYS} allowed = "alumno"/>
+        <PrivateRoute path="/usuario_uaeh" component={Usuario_UAEH} allowed = "alumno"/>
+        <PrivateRoute path="/usuario_unadem" component={Usuario_UNADEM} allowed = "alumno"/>
         <PrivateRoute path="/validador" component={Validador} allowed = "verificador"/>
         <PrivateRoute path="/administrador" component={ADMI} allowed = "admin" />
        

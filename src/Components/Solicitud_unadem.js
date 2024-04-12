@@ -8,12 +8,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
-import imagecar from '../Img/00.jpg';
-import imagecar2 from '../Img/06.jpg';
-import imagecar3 from '../Img/02.jpg';
-import imagecar4 from '../Img/05.jpg';
-import imagecar5 from '../Img/01.jpg';
-import imagecar6 from '../Img/04.jpg';
+
 import imagecar7 from '../Img/03.jpg';
 import axios from "axios";
 
@@ -248,7 +243,7 @@ const SendButton = styled(Button)`
 
 
 
-function Solicitud({ title }) {
+function Solicitud_UNADEM({ title }) {
   
   //const dataUser = JSON.parse(localStorage.getItem('dataUser'));
   
@@ -392,114 +387,7 @@ function Solicitud({ title }) {
          <Text>Bienvenido. A continuación, se presentan todas las opciones disponibles. Selecciona la que se adapte a tus necesidades.</Text><br></br><br></br>
 
       <CardsContainer>
-          <StyledCard>
-            <CardImage src={imagecar} alt="imagecar" className="img-fluid" />
-            <Line />
-            <CardBody>
-              <CardTitle>Servicio Social</CardTitle>
-              <CardText>
-                Si estás listo para marcar la diferencia a través del servicio social, ¡Únete a nosotros!
-              </CardText>
-              <StyledButton
-                variant="primary"
-                onClick={() => { handleSelect(1); }}
-                disabled={!isSelectButtonEnabled(0)}
-              >
-                Seleccionar
-              </StyledButton>
-            </CardBody>
-          </StyledCard>
-
-          <StyledCard>
-            <CardImage src={imagecar2} alt="imagecar" className="img-fluid" />
-            <Line />
-            <CardBody>
-              <CardTitle>Prácticas Profesionales</CardTitle>
-              <CardText>
-                Explora nuestras prácticas profesionales en el gobierno y da forma a tu futuro. Haz clic abajo para empezar.
-              </CardText>
-              <StyledButton
-                variant="primary"
-                onClick={() => { handleSelect(2); }}
-                disabled={!isSelectButtonEnabled(1)}
-              >
-                Seleccionar
-              </StyledButton>
-            </CardBody>
-          </StyledCard>
-
-          <StyledCard>
-            <CardImage src={imagecar3} alt="imagecar" className="img-fluid" />
-            <Line />
-            <CardBody>
-              <CardTitle>Estancias</CardTitle>
-              <CardText>
-                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-              </CardText>
-              <StyledButton
-                variant="primary"
-                onClick={() => { handleSelect(3); }}
-                disabled={!isSelectButtonEnabled(2)}
-                
-              >
-                Seleccionar
-              </StyledButton>
-            </CardBody>
-          </StyledCard>
-
-          <StyledCard>
-            <CardImage src={imagecar4} alt="imagecar" className="img-fluid" />
-            <Line />
-            <CardBody>
-              <CardTitle>Estadías</CardTitle>
-              <CardText>
-                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-              </CardText>
-              <StyledButton
-                variant="primary"
-                onClick={() => { handleSelect(4); }}
-                disabled={!isSelectButtonEnabled(3)}
-              >
-                Seleccionar
-              </StyledButton>
-            </CardBody>
-          </StyledCard>
-
-          <StyledCard>
-            <CardImage src={imagecar5} alt="imagecar" className="img-fluid" />
-            <Line />
-            <CardBody>
-              <CardTitle>Modelo Dual</CardTitle>
-              <CardText>
-                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-              </CardText>
-              <StyledButton
-                variant="primary"
-                onClick={() => { handleSelect(5); }}
-                disabled={!isSelectButtonEnabled(4)}
-              >
-                Seleccionar
-              </StyledButton>
-            </CardBody>
-          </StyledCard>
-
-          <StyledCard>
-            <CardImage src={imagecar6} alt="imagecar" className="img-fluid" />
-            <Line />
-            <CardBody>
-              <CardTitle>Residencia Profesional</CardTitle>
-              <CardText>
-                Explora las oportunidades para desarrollar tu potencial en el servicio público a través de nuestras estancias en el gobierno.
-              </CardText>
-              <StyledButton
-                variant="primary"
-                onClick={() => { handleSelect(6); }}
-                disabled={!isSelectButtonEnabled(5)}
-              >
-                Seleccionar
-              </StyledButton>
-            </CardBody>
-          </StyledCard>
+          
 
           <StyledCard>
             <CardImage src={imagecar7} alt="imagecar" className="img-fluid" />
@@ -564,5 +452,5 @@ function Solicitud({ title }) {
   );
 }
 
-export default Solicitud;
+export default Solicitud_UNADEM;
 

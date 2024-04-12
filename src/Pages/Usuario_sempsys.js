@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import LogoImage from '../Img/333.jpeg'; // se cambnio la imagen Logo_escudo_blanco.png por veda
-import Solicitud from '../Components/Solicitud_uaeh';
+
 import Estatus from '../Components/Estatus';
 import Reportes from '../Components/Reportes';
 import CerrarSesion from '../Components/CerrarSesion';
@@ -9,6 +9,7 @@ import { IoMdExit } from 'react-icons/io';
 import { MdError } from 'react-icons/md';
 import ReactDOM from 'react-dom';  // Agrega esta línea
 import '../Styles/responsive.css';
+import Solicitud_SEMPSYS from '../Components/Solicitud_sempsys';
 
 const BrighterColor = '#666666';  //#9E2343; VEDA 
 const LineColor = '#98989a';// #BC955B  veda
@@ -187,7 +188,7 @@ const AlertMessage = styled.div`
   font-size: 18px;
 `;
 
-const Usuariox = ({ title }) => {
+const Usuario_SEMPSYS = ({ title }) => {
   const [selectedItem, setSelectedItem] = useState('Section1');
   const [expanded, setExpanded] = useState(false);
 
@@ -272,7 +273,7 @@ const Usuariox = ({ title }) => {
       
         <Content>
           {/* CONTENIDO FORMULARIOS SIDEBAR */}
-          {selectedItem === 'Section1' && <Solicitud /> }
+          {selectedItem === 'Section1' && <Solicitud_SEMPSYS /> }
           {selectedItem === 'Section2' && <Estatus />}
           {selectedItem === 'Section3' && <Reportes />}
           {selectedItem === 'Section4' && <CerrarSesion />}
@@ -287,4 +288,4 @@ const Usuariox = ({ title }) => {
   );
 };
 
-export default Usuariox;
+export default Usuario_SEMPSYS;
