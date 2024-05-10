@@ -15,7 +15,7 @@ import imagecar4 from '../Img/05.jpg';
 import imagecar5 from '../Img/01.jpg';
 import imagecar6 from '../Img/04.jpg';
 import imagecar7 from '../Img/03.jpg';
-import axios from "axios";
+import { axios, obtenerTuToken } from "../Pages/axiosConfig";
 
 
 const Header = styled.div`

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
+import fetchWithToken from '../Pages/fetchConfig';
 import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import '../Styles/responsive.css';
 
@@ -144,7 +145,7 @@ function ValidarSolicitud({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesTodos?tipo=todos');
+        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesTodos?tipo=todos');
         const responseData = await response.json();
         
 
@@ -192,7 +193,7 @@ function ValidarSolicitud({ title }) {
         horas: horas.toString(),
       };
 
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarReporte', {
+      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarReporte', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

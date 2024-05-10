@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import axios from "axios";
 import "../Styles/preregistro.css"
-
+import fetchWithToken from './fetchConfig';
 import { useHistory } from "react-router-dom"; 
 import { Tag } from "keep-react";
 
@@ -96,7 +96,7 @@ function Preregistro() {
     e.preventDefault();
   
     try {
-      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, {
+      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -144,7 +144,7 @@ function Preregistro() {
   
   const traerPlanteles = async () => {
     //Hacer peticion al endpoint  
-    const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
+    const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
     const data = await response.json();
 
     // Array para almacenar los objetos con id y universidad únicos

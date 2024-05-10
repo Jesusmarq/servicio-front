@@ -6,7 +6,10 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet';
-import axios from "axios";
+
+import { axios, obtenerTuToken } from "../../Pages/axiosConfig";
+import fetchWithToken from '../../Pages/fetchConfig';
+
 import '../../Styles/responsive.css';
 import { jsPDF } from 'jspdf';
 import { format } from 'date-fns';
@@ -177,7 +180,7 @@ function PracticasUAEH ({ title }) {
   const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
     //console.log(solicitudId)
     try {
-      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
+      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
       //console.log(data);
@@ -205,7 +208,7 @@ function PracticasUAEH ({ title }) {
           filtroURL = `&filtro=${filtroSeleccionado}`; // De lo contrario, establecer el filtro según la selección
       }
 
-      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaSolicitudes?limite=100${filtroURL}`);
+      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaSolicitudes?limite=100${filtroURL}`);
 
       if (!response.ok) {
           throw new Error('Error al obtener las solicitudes');
@@ -682,7 +685,7 @@ const direccion=`
 
   const traerDatos = async () => {
     try {
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
       const datos = await response.json();
       //console.log(datos);
 
@@ -734,7 +737,7 @@ const direccion=`
     setSelectedDependencia(selectedDep);
   
     try {
-      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos`);
+      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos`);
       const data = await response.json();
       //console.log(data);
   
@@ -783,7 +786,7 @@ const direccion=`
     const fetchDatosModal = async (solicitudId) => {
       //console.log(solicitudId)
       try {
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
         const data = await response.json();
        // console.log(data);
     

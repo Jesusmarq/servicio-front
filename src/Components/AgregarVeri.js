@@ -5,6 +5,9 @@ import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import '../Styles/responsive.css';
 
+import fetchWithToken from '../Pages/fetchConfig';
+
+
 const Header = styled.div`
   height: 5%;
   background-color: white;
@@ -155,7 +158,7 @@ const AgregarVal = ({ title }) => {
   useEffect(() => {
     const traerDatos = async () => {
       try {
-        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
         const datos = await response.json();
         //console.log(datos);
 
@@ -201,7 +204,7 @@ const AgregarVal = ({ title }) => {
      // console.log(JSON.stringify(formData))
 
       // Enviar la solicitud POST a la URL
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
+      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
         method: 'POST', // Método de la solicitud HTTP
         headers: {
           'Content-Type': 'application/json', // Tipo de contenido que se está enviando (en este caso, JSON)

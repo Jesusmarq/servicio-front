@@ -11,7 +11,7 @@ import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 import imagecar from '../Img/00.jpg';
 import imagecar2 from '../Img/06.jpg';
 
-import axios from "axios";
+import { axios, obtenerTuToken } from "../Pages/axiosConfig";
 
 
 const Header = styled.div`

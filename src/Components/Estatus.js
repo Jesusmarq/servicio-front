@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Button from 'react-bootstrap/Button';
-
+import fetchWithToken from '../Pages/fetchConfig';
 
 const EstatusWrapper = styled.div`
   //  background-image: url(${backgroundImg});  por veda se comenta imagen
@@ -323,7 +323,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 
       try {
         // Hacer la primera petición para obtener el id
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/idSolicitud?alumno=${parsedDataUser.id} `, formDataObj);
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/idSolicitud?alumno=${parsedDataUser.id} `, formDataObj);
         
         if (!response.ok) {
           throw new Error('Error al obtener el ID de solicitud');
@@ -332,7 +332,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
         const { id } = await response.json();
     
         // Hacer la segunda petición con el id obtenido
-        const secondResponse = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/solicitarLiberacion?solicitud=${id}`, {
+        const secondResponse = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/solicitarLiberacion?solicitud=${id}`, {
           method: 'PATCH',
         });
     
@@ -377,7 +377,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaAlumno?alumno=${parsedDataUser.id}`);
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
   
         // Verifica si la respuesta contiene la propiedad 'solicitudes'

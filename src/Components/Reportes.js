@@ -4,8 +4,9 @@ import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faFileUpload } from '@fortawesome/free-solid-svg-icons';
 import Swal from "sweetalert2";
-import axios from "axios";
+import { axios, obtenerTuToken } from "../Pages/axiosConfig";
 import '../Styles/responsive.css';
+import fetchWithToken from '../Pages/fetchConfig';
 
 
 const Header = styled.div`
@@ -210,7 +211,7 @@ function Reportes({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
   
         setDatosTabla(data.solicitudes);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import LogoImage from '../Img/333.jpeg';
+import fetchWithToken from './fetchConfig';
 
 const CardContainer = styled.div`
   background-color: #ccc;
@@ -34,7 +35,7 @@ function Table() {
  //console.log(solicitudData)
  const fetchSolicitudData = async () => {
       try {
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaQR?solicitud=${param1}`);
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaQR?solicitud=${param1}`);
 
         if (!response.ok) {
           throw new Error('Error al obtener las solicitudes');
