@@ -6,7 +6,10 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 import { Helmet } from 'react-helmet';
-import axios from "axios";
+
+import { axios, obtenerTuToken } from "../../Pages/axiosConfig";
+import fetchWithToken from '../../Pages/fetchConfig';
+
 import '../../Styles/responsive.css';
 import { jsPDF } from 'jspdf';
 import { format } from 'date-fns';
@@ -168,7 +171,7 @@ function PracticasProfesionales ({ title }) {
   const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
     //console.log(solicitudId)
     try {
-      const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
+      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
       //console.log(data);
@@ -189,7 +192,7 @@ function PracticasProfesionales ({ title }) {
   //peticion datos de la tabla  ------------------
   const fetchDataTabla = async () => {
     try {
-        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
+        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
 
         if (!response.ok) {
             throw new Error('Error al obtener las solicitudes');
@@ -660,7 +663,7 @@ const direccion=`
   
     const traerDatos = async () => {
       try {
-        const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
         const datos = await response.json();
         //console.log(datos);
   
@@ -710,7 +713,7 @@ const direccion=`
       const fetchDatosModal = async (solicitudId) => {
       // console.log(solicitudId)
         try {
-          const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
+          const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
           const data = await response.json();
         //  console.log(data);
       
@@ -744,7 +747,7 @@ const direccion=`
     
       const traerDatos2 = async () => {
         try {
-          const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos');
+          const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos');
           const data = await response.json();
         //  console.log(data);
     

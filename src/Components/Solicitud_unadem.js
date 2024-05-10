@@ -5,12 +5,13 @@ import Card from 'react-bootstrap/Card';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
+
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
 
 import imagecar7 from '../Img/03.jpg';
-import axios from "axios";
+import { axios, obtenerTuToken } from "../Pages/axiosConfig";
 
 
 const Header = styled.div`

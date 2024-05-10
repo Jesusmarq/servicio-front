@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
+import fetchWithToken from '../../Pages/fetchConfig';
 
 
 
@@ -274,7 +275,7 @@ function TablaSecretarias  ({ title })  {
   // Función para obtener dependencias
   const fetchDependencias = async () => {
     try {
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
 
       if (response.ok) {
         const depen = await response.json();
@@ -303,7 +304,7 @@ function TablaSecretarias  ({ title })  {
       try {
         const newData = { nombre: editedData.dependencia, dependencia: id };
   
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/dependenciaEditar`, {
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/dependenciaEditar`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -378,7 +379,7 @@ useEffect(() => {
 //-{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{POST AGREGAR DEPENDENCIA}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
 const handleAddPlantel = async () => {
   try {
-    const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregar_dependencia', {
+    const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/agregar_dependencia', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

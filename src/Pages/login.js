@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
-import axios from "axios";
+import { axios, obtenerTuToken } from "./axiosConfig";
 import Swal from "sweetalert2";
 import "../Styles/Login.css";
 

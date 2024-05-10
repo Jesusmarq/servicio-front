@@ -6,6 +6,8 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Button from 'react-bootstrap/Button';
 
+import fetchWithToken from '../../Pages/fetchConfig';
+
 
 const TableWrapper = styled.div`
   margin: 20px auto;
@@ -254,7 +256,7 @@ const TablaEscuelas = ({ title }) => {
 
   const handleAddPlantel = async () => {
     try {
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/agregarUniversidadPlantel', {
+      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/agregarUniversidadPlantel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -313,7 +315,7 @@ const TablaEscuelas = ({ title }) => {
       //console.log(plantelNombre);
       //console.log(institucion);
       try {
-        const response = await fetch(`https://servicioypracticas.hidalgo.gob.mx:3002/plantelEditar`, {
+        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/plantelEditar`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -384,7 +386,7 @@ const TablaEscuelas = ({ title }) => {
   let plantelSeleccionado = null;
   const fetchPlanteles = async () => {
     try {
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
+      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
   
       // Verificar si la respuesta es exitosa (código de estado 200)
       console.log(response);
