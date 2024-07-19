@@ -226,7 +226,7 @@ const handleConfirmation = () => {
   return (
     <section id="section_pre">
       <div className="form-container">
-        <img src="./Images/333.jpeg" alt="Imagen Superior" className="imagenlogo" />
+        <img src="./Images/logotipo-09.png" alt="Imagen Superior" className="imagenlogo" />
         <h2 className="encabezado">Registro de Usuario</h2>
         
         

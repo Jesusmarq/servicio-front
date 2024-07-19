@@ -90,7 +90,7 @@ const Login = () => {
         <div
           className="left-side"
           style={{
-            backgroundColor: "#98989A ",     /* #9E2343; VEDA */
+            backgroundColor: "#9E2343",     /* #98989A; VEDA */
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -106,7 +106,7 @@ const Login = () => {
         {/* Lado Derecho */}
         <div className="right-side">
           <img
-            src="./Images/333.jpeg"    /* logotipo-09.png   cambio por veda */
+            src="./Images/logotipo-09.png"    /* 333.jpeg   cambio por veda */
             alt="Imagen Superior"
             className="top-image"
           />
@@ -156,7 +156,7 @@ const Login = () => {
           {/* Opción para registrarse */}
           <p className="texto2">
             ¿No tienes una cuenta?{" "}<br></br>
-            <Link to="/registro" style={{ color: "#98989A" }}>   {/* #9E2343; VEDA */}
+            <Link to="/registro" style={{ color: "#9E2343" }}>   {/* #98989A; VEDA */}
               Registrarse
             </Link>
           </p>
