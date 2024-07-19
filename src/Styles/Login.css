@@ -14,7 +14,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-   /*  background-image: url('/public/Images/1.png'); Imagen comentada modo veda*/
+    background-image: url('/public/Images/1.png'); /*Imagen comentada modo veda*/
     background-size: cover;
     background-position: center;
   }
@@ -25,8 +25,8 @@ img {
   display: flex;
   max-width: 90vh;
   margin: auto;
-  margin-top: 0%; /* Cambia el margen superior a un 10% */
-  background-color: rgba(255, 255, 255, 0.8);
+  margin-top: 5%; /* Cambia el margen superior a un 0% en veda */
+  background-color: rgba(245, 255, 255, 0.8);
   padding: 20px;
   border-radius: 10px;
   height: 80vh; /* Abarca el 80% de la altura de la página */
@@ -56,7 +56,7 @@ img {
 }
 
 .top-image {
-  max-width: 60%; /* cambio tamaño de 100 a 60 por veda*/
+  max-width: 100%; /* cambio tamaño de 100 a 60 por veda*/
   margin-bottom: 5%;
 }
 
@@ -74,16 +74,16 @@ img {
 .input1 {
   margin-bottom: 0.5%;
   padding: 2%;
-  border: 2px solid  #98989A ;/*#9E2343; VEDA */
+  border: 2px solid  #9E2343 ;/*#98989A; VEDA */
   border-radius: 10px;
   background-color: transparent;
-  color:  #98989A ;/*#9E2343; VEDA */
+  color:  #9E2343 ;/*#98989A; VEDA */
 }
 
 .button1 {
   font-size: clamp(12px, 2vw, 20px);
   padding: 2%;
-  background-color: #98989A ;/*#9E2343; VEDA */
+  background-color: #9E2343;/*#98989A; VEDA */
   color: #fff;
   cursor: pointer;
   border-radius: 10px;
