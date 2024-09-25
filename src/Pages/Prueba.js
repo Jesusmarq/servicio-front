@@ -96,7 +96,7 @@ function Preregistro() {
     e.preventDefault();
   
     try {
-      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, {
+      const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/registroAlumno`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -144,7 +144,7 @@ function Preregistro() {
   
   const traerPlanteles = async () => {
     //Hacer peticion al endpoint  
-    const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
+    const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/planteles');
     const data = await response.json();
 
     // Array para almacenar los objetos con id y universidad únicos
@@ -368,7 +368,7 @@ const handleConfirmation = () => {
           </>
         ) : (
           <div className="form-group">
-            <button className="botonchido2" onClick={handleConfirmation}>SEGUIR</button>
+            <button className="botonchido2" onClick={handleConfirmation}>Seguir</button>
           </div>
         )}
       </form>

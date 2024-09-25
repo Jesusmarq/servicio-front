@@ -9,7 +9,7 @@ const fetchWithToken = (url, options = {}) => {
   const token = obtenerTuToken();
   options.headers = {
     ...options.headers,
-    Authorization: `Bearer ${token}`
+    Authorization: `${token}`
   };
   return fetch(url, options);
 };

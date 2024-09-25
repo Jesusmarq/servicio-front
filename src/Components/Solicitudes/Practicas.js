@@ -46,7 +46,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #666666;  // por veda #9e2343
+  background-color: #9e2343;  // por veda #666666
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -62,10 +62,12 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#666666' : '#666666')}; //por veda '#9e2343' : '#bc955b'
+  background-color: ${(props) => (props.validar ? '#9e2343' : '#bc955b')}; //por veda '#666666' : '#666666'
   color: white;
   cursor: pointer;
   border-radius: 15px;
+   border: none;
+  padding:5px 15px;
 `;
 
 const CenteredModal = styled(Modal)`
@@ -75,16 +77,16 @@ const CenteredModal = styled(Modal)`
 `;
 
 const ModalContent = styled.div`
-  background-color: #ccc;
+  background-color: white;
   padding: 80px;
   border-radius: 15px;
   width: 40vw;
   margin: 0 auto;
   text-align: center;
-  color: #333;
+  color: black;
   font-weight: bold;
   font-size: 20px;
-  border: 10px solid #ddd;
+
 
   @media screen and (max-width: 768px) {
     padding: 40px;
@@ -99,13 +101,19 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9e2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9e2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  &:hover {
+    background-color: #bc955b !important;
+    border-color: #bc955b !important;
+  }
+  
 
   @media screen and (max-width: 768px) {
     font-size: clamp(10px, 3vw, 24px);
@@ -122,13 +130,18 @@ const CloseButton = styled(Button)`
 `;
 
 const SendButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9e2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9e2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+   &:hover {
+    background-color: #bc955b !important;
+    border-color: #bc955b !important;
+  }
 
   @media screen and (max-width: 768px) {
     font-size: clamp(10px, 3vw, 24px);
@@ -183,7 +196,7 @@ function PracticasProfesionales ({ title }) {
   const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
    // console.log(solicitudId)
     try {
-      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
+      const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
     //  console.log(data);
@@ -211,7 +224,7 @@ const fetchDataTabla = async (filtroSeleccionado) => {
           filtroURL = `&filtro=${filtroSeleccionado}`; // De lo contrario, establecer el filtro según la selección
       }
 
-      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaSolicitudes?limite=100${filtroURL}`);
+      const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaSolicitudes?limite=100${filtroURL}`);
 
       if (!response.ok) {
           throw new Error('Error al obtener las solicitudes');
@@ -234,10 +247,15 @@ const fetchDataTabla = async (filtroSeleccionado) => {
   }
 };
 
-const handleFiltroChange = (event) => {
+//filtro tabla
+const [filtroSeleccionado, setFiltroSeleccionado] = useState(" ");
+
+const handleFiltroChange = (event) => { 
   const filtroSeleccionado = event.target.value;
   fetchDataTabla(filtroSeleccionado);
+  setFiltroSeleccionado(filtroSeleccionado); // Asegúrate de tener un estado para el filtro
 };
+
   
 //------------------------   mada hacer los los cambios -------------
 useEffect(() => {
@@ -418,7 +436,7 @@ const fecha =`
     pdf.text(actividadLines, xPosition, yPosition);
   });
 
-  const saludo =` Sin otro particular por el momento, le reitero mimás distinguida consideración y respeto.`;
+  const saludo =` Sin otro particular por el momento, le reitero mi más distinguida consideración y respeto.`;
   yPosition += 30;
   // Dividir el texto del pie de página en líneas
 const saludolines = pdf.splitTextToSize(saludo, pdf.internal.pageSize.width - 2 * xPosition);
@@ -511,7 +529,7 @@ const direccion=`
     
       // Realizar la solicitud Axios
       axios
-      .patch(`https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarSolicitud`, formData)
+      .patch(`https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarSolicitud`, formData)
       .then((response) => {
     fetchDataTabla()
   
@@ -557,7 +575,7 @@ const direccion=`
       
         // Realizar la solicitud Axios
         axios
-        .patch(`https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarSolicitud`, formData)
+        .patch(`https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarSolicitud`, formData)
         .then((response) => {
       fetchDataTabla()
     
@@ -687,7 +705,7 @@ const direccion=`
   
     const traerDatos = async () => {
       try {
-        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+        const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/dependencias');
         const datos = await response.json();
         //console.log(datos);
   
@@ -740,7 +758,7 @@ const direccion=`
       setSelectedDependencia(selectedDep);
     
       try {
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos`);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaProyectos`);
         const data = await response.json();
        // console.log(data);
     
@@ -791,7 +809,7 @@ const direccion=`
       const fetchDatosModal = async (solicitudId) => {
        // console.log(solicitudId)
         try {
-          const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
+          const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/datosAceptacion?solicitud=${solicitudId}`);
           const data = await response.json();
         //  console.log(data);
       
@@ -831,47 +849,55 @@ const direccion=`
         <option value="Pendiente">Pendientes</option>
         <option value="Aceptado">Aceptados</option>
         <option value="Rechazado">Rechazados</option>
+        <option value="Liberado">Liberado</option>
       </StyledSelect>
-        <TableContainer>
-          <StyledTable>
-            <thead>
-              <tr>
-                <StyledTh>ID</StyledTh>
-                <StyledTh>Nombre</StyledTh>
-                <StyledTh>Escuela</StyledTh>
-                <StyledTh>Tipo de Solicitud</StyledTh>
-                <StyledTh>Carta de Presentación</StyledTh>
-                <StyledTh>Carta de Aceptación</StyledTh>
-                <StyledTh>Fecha</StyledTh>
+      <TableContainer>
+        <StyledTable>
+          <thead>
+            <tr>
+              <StyledTh>ID</StyledTh>
+              <StyledTh>Nombre</StyledTh>
+              <StyledTh>Escuela</StyledTh>
+              <StyledTh>Tipo de Solicitud</StyledTh>
+              <StyledTh>Carta de Presentación</StyledTh>
+              <StyledTh>Carta de Aceptación</StyledTh>
+              <StyledTh>Carta de Liberación</StyledTh>
+              <StyledTh>Fecha</StyledTh>
+              {filtroSeleccionado === "Pendiente" && (
                 <StyledTh>Cambiar Estatus</StyledTh>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((item, index) => (
-                <StyledTr key={item.solicitud_id} even={index % 2 === 0}>
-                  <StyledTd>{item.solicitud_id}</StyledTd>
-                  <StyledTd>{item.nombre}</StyledTd>
-                  <StyledTd>{"SEMSyS"}</StyledTd>
-                  <StyledTd>{item.tipo}</StyledTd>
-                  <StyledTd>
-                  <button
-                          onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
-                          PDF
-                        </button>
-                  </StyledTd>
-                  <StyledTd>
-                <button
-                        onClick={() => handleDownloadPDF(item.pdf_aceptacion, 'aceptacion2.pdf')}>
-                        Carta de aceptación
-                      </button>
+              )}
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <StyledTr key={item.solicitud_id} even={index % 2 === 0}>
+                <StyledTd>{item.solicitud_id}</StyledTd>
+                <StyledTd>{item.nombre}</StyledTd>
+                <StyledTd>{"SEMSyS"}</StyledTd>
+                <StyledTd>{item.tipo}</StyledTd>
+                <StyledTd>
+                  <button onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
+                    PDF
+                  </button>
                 </StyledTd>
-                  <StyledTd>{item.fecha}</StyledTd>
+                <StyledTd>
+                  <button onClick={() => handleDownloadPDF(item.pdf_aceptacion, 'aceptacion2.pdf')}>
+                    PDF
+                  </button>
+                </StyledTd>
+                <StyledTd>
+                  <button onClick={() => handleDownloadPDF(item.pdf_liberacion, 'liberacion.pdf')}>
+                    PDF
+                  </button>
+                </StyledTd>
+                <StyledTd>{item.fecha}</StyledTd>
+                {filtroSeleccionado === "Pendiente" && (
                   <StyledTd>
                     <StyledButton
                       variant="primary"
                       onClick={() => {
                         handleShow();
-                        setNumChange(item.solicitud_id)
+                        setNumChange(item.solicitud_id);
                         handleValidation(item.id);
                         setSendButtonClicked(false);
                         fetchDatosModal(item.solicitud_id);
@@ -883,11 +909,12 @@ const direccion=`
                       {item.validar ? 'Revisado' : 'Revisar'}
                     </StyledButton>
                   </StyledTd>
-                </StyledTr>
-              ))}
-            </tbody>
-          </StyledTable>
-        </TableContainer>
+                )}
+              </StyledTr>
+            ))}
+          </tbody>
+        </StyledTable>
+      </TableContainer>
   
         <CenteredModal show={showModal} onHide={handleClose} onExited={() => setSendButtonClicked(false)}>
           <ModalContent>

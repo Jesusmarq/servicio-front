@@ -100,7 +100,7 @@ function Preregistro() {
 
     // Realiza una solicitud POST a la URL 'http://127.0.0.1:5000/registroAlumno' utilizando Axios.
     axios
-      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/registroAlumno`, formData)
+      .post(`https://dev-apis.hidalgo.gob.mx/serviciosocial/registroAlumno`, formData)
       .then((response) => {
         // Si la solicitud es exitosa, muestra una ventana emergente de éxito utilizando SweetAlert.
         Swal.fire({
@@ -138,7 +138,7 @@ function Preregistro() {
   
   const traerPlanteles = async () => {
     //Hacer peticion al endpoint  
-    const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
+    const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/planteles');
     const data = await response.json();
 
     // Array para almacenar los objetos con id y universidad únicos

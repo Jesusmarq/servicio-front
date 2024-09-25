@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/333.jpeg';  //POR VEDA Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  //POR VEDA 333.jpeg
 import 'sweetalert2/src/sweetalert2.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -59,12 +59,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color: #BC955B;    // por veda #98989a
   position: relative;
 
   &::before {
     content: 'Validación de Solicitudes:';
-    color: #666666; // por veda #9E2343
+    color: #9E2343; // por veda #666666
     position: absolute;
     z-index: 1;
   }
@@ -110,13 +110,13 @@ function ADMIsol({ title }) {
     <div>
       <Header>
         <TitleWrapper>
-          <Title>{title}Validación de Solicitudes: Servicio Social, Practicas Profecionas, Estadias entre otras. </Title>
+          <Title>{title}Validación de Solicitudes: Servicio Social, Prácticas Profesionales, Estadías entre otras. </Title>
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
       </Header>
-      <div></div><div></div><Text>Bienvenido al Centro de Validación de Solicitudes. Aquí, encontrarás una interfaz intuitiva para revisar y aceptar o rechazar solicitudes de manera eficiente. 
+      {/* <div></div><div></div><Text>Bienvenido al Centro de Validación de Solicitudes. Aquí, encontrarás una interfaz intuitiva para revisar y aceptar o rechazar solicitudes de manera eficiente. 
         Simplificamos el proceso para que puedas verificar la precisión de los datos de manera rápida. ¡Explora, valida y toma decisiones informadas con facilidad!</Text>
-        
+         */}
         <Tabs
           defaultActiveKey="secretarias"
           id="fill-tab-example"
@@ -128,7 +128,7 @@ function ADMIsol({ title }) {
             <ServicioSocial />
             
           </Tab>
-          <Tab eventKey="practicas-profesionales" title="Practicas Profesionales">
+          <Tab eventKey="practicas-profesionales" title="Prácticas Profesionales">
             <PracticasUAEH />
             <PracticasProfesionales />
             

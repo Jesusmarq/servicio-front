@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import LogoImage from '../Img/333.jpeg'; // se cambnio la imagen Logo_escudo_blanco.png por veda
+import LogoImage from '../Img/Logo_escudo_blanco.png'; // se cambnio la imagen  por veda 333.jpeg
 
 import Estatus from '../Components/Estatus';
 import Reportes from '../Components/Reportes';
@@ -11,9 +11,9 @@ import ReactDOM from 'react-dom';  // Agrega esta línea
 import '../Styles/responsive.css';
 import Solicitud_SEMPSYS from '../Components/Solicitud_sempsys';
 
-const BrighterColor = '#666666';  //#9E2343; VEDA 
-const LineColor = '#98989a';// #BC955B  veda
-const SelectedColor = '#666666';  //#9E2343; VEDA 
+const BrighterColor = '#9E2343';  //#666666; VEDA 
+const LineColor = '#BC955B';//   veda #98989a
+const SelectedColor = '#9E2343';  //#666666; VEDA 
 const SidebarBackgroundColor = 'white';
 
 
@@ -153,7 +153,7 @@ const Content = styled.div`
 `;
 
 const LogoutButton = styled.button`
-  background-color: #666666 ; //#9E2343; VEDA  
+  background-color: #9E2343 ; // #666666; VEDA  
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -163,7 +163,7 @@ const LogoutButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #98989a ;/*#BC955B; VEDA */
+    background-color: #BC955B; /*#98989a; VEDA */
   }
 `;
 
@@ -173,7 +173,7 @@ const AlertContainer = styled.div`
   left: 10%;
   transform: translate(-50%, -50%);
   padding: 20px;
-  background-color: #666666; // por veda #BC955B
+  background-color: #BC955B; // por veda #666666
   color: white;
   border-radius: 10px;
   display: flex;
@@ -241,7 +241,7 @@ const Usuario_SEMPSYS = ({ title }) => {
         <LineDivider />
         <SidebarItem isSelected={selectedItem === 'Section1'} onClick={() => handleMenuItemClick('Section1')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Solicitante-veda2.png')} alt='ImageSolicitante' />
+            <IcoImage src={require('../Img/Solicitante.png')} alt='ImageSolicitante' />
             Solicitud
           </IcoContainer>
           <LineDivider />
@@ -249,7 +249,7 @@ const Usuario_SEMPSYS = ({ title }) => {
 
         <SidebarItem isSelected={selectedItem === 'Section2'} onClick={() => handleMenuItemClick('Section2')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Aval-veda2.png')} alt='ImagePadres' />
+            <IcoImage src={require('../Img/Aval.png')} alt='ImagePadres' />
             Estatus y Liberación
           </IcoContainer>
           <LineDivider />
@@ -257,7 +257,7 @@ const Usuario_SEMPSYS = ({ title }) => {
 
         <SidebarItem isSelected={selectedItem === 'Section3'} onClick={() => handleMenuItemClick('Section3')}>
           <IcoContainer>
-            <IcoImage src={require('../Img/Documentacion-veda2.png')} alt='ImageInstitucion' />
+            <IcoImage src={require('../Img/Documentacion.png')} alt='ImageInstitucion' />
             Reportes
           </IcoContainer>
           <LineDivider />

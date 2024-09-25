@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg
 import backgroundImg from '../Img/fondo.png'; 
 import Swal from "sweetalert2";
 import { Worker, Viewer } from '@react-pdf-viewer/core';
@@ -71,12 +71,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color: #BC955B;    // por veda #98989a 
   position: relative;
 
   &::before {
     content: 'Seguimiento de Solicitud:';
-    color: #666666; // por veda #9E2343
+    color: #9E2343; // por veda #666666
     position: absolute;
     z-index: 1;
   }
@@ -137,7 +137,7 @@ margin-top: 20px;
 `;
 
 const StyledTh = styled.th`
-  background-color: #666666; // por veda #9E2343
+  background-color: #9E2343; // por veda #666666
   color: white;
   padding: 20px;
   text-align: center;
@@ -172,7 +172,7 @@ const StyledTd = styled.td`
 `;
 
 const LiberacionButton = styled.button`
-  background-color: #666666;  // por veda #9E2343
+  background-color: #9E2343;  // por veda #666666
   color: white;
   padding: 15px;
   font-size: 20px;
@@ -182,7 +182,7 @@ const LiberacionButton = styled.button`
   margin-top: 20px;
 
   &:hover {
-    background-color: #98989a; // por veda #7a1c33
+    background-color: #7a1c33; // por veda #98989a
   }
 
   @media screen and (max-width: 768px) {
@@ -230,9 +230,9 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9E2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9E2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -253,9 +253,9 @@ const CloseButton = styled(Button)`
 `;
 
 const SendButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9E2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9E2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -323,7 +323,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 
       try {
         // Hacer la primera petición para obtener el id
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/idSolicitud?alumno=${parsedDataUser.id} `, formDataObj);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/idSolicitud?alumno=${parsedDataUser.id} `, formDataObj);
         
         if (!response.ok) {
           throw new Error('Error al obtener el ID de solicitud');
@@ -332,7 +332,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
         const { id } = await response.json();
     
         // Hacer la segunda petición con el id obtenido
-        const secondResponse = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/solicitarLiberacion?solicitud=${id}`, {
+        const secondResponse = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/solicitarLiberacion?solicitud=${id}`, {
           method: 'PATCH',
         });
     
@@ -377,7 +377,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaAlumno?alumno=${parsedDataUser.id}`);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
   
         // Verifica si la respuesta contiene la propiedad 'solicitudes'
@@ -471,7 +471,7 @@ const handleChangeFile = (e) => {
                 <StyledTh>Tipo de solicitud</StyledTh>
                 <StyledTh>Carta de aceptacion</StyledTh>
                 <StyledTh>Fecha Liberacion</StyledTh>
-                {data.pdf_liberacion !== null && (
+                {data.pdf_liberacioen !== null && (
                   <StyledTh>Carta de liberación</StyledTh>
                 )}
 
@@ -498,14 +498,19 @@ const handleChangeFile = (e) => {
                     </>
                   )}
                 <StyledTd isEven={true}>{data.fechaLiberacion}</StyledTd>
-                {data.pdf_liberacion !== null && (
+                {data.pdf_liberacion !== null ? (
                   <StyledTd isEven={true}>
                   <button
-                    onClick={() => handleDownloadPDF(data.pdf_liberacion, 'aceptacion.pdf')}>
+                    onClick={() => handleDownloadPDF(data.pdf_liberacion, 'liberacion.pdf')}>
                     PDF
                   </button>
                   </StyledTd>
+                ) : (
+                  <>
+                    <StyledTd>No disponible</StyledTd>
+                  </>
                 )}
+              
               </tr>
             </tbody>
           </StyledTable>

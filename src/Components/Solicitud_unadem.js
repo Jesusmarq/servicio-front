@@ -9,7 +9,7 @@ import FormControl from 'react-bootstrap/FormControl';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
 import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
-
+import fetchWithToken from '../Pages/fetchConfig';
 import imagecar7 from '../Img/03.jpg';
 import { axios, obtenerTuToken } from "../Pages/axiosConfig";
 
@@ -309,48 +309,45 @@ function Solicitud_UNADEM({ title }) {
   
   const handleSend = (e) => {
     // Lógica para enviar la carta
-
-    //const dataUser = JSON.parse(localStorage.getItem('dataUser'));
-
-
     const jsonString = JSON.stringify(formData);
-    const formDataObj =  new FormData()
-
-    formDataObj.append('JSON',jsonString)
-    formDataObj.append('pdf', formData.pdf)
-    // Obtener el objeto JSON desde localStorage
-
-    //console.log(formDataObj)
-    
+    const formDataObj = new FormData();
+  
+    formDataObj.append('JSON', jsonString);
+    formDataObj.append('pdf', formData.pdf);
+  
     e.preventDefault();
   
-    axios
-      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/subirCarta`, formDataObj)
-      .then((response) => {
-        
-        if (response.status == 201) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Carta enviada',
-            text: 'Tu carta de presentación ha sido enviada correctamente.',
-          });
-        }
-        
-      })
-      .catch((error) => {
-        // Maneja errores de solicitud
-        console.error("Error al enviar el formulario:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error al enviar el formulario",
-          text: "Hubo un problema al enviar el formulario.",
-        });
+    fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/subirCarta', {
+      method: 'POST',
+      body: formDataObj,
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.status === 201 
+          ? Swal.fire({
+              icon: 'success',
+              title: 'Carta enviada',
+              text: 'Tu carta de presentación ha sido enviada correctamente.',
+            }) 
+          : Promise.reject('Error en el envío');
+      } else {
+        throw new Error('Error en la respuesta de la red');
+      }
+    })
+    .catch((error) => {
+      // Maneja errores de solicitud
+      console.error("Error al enviar el formulario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el formulario",
+        text: "Hubo un problema al enviar el formulario.",
       });
-
+    });
+  
     // Cierra la ventana emergente
     handleClose();
   };
-
+  
   const handleCancel = () => {
     // Muestra la alerta de error
     Swal.fire({
@@ -358,11 +355,11 @@ function Solicitud_UNADEM({ title }) {
       title: 'Carta no enviada',
       text: 'La carta no fue enviada.',
     });
-
+  
     // Cierra la ventana emergente
     handleClose();
   };
-
+  
  
 
   const isSelectButtonEnabled = (index) => {

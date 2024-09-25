@@ -21,9 +21,9 @@ const Login = () => {
     e.preventDefault();
 
     axios
-      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/login`, formData)
+      .post(`https://dev-apis.hidalgo.gob.mx/serviciosocial/login`, formData)
       .then((response) => {
-        //console.log(response.data);
+        console.log(response.data);
         // Acceder y guardar solo las propiedades necesarias
         const { exp, rol, id, nombre, token, universidad, plantel } = response.data;
 
@@ -116,7 +116,7 @@ const Login = () => {
             Bienvenido al Sistema de Servicio Social, Prácticas Profesionales, Estancias y Estadías.
           </p>
           <br></br>
-          <p className="texto">Por favor ingresa tus datos...</p>
+          {/* <p className="texto">Por favor ingresa tus datos...</p> */}
 
           {/* Formulario de Login */}
           <form onSubmit={handleSubmit} className="form1">

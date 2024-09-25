@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';import styled from 'styled-components';
-import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faFileUpload } from '@fortawesome/free-solid-svg-icons';
@@ -51,12 +51,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color: #BC955B;    // por veda #98989a
   position: relative;
 
   &::before {
     content: 'Portal de Reportes:';
-    color: #666666; // por veda #9E2343
+    color: #9E2343; // por veda #666666
     position: absolute;
     z-index: 1;
   }
@@ -114,7 +114,7 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  background-color: #666666;  // por veda #9E2343
+  background-color: #9E2343;  // por veda #666666 
   color: white;
   padding: 15px;
   text-align: center;
@@ -128,17 +128,17 @@ const Td = styled.td`
 
   &:hover {
     text-decoration: underline;
-    color: #98989a;  // por veda  #BC955B
+    color: #BC955B;  // por veda  #98989a
   }
 `;
 
 const TrashIcon = styled(FontAwesomeIcon)`
   cursor: pointer;
-  color: #666666;  // #9E2343
+  color: #9E2343;  // #666666
 `;
 
 const UploadButton = styled.label`
-  background-color: #666666;   // por veda  #9E2343 
+  background-color: #9E2343 ;   // por veda  #666666
   color: white;
   padding: 1%; /* Controla la altura del botón */
   width: 8%; /* Ajusta el ancho del botón */
@@ -151,8 +151,7 @@ const UploadButton = styled.label`
   margin-bottom: 40px;
 
   &:hover {
-    background-color: #98989a;   // por veda #7a1c33
-  }
+    background-color: #7a1c33;   // por veda #98989a
 
   input {
     display: none;
@@ -211,7 +210,7 @@ function Reportes({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
   
         setDatosTabla(data.solicitudes);
@@ -252,30 +251,39 @@ function Reportes({ title }) {
 
 
   const handleSend = async () => {
-    try {
-      const formDataObj = new FormData();
-      formDataObj.append('JSON', JSON.stringify(formData));
-      formDataObj.append('pdf', pdfFile);
+  try {
+    const formDataObj = new FormData();
+    formDataObj.append('JSON', JSON.stringify(formData));
+    formDataObj.append('pdf', pdfFile);
 
-      const response = await axios.post("https://servicioypracticas.hidalgo.gob.mx:3002/subirReporte", formDataObj);
+    const response = await fetchWithToken("https://dev-apis.hidalgo.gob.mx/serviciosocial/subirReporte", {
+      method: 'POST',
+      body: formDataObj,
+    });
 
+    if (response.ok) {
+      const responseData = await response;
       if (response.status === 201) {
         Swal.fire({
           icon: "success",
           title: "Archivo enviado",
           text: "Tu archivo PDF ha sido enviado correctamente.",
         });
-        window.location.reload()
+        window.location.reload();
       }
-    } catch (error) {
-      console.error("Error al enviar el archivo:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error al enviar el archivo",
-        text: "Hubo un problema al enviar el archivo.",
-      });
+    } else {
+      throw new Error('Error en la respuesta de la red');
     }
-  };
+  } catch (error) {
+    console.error("Error al enviar el archivo:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error al enviar el archivo",
+      text: "Hubo un problema al enviar el archivo.",
+    });
+  }
+};
+
   const { getInputProps } = useDropzone({ onDrop });
 
   return (
