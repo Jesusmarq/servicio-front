@@ -1,5 +1,5 @@
 import React from 'react';
-import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg 
 import styled from 'styled-components';
 import 'sweetalert2/src/sweetalert2.scss';
 import Tab from 'react-bootstrap/Tab';
@@ -60,12 +60,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color: #BC955B;    // por veda #98989a
   position: relative;
 
   &::before {
     content: 'Validación de Documentos:';
-    color: #666666; // por veda #9E2343
+    color: #9E2343; // por veda #666666
     position: absolute;
     z-index: 1;
   }
@@ -113,7 +113,7 @@ function Liberar({ title }) {
         </TitleWrapper>
         <Image src={Logo2} alt="Logo2" />
       </Header>
-      <br></br><Text>Bienvenido al Centro de Validación y Liberacion de Usuarios. Aquí, encontrarás una interfaz intuitiva para liberar usuarios de manera eficiente. Simplificamos el proceso para que puedas verificar la fecha de solicitud y liberar usuarios de manera rápida. ¡Explora y toma decisiones informadas con facilidad!</Text>
+      {/* <br></br><Text>Bienvenido al Centro de Validación y Liberacion de Usuarios. Aquí, encontrarás una interfaz intuitiva para liberar usuarios de manera eficiente. Simplificamos el proceso para que puedas verificar la fecha de solicitud y liberar usuarios de manera rápida. ¡Explora y toma decisiones informadas con facilidad!</Text> */}
 
       <Tabs
           defaultActiveKey="secretarias"
@@ -126,7 +126,7 @@ function Liberar({ title }) {
             <ServicioSocial2 />
             
           </Tab>
-          <Tab eventKey="practicas-profesionales" title="Practicas Profesionales">
+          <Tab eventKey="practicas-profesionales" title="Prácticas Profesionales">
             <PracticasProfesionales2 />
             <PracticasUAEH2 />
           </Tab>

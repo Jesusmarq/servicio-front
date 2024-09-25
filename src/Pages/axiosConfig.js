@@ -9,7 +9,7 @@ const obtenerTuToken = () => {
 // Función para configurar el token en la cabecera de la solicitud
 const setAuthToken = token => {
   if (token) {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    axios.defaults.headers.common['Authorization'] = `${token}`;
   } else {
     delete axios.defaults.headers.common['Authorization'];
   }

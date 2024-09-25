@@ -131,7 +131,7 @@ const AgregarVal = ({ title }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
+      const response = await fetch('https://dev-apis.hidalgo.gob.mx/serviciosocial/registroValidador', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import Swal from 'sweetalert2';
 import 'sweetalert2/src/sweetalert2.scss';
-import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg
 import imagecar from '../Img/00.jpg';
 import imagecar2 from '../Img/06.jpg';
 import imagecar3 from '../Img/02.jpg';
@@ -16,7 +16,7 @@ import imagecar5 from '../Img/01.jpg';
 import imagecar6 from '../Img/04.jpg';
 import imagecar7 from '../Img/03.jpg';
 import { axios, obtenerTuToken } from "../Pages/axiosConfig";
-
+import fetchWithToken from '../Pages/fetchConfig';
 
 const Header = styled.div`
   height: 5%;
@@ -60,12 +60,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color:#BC955B;    // por veda  #98989a
   position: relative;
 
   &::before {
     content: 'Explora Oportunidades:';
-    color: #666666; // por veda #9E2343
+    color: #9E2343; // por veda #666666
     position: absolute;
     z-index: 1;
   }
@@ -108,7 +108,7 @@ const CardsContainer = styled.div`
 const StyledCard = styled(Card)`
   width: 18rem;
   border-radius: 15px;
-  background-color: #666666 !important; // por veda #9E2343 
+  background-color: #9E2343  !important; // por veda #666666
   //position: relative ;
   margin: 1%;
 
@@ -145,27 +145,27 @@ const CardTitle = styled(Card.Title)`
 const CardText = styled(Card.Text)`
 
   color: white;
-  text-align: justify ;
+  text-align: justify ;B
 `;
 
 const Line = styled.div`
   width: 100%;
   height: 10px;
-  background-color: #98989a; // por veda #BC955B
+  background-color: #BC955B; // por veda #98989a
   margin: 0;
 `;
 
 const StyledButton = styled(Button)`
-  background-color: ${({ disabled }) => (disabled ? '#666666' : '#98989a')} !important;
+  background-color: ${({ disabled }) => (disabled ? '#666666' : '#BC955b')} !important;
   color: white !important;
-  border-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')} !important;
+  border-color: ${({ disabled }) => (disabled ? '#666666' : '#BC955B')} !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
 
   &:hover {
-    background-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')};
-    border-color: ${({ disabled }) => (disabled ? '#666666' : '#ccc')};
+    background-color: ${({ disabled }) => (disabled ? '#666666' : '#ddc9a3')};
+    border-color: ${({ disabled }) => (disabled ? '#666666' : '#ddc9a3')};
   }
 `;
 
@@ -176,13 +176,13 @@ const CenteredModal = styled(Modal)`
 `;
 
 const ModalContent = styled.div`
-  background-color: #ccc;
+  background-color: white;
   padding: 80px;
   border-radius: 15px;
   width: 40vw;
   margin: 0 auto;
   text-align: center;
-  color: #333;
+  color: black;
   font-weight: bold;
   font-size: 20px;
   border: 10px solid #ddd;
@@ -200,9 +200,9 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #BC955b !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #BC955b !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -223,9 +223,9 @@ const CloseButton = styled(Button)`
 `;
 
 const SendButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #BC955b !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #BC955b !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -313,48 +313,45 @@ function Solicitud_SEMPSYS({ title }) {
   
   const handleSend = (e) => {
     // Lógica para enviar la carta
-
-    //const dataUser = JSON.parse(localStorage.getItem('dataUser'));
-
-
     const jsonString = JSON.stringify(formData);
-    const formDataObj =  new FormData()
-
-    formDataObj.append('JSON',jsonString)
-    formDataObj.append('pdf', formData.pdf)
-    // Obtener el objeto JSON desde localStorage
-
-    //console.log(formDataObj)
-    
+    const formDataObj = new FormData();
+  
+    formDataObj.append('JSON', jsonString);
+    formDataObj.append('pdf', formData.pdf);
+  
     e.preventDefault();
   
-    axios
-      .post(`https://servicioypracticas.hidalgo.gob.mx:3002/subirCarta`, formDataObj)
-      .then((response) => {
-        
-        if (response.status == 201) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Carta enviada',
-            text: 'Tu carta de presentación ha sido enviada correctamente.',
-          });
-        }
-        
-      })
-      .catch((error) => {
-        // Maneja errores de solicitud
-        console.error("Error al enviar el formulario:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error al enviar el formulario",
-          text: "Hubo un problema al enviar el formulario.",
-        });
+    fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/subirCarta', {
+      method: 'POST',
+      body: formDataObj,
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.status === 201 
+          ? Swal.fire({
+              icon: 'success',
+              title: 'Carta enviada',
+              text: 'Tu carta de presentación ha sido enviada correctamente.',
+            }) 
+          : Promise.reject('Error en el envío');
+      } else {
+        throw new Error('Error en la respuesta de la red');
+      }
+    })
+    .catch((error) => {
+      // Maneja errores de solicitud
+      console.error("Error al enviar el formulario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el formulario",
+        text: "Hubo un problema al enviar el formulario.",
       });
-
+    });
+  
     // Cierra la ventana emergente
     handleClose();
   };
-
+  
   const handleCancel = () => {
     // Muestra la alerta de error
     Swal.fire({
@@ -362,10 +359,11 @@ function Solicitud_SEMPSYS({ title }) {
       title: 'Carta no enviada',
       text: 'La carta no fue enviada.',
     });
-
+  
     // Cierra la ventana emergente
     handleClose();
   };
+  
 
  
 
@@ -554,9 +552,9 @@ function Solicitud_SEMPSYS({ title }) {
             <SendButton variant="primary" onClick={handleSend} disabled={!fileSelected}>
               Enviar
             </SendButton>
-            <CloseButton variant="primary" onClick={handleCancel}>
+            {/* <CloseButton variant="primary" onClick={handleCancel}>
               Cerrar
-            </CloseButton>
+            </CloseButton> */}
           </Modal.Footer>
         </ModalContent>
       </CenteredModal>

@@ -35,7 +35,7 @@ function Table() {
  //console.log(solicitudData)
  const fetchSolicitudData = async () => {
       try {
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaQR?solicitud=${param1}`);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaQR?solicitud=${param1}`);
 
         if (!response.ok) {
           throw new Error('Error al obtener las solicitudes');

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import fetchWithToken from '../Pages/fetchConfig';
-import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg
 import '../Styles/responsive.css';
 
 const Header = styled.div`
@@ -46,12 +46,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color: #BC955B;    // por veda #98989a
   position: relative;
 
   &::before {
     content: 'Validación de Documentos:';
-    color: #666666; // por veda #9E2343
+    color:#9E2343; // por veda  #666666
     position: absolute;
     z-index: 1;
   }
@@ -108,7 +108,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #666666; // por veda  #9e2343
+  background-color: #9e2343; // por veda  #666666
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -124,13 +124,13 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#666666' : '#666666')}; // por veda '#9e2343' : '#bc955b'
+  background-color: ${(props) => (props.validar ? '#9e2343' : '#bc955b')}; // por veda '#666666' : '#666666'
   color: white;
   cursor: ${(props) => (props.validar ? 'not-allowed' : 'pointer')};
   border-radius: 15px;
   &:disabled {
     cursor: not-allowed;
-    background-color:#98989a; // por veda #9e2343
+    background-color:#9e2343; // por veda #98989a
   }
 `;
 
@@ -145,7 +145,7 @@ function ValidarSolicitud({ title }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/consultaReportesTodos?tipo=todos');
+        const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaReportesTodos?tipo=todos');
         const responseData = await response.json();
         
 
@@ -193,7 +193,7 @@ function ValidarSolicitud({ title }) {
         horas: horas.toString(),
       };
 
-      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarReporte', {
+      const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarReporte', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

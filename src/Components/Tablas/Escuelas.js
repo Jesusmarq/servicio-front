@@ -12,7 +12,6 @@ import fetchWithToken from '../../Pages/fetchConfig';
 const TableWrapper = styled.div`
   margin: 20px auto;
   width: 90%;
-  border: 1px solid #ddd;
   border-radius: 10px;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 0.8);
@@ -33,7 +32,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-background-color: #666666;  // por veda #9E2343
+background-color: #9E2343;  // por veda #666666
   color: white;
   padding: 15px;
   text-align: center;
@@ -49,7 +48,7 @@ const StyledTd = styled.td`
 `;
 
 const LiberacionButton = styled.button`
-  background-color: #666666;   // por veda #9E2343
+  background-color: #9E2343;   // por veda #666666
   color: white;
   padding: 5px;
   border: none;
@@ -57,7 +56,7 @@ const LiberacionButton = styled.button`
   border-radius: 5px;
 
   &:hover {
-    background-color: #98989a;   // por veda #7a1c33
+    background-color:#7a1c33;   // por veda #98989a
   }
 `;
 
@@ -68,16 +67,16 @@ const CenteredModal = styled(Modal)`
 `;
 
 const ModalContent = styled.div`
-  background-color: #ccc;
+  background-color: white;
   padding: 80px;
   border-radius: 15px;
   width: 40vw;
   margin: 0 auto;
   text-align: center;
-  color: #333;
+  color: black;
   font-weight: bold;
   font-size: 20px;
-  border: 10px solid #ddd;
+  
 
   @media screen and (max-width: 768px) {
     padding: 40px;
@@ -92,9 +91,9 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9E2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9E2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -115,9 +114,9 @@ const CloseButton = styled(Button)`
 `;
 
 const SendButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9E2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9E2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
@@ -171,7 +170,7 @@ const StyledInput = styled.input`
   margin-right: 10%;
   padding: 5px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid black;
 
     @media screen and (max-width: 768px) {
     margin-left: 0px;
@@ -188,7 +187,7 @@ const StyledInput = styled.input`
 const StyledSelect = styled.select`
   padding: 5px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid black;
   background-color: white; /* Color de fondo del select */
   color: #333; /* Color del texto */
   margin-right: 20%;
@@ -208,15 +207,15 @@ const StyledSelect = styled.select`
 
 
 const StyledAddButton = styled(Button)`
-  background-color: #666666 !important;  // por veda #9E2343
+  background-color: #9E2343 !important;  // por veda #666666
   color: white;
   border-radius: 5px;
-  border-color: #666666 !important;  // por veda #9E2343
+  border-color: #9E2343 !important;  // por veda #666666
   margin-left: auto;
 
   &:hover {
-    background-color: #98989a !important; // por veda #bc955b
-    border-color: #98989a !important;
+    background-color: #bc955b !important; // por veda #98989a
+    border-color: #bc955b !important;
   }
 
   @media screen and (max-width: 768px) {
@@ -256,7 +255,7 @@ const TablaEscuelas = ({ title }) => {
 
   const handleAddPlantel = async () => {
     try {
-      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/agregarUniversidadPlantel', {
+      const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/agregarUniversidadPlantel', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -315,7 +314,7 @@ const TablaEscuelas = ({ title }) => {
       //console.log(plantelNombre);
       //console.log(institucion);
       try {
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/plantelEditar`, {
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/plantelEditar`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -386,7 +385,7 @@ const TablaEscuelas = ({ title }) => {
   let plantelSeleccionado = null;
   const fetchPlanteles = async () => {
     try {
-      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/planteles');
+      const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/planteles');
   
       // Verificar si la respuesta es exitosa (código de estado 200)
       console.log(response);
@@ -566,9 +565,9 @@ const TablaEscuelas = ({ title }) => {
             <SendButton variant="primary" >
               Guardar
             </SendButton>
-            <CloseButton variant="primary" onClick={handleCancel}>
+            {/* <CloseButton variant="primary" onClick={handleCancel}>
               Cerrar
-            </CloseButton>
+            </CloseButton> */}
           </Modal.Footer>
         </ModalContent>
       </CenteredModal>

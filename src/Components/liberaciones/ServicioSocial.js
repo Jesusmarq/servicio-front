@@ -46,7 +46,7 @@ const StyledTable = styled.table`
 `;
 
 const StyledTh = styled.th`
-  background-color: #666666;  // por veda #9e2343
+  background-color: #9e2343;  // por veda #666666
   color: white;
   padding: 10px;
   font-size: 20px;
@@ -62,7 +62,7 @@ const StyledTd = styled.td`
 `;
 
 const StyledButton = styled.button`
-  background-color: ${(props) => (props.validar ? '#666666' : '#666666')}; //por veda '#9e2343' : '#bc955b'
+  background-color: ${(props) => (props.validar ? '#9e2343' : '#bc955b')}; //por veda '#666666' : '#666666'
   color: white;
   cursor: pointer;
   border-radius: 15px;
@@ -75,16 +75,16 @@ const CenteredModal = styled(Modal)`
 `;
 
 const ModalContent = styled.div`
-  background-color: #ccc;
+  background-color: white;
   padding: 80px;
   border-radius: 15px;
   width: 40vw;
   margin: 0 auto;
   text-align: center;
-  color: #333;
+  color: black;
   font-weight: bold;
   font-size: 20px;
-  border: 10px solid #ddd;
+
 
   @media screen and (max-width: 768px) {
     padding: 40px;
@@ -99,13 +99,19 @@ const ModalContent = styled.div`
 `;
 
 const CloseButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9e2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9e2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+  &:hover {
+    background-color: #bc955b !important;
+    border-color: #bc955b !important;
+  }
+  
 
   @media screen and (max-width: 768px) {
     font-size: clamp(10px, 3vw, 24px);
@@ -122,13 +128,18 @@ const CloseButton = styled(Button)`
 `;
 
 const SendButton = styled(Button)`
-  background-color: #98989a !important;
+  background-color: #9e2343 !important;
   color: white !important;
-  border-color: #98989a !important;
+  border-color: #9e2343 !important;
   border-radius: 10px;
   margin: 10px;
   height: 40px;
   width: 10vw;
+
+   &:hover {
+    background-color: #bc955b !important;
+    border-color: #bc955b !important;
+  }
 
   @media screen and (max-width: 768px) {
     font-size: clamp(10px, 3vw, 24px);
@@ -170,7 +181,7 @@ function ServicioSocial ({ title }) {
   const fetchData = async (solicitudId) => { // Aquí agregamos solicitudId como parámetro
    // console.log(solicitudId)
     try {
-      const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
+      const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
   
       //console.log(data);
@@ -191,7 +202,7 @@ function ServicioSocial ({ title }) {
   //peticion datos de la tabla  ------------------
   const fetchDataTabla = async () => {
     try {
-        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
+        const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaLiberaciones?filtro=pendiente&limite=1005&alumno=5&firma=XEXX010101HNEXXXQ5_2Vzc4mMO6sr');
 
         if (!response.ok) {
             throw new Error('Error al obtener las solicitudes');
@@ -486,7 +497,7 @@ const direccion=`
     
       // Realizar la solicitud Axios
       axios
-      .patch(`https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarLiberacion`, formData)
+      .patch(`https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarLiberacion`, formData)
       .then((response) => {
     fetchDataTabla()
   
@@ -532,7 +543,7 @@ const direccion=`
     
       // Realizar la solicitud Axios
       axios
-      .patch(`https://servicioypracticas.hidalgo.gob.mx:3002/AceptarRechazarLiberacion`, formData)
+      .patch(`https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarLiberacion`, formData)
       .then((response) => {
     fetchDataTabla()
   
@@ -662,7 +673,7 @@ const direccion=`
   
     const traerDatos = async () => {
       try {
-        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+        const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/dependencias');
         const datos = await response.json();
         //console.log(datos);
   
@@ -713,7 +724,7 @@ const direccion=`
       const fetchDatosModal = async (solicitudId) => {
        // console.log(solicitudId)
         try {
-          const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/datosAceptacion?solicitud=${solicitudId}`);
+          const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/datosAceptacion?solicitud=${solicitudId}`);
           const data = await response.json();
         //  console.log(data);
       
@@ -748,7 +759,7 @@ const direccion=`
     
       const traerDatos2 = async () => {
         try {
-          const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/consultaProyectos');
+          const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaProyectos');
           const data = await response.json();
           //console.log(data);
     

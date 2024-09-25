@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import Logo2 from '../Img/333.jpeg';  // por veda Oficialia.png
+import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg
 import * as Yup from 'yup';
 import Swal from 'sweetalert2';
 import '../Styles/responsive.css';
@@ -50,12 +50,12 @@ const TitleWrapper = styled.div`
 const Title = styled.h2`
   font-size: clamp(15px, 4vw, 52px);
   margin: 0;
-  color: #98989a;    // por veda #BC955B
+  color: #BC955B;    // por veda #98989a
   position: relative;
 
   &::before {
     content: 'Validación de Documentos:';
-    color: #666666; // por veda #9E2343
+    color: #9E2343; // por veda #666666
     position: absolute;
     z-index: 1;
   }
@@ -93,7 +93,7 @@ const FormContainer = styled.div`
   max-width: 400px;
   margin: 20px auto;
   padding: 20px;
-  border: 2px solid #666666; // #9e2343 por veda  
+  border: 2px solid #9e2343; //  por veda  #666666
   border-radius: 10px;
 `;
 
@@ -108,7 +108,7 @@ const FormGroup = styled.div`
 
 const StyledField = styled.input`
   height: 40px;
-  border: 2px solid #666666; // #9e2343 por veda  
+  border: 2px solid #9e2343; //  por veda  #666666
   border-radius: 5px;
   padding: 5px;
   width: 100%;
@@ -116,13 +116,13 @@ const StyledField = styled.input`
 `;
 
 const ErrorMessageStyled = styled.div`
-  color: #98989a;   // por veda bc955b
+  color: #bc955b;   // por veda 98989a
   font-size: 14px;
   margin-top: 5px;
 `;
 
 const SubmitButton = styled.button`
-  background-color: ${(props) => (props.disabled ? '#666666' : '#666666')}; // por veda '#9e2343' : '#bc955b'
+  background-color: ${(props) => (props.disabled ? '#9e2343' : '#bc955b')}; // por veda '#666666' : '#666666'
   color: white;
   cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
   border-radius: 5px;
@@ -158,7 +158,7 @@ const AgregarVal = ({ title }) => {
   useEffect(() => {
     const traerDatos = async () => {
       try {
-        const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/dependencias');
+        const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/dependencias');
         const datos = await response.json();
         //console.log(datos);
 
@@ -204,7 +204,7 @@ const AgregarVal = ({ title }) => {
      // console.log(JSON.stringify(formData))
 
       // Enviar la solicitud POST a la URL
-      const response = await fetchWithToken('https://servicioypracticas.hidalgo.gob.mx:3002/registroValidador', {
+      const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/registroValidador', {
         method: 'POST', // Método de la solicitud HTTP
         headers: {
           'Content-Type': 'application/json', // Tipo de contenido que se está enviando (en este caso, JSON)
@@ -317,13 +317,15 @@ const AgregarVal = ({ title }) => {
               required
             />
           </FormGroup>
-
+          
+          <FormGroup>
           <select value={selectedSecretaria} onChange={handleSecretariaChange}>
             <option value="">Seleccione una secretaría</option>
             {secretarias.map(secretaria => (
               <option key={secretaria} value={secretaria}>{secretaria}</option>
             ))}
           </select>
+          </FormGroup>
 
           <FormGroup><br></br>
             <SubmitButton type="submit">

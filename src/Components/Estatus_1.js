@@ -231,7 +231,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
     const handleSolicitarLiberacion = async () => {
       try {
         // Hacer la primera petición para obtener el id
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/idSolicitud?alumno=${parsedDataUser.id}`);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/idSolicitud?alumno=${parsedDataUser.id}`);
         
         if (!response.ok) {
           throw new Error('Error al obtener el ID de solicitud');
@@ -240,7 +240,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
         const { id } = await response.json();
     
         // Hacer la segunda petición con el id obtenido
-        const secondResponse = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/solicitarLiberacion?solicitud=${id}`, {
+        const secondResponse = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/solicitarLiberacion?solicitud=${id}`, {
           method: 'PATCH',
         });
     
@@ -283,7 +283,7 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetchWithToken(`https://servicioypracticas.hidalgo.gob.mx:3002/consultaAlumno?alumno=${parsedDataUser.id}`);
+        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaAlumno?alumno=${parsedDataUser.id}`);
         const data = await response.json();
   
         // Verifica si la respuesta contiene la propiedad 'solicitudes'
