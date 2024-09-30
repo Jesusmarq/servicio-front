@@ -116,7 +116,7 @@ function Liberar({ title }) {
       {/* <br></br><Text>Bienvenido al Centro de Validación y Liberacion de Usuarios. Aquí, encontrarás una interfaz intuitiva para liberar usuarios de manera eficiente. Simplificamos el proceso para que puedas verificar la fecha de solicitud y liberar usuarios de manera rápida. ¡Explora y toma decisiones informadas con facilidad!</Text> */}
 
       <Tabs
-          defaultActiveKey="secretarias"
+          defaultActiveKey="servicio-social" // Cambiado a "servicio-social"
           id="fill-tab-example"
           className="mb-3"
           fill

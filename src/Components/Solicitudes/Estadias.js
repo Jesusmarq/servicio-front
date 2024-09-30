@@ -248,12 +248,16 @@ const fetchDataTabla = async (filtroSeleccionado) => {
 };
 
 //filtro tabla
-const [filtroSeleccionado, setFiltroSeleccionado] = useState(" ");
+const [filtroSeleccionado, setFiltroSeleccionado] = useState("todos");
 
-const handleFiltroChange = (event) => { 
+useEffect(() => {
+  fetchDataTabla(filtroSeleccionado); // Cargar datos al montar el componente
+}, []);
+
+const handleFiltroChange = (event) => {
   const filtroSeleccionado = event.target.value;
-  fetchDataTabla(filtroSeleccionado);
-  setFiltroSeleccionado(filtroSeleccionado); // Asegúrate de tener un estado para el filtro
+  setFiltroSeleccionado(filtroSeleccionado);
+  fetchDataTabla(filtroSeleccionado); // Actualizar la tabla al cambiar el filtro
 };
 
 //------------------------   mada hacer los los cambios -------------
@@ -513,6 +517,34 @@ const direccion=`
   };
 
   const sendRequest = async() => {
+  // Validar que todos los campos requeridos estén llenos
+  const requiredFields = [
+    modalData.date,
+    modalData.dirigidaA,
+    modalData.cargo,
+    selectedSecretaria,
+    selectedDependencia,
+    selectedProyecto,
+    modalData.periodo_inicio,
+    modalData.periodo_termino,
+    modalData.horarioInicio,
+    modalData.horarioFin,
+    modalData.horas,
+    ...modalData.actividadesDesarrollar,
+  ];
+
+  const allFieldsFilled = requiredFields.every(field => field);
+
+  if (!allFieldsFilled) {
+    Swal.fire({
+      icon: "warning",
+      title: "Campos requeridos",
+      text: "Por favor, completa todos los campos antes de enviar.",
+      confirmButtonText: "Aceptar",
+    });
+    return; // Salir de la función si no están todos los campos llenos
+  }
+
       // Crear FormData y agregar el PDF
       const pdfFile = await generatePDF();
     //  console.log(pdfFile)
@@ -538,12 +570,13 @@ const direccion=`
       text: 'Tu carta de presentación ha sido enviada correctamente.',
       allowOutsideClick: false,
       confirmButtonText: "Aceptar"
-    }).then((result) => {
-      console.log(result)
+    }).then((result) => {      
       if (result.isConfirmed) {
-          console.log(result)
-          handleClose()
-      }
+          fetchDataTabla('todos');
+          setFiltroSeleccionado('todos');
+          handleClose();
+          //setrecarga(1);
+        }
   });
         
       })
@@ -875,21 +908,42 @@ const direccion=`
                 <StyledTd>{item.nombre}</StyledTd>
                 <StyledTd>{"SEMSyS"}</StyledTd>
                 <StyledTd>{item.tipo}</StyledTd>
-                <StyledTd>
+                {item.pdf !== null ? (
+                <StyledTd isEven={true}>
                   <button onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
                     PDF
                   </button>
                 </StyledTd>
-                <StyledTd>
+                  ) : (
+                      <>
+                        <StyledTd>No disponible</StyledTd>
+                      </>
+                    )}
+
+                {item.pdf_aceptacion !== null ? (
+                <StyledTd isEven={true}>
                   <button onClick={() => handleDownloadPDF(item.pdf_aceptacion, 'aceptacion2.pdf')}>
                     PDF
                   </button>
                 </StyledTd>
-                <StyledTd>
+                 ) : (
+                  <>
+                    <StyledTd>No disponible</StyledTd>
+                  </>
+                )}
+
+                {item.pdf_liberacion !== null ? (
+                <StyledTd isEven={true}>
                   <button onClick={() => handleDownloadPDF(item.pdf_liberacion, 'liberacion.pdf')}>
                     PDF
                   </button>
                 </StyledTd>
+                ) : (
+                  <>
+                    <StyledTd>No disponible</StyledTd>
+                  </>
+                )}
+                
                 <StyledTd>{item.fecha}</StyledTd>
                 {filtroSeleccionado === "Pendiente" && (
                   <StyledTd>
@@ -1008,7 +1062,13 @@ const direccion=`
             <Form.Control
               type="date"
               value={modalData.periodo_inicio}
-              onChange={(e) => handleChange('periodo_inicio', e.target.value)}
+              onChange={(e) => {
+                handleChange('periodo_inicio', e.target.value);
+                // Actualiza la fecha de término para que no sea anterior a la fecha de inicio
+                if (modalData.periodo_termino < e.target.value) {
+                  handleChange('periodo_termino', e.target.value);
+                }
+              }}
             />
           </Form.Group>
   
@@ -1018,6 +1078,7 @@ const direccion=`
               type="date"
               value={modalData.periodo_termino}
               onChange={(e) => handleChange('periodo_termino', e.target.value)}
+              min={modalData.periodo_inicio}
             />
           </Form.Group>
   
