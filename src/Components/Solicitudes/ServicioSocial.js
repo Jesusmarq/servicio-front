@@ -248,12 +248,16 @@ const fetchDataTabla = async (filtroSeleccionado) => {
 };
 
 //filtro tabla
-const [filtroSeleccionado, setFiltroSeleccionado] = useState(" ");
+const [filtroSeleccionado, setFiltroSeleccionado] = useState("todos");
 
-const handleFiltroChange = (event) => { 
+useEffect(() => {
+  fetchDataTabla(filtroSeleccionado); // Cargar datos al montar el componente
+}, []);
+
+const handleFiltroChange = (event) => {
   const filtroSeleccionado = event.target.value;
-  fetchDataTabla(filtroSeleccionado);
-  setFiltroSeleccionado(filtroSeleccionado); // Asegúrate de tener un estado para el filtro
+  setFiltroSeleccionado(filtroSeleccionado);
+  fetchDataTabla(filtroSeleccionado); // Actualizar la tabla al cambiar el filtro
 };
 
 
@@ -326,8 +330,8 @@ function handleDownloadPDF(pdfBase64, fileName) {
       ver_carta:'true',
       actividadesDesarrollar: [''],
     });
-
-  
+    
+    
    
     const handleChange = (field, value) => {
       // Actualizar el campo de almacenamiento
@@ -515,51 +519,81 @@ const direccion=`
   
   };
 
-  const sendRequest = async() => {
-      // Crear FormData y agregar el PDF
-      const pdfFile = await generatePDF();
-      //console.log(pdfFile)
-      const formData = new FormData();
-      formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
-    //console.log(numChange)
-      // Agregar el JSON al FormData
-      const jsonData = {"solicitud": numChange,"estatus":"Aceptado","validador":parsedDataUser.id, "ver_pdf":modalData.ver_carta,}; 
-  //console.log(jsonData)
-      formData.append('JSON', JSON.stringify(jsonData));
-    
-      //console.log('FormData antes de la solicitud:', formData);
-    
-      // Realizar la solicitud Axios
-      axios
-      .patch(`https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarSolicitud`, formData)
-      .then((response) => {
-    fetchDataTabla()
-  
+  const sendRequest = async () => {
+  // Validar que todos los campos requeridos estén llenos
+  const requiredFields = [
+    modalData.date,
+    modalData.dirigidaA,
+    modalData.cargo,
+    selectedSecretaria,
+    selectedDependencia,
+    selectedProyecto,
+    modalData.periodo_inicio,
+    modalData.periodo_termino,
+    modalData.horarioInicio,
+    modalData.horarioFin,
+    modalData.horas,
+    ...modalData.actividadesDesarrollar,
+  ];
+
+  const allFieldsFilled = requiredFields.every(field => field);
+
+  if (!allFieldsFilled) {
     Swal.fire({
-      icon: 'success',
-      title: 'Carta enviada',
-      text: 'Tu carta de presentación ha sido enviada correctamente.',
-      allowOutsideClick: false,
-      confirmButtonText: "Aceptar"
-    }).then((result) => {
-      console.log(result)
-      if (result.isConfirmed) {
-          console.log(result)
-          handleClose()
-      }
-  });
-        
-      })
-      .catch((error) => {
-        // Maneja errores de solicitud
-        console.error("Error al enviar el formulario:", error);
-        Swal.fire({
-          icon: "error",
-          title: "Error al enviar el formulario",
-          text: "Hubo un problema al enviar el formulario.",
-        });
-      });
+      icon: "warning",
+      title: "Campos requeridos",
+      text: "Por favor, completa todos los campos antes de enviar.",
+      confirmButtonText: "Aceptar",
+    });
+    return; // Salir de la función si no están todos los campos llenos
+  }
+
+  // Crear FormData y agregar el PDF
+  const pdfFile = await generatePDF();
+  const formData = new FormData();
+  formData.append('pdf', pdfFile, 'pdfgenerado.pdf');
+
+  // Agregar el JSON al FormData
+  const jsonData = {
+    "solicitud": numChange,
+    "estatus": "Aceptado",
+    "validador": parsedDataUser.id,
+    "ver_pdf": modalData.ver_carta,
   };
+  formData.append('JSON', JSON.stringify(jsonData));
+
+  // Realizar la solicitud Axios
+  axios
+    .patch(`https://dev-apis.hidalgo.gob.mx/serviciosocial/AceptarRechazarSolicitud`, formData)
+    .then((response) => {
+      fetchDataTabla();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Carta enviada',
+        text: 'Tu carta de presentación ha sido enviada correctamente.',
+        allowOutsideClick: false,
+        confirmButtonText: "Aceptar"
+      }).then((result) => {
+        if (result.isConfirmed) {
+          fetchDataTabla('todos');
+          setFiltroSeleccionado('todos');
+          handleClose();
+          //setrecarga(1);
+        }
+      });
+    })
+    .catch((error) => {
+      console.error("Error al enviar el formulario:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el formulario",
+        text: "Hubo un problema al enviar el formulario.",
+      });
+    });
+};
+
+
 
   const sendRequest22 = async() => {
       // Crear FormData y agregar el PDF
@@ -659,6 +693,7 @@ const direccion=`
         )
       );
     };
+
     
     
   
@@ -728,10 +763,15 @@ const direccion=`
       }
     };
   
+    const [recarga, setrecarga] = useState({
+      
+    });
+    
     useEffect(() => {
       traerDatos();
       fetchDatosModal();
-    }, []);
+      console.log(recarga)
+    }, [recarga]);
   
     const handleSecretariaChange = (e) => {
       const selectedSec = e.target.value;
@@ -812,6 +852,7 @@ const direccion=`
       
       // Función para realizar la solicitud y obtener los datos del nuevo endpoint
       const fetchDatosModal = async (solicitudId) => {
+        
         console.log(solicitudId)
         try {
           const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/datosAceptacion?solicitud=${solicitudId}`);
@@ -846,14 +887,14 @@ const direccion=`
     return (
       <div>
 
-      <StyledSelect onChange={handleFiltroChange}>
-      <option value=" ">Seleccionar estado de la solicitud</option>
-        <option value="todos">Todas las solicitudes</option>
-        <option value="Pendiente">Pendientes</option>
-        <option value="Aceptado">Aceptados</option>
-        <option value="Rechazado">Rechazados</option>
-        <option value="Liberado">Liberado</option>
-      </StyledSelect>
+    <StyledSelect onChange={handleFiltroChange} value={filtroSeleccionado}>
+      <option value="">Seleccionar estado de la solicitud</option>
+      <option value="todos">Todas las solicitudes</option>
+      <option value="Pendiente">Pendientes</option>
+      <option value="Aceptado">Aceptados</option>
+      <option value="Rechazado">Rechazados</option>
+      <option value="Liberado">Liberado</option>
+    </StyledSelect>
 
       <TableContainer>
         <StyledTable>
@@ -879,21 +920,43 @@ const direccion=`
                 <StyledTd>{item.nombre}</StyledTd>
                 <StyledTd>{"SEMSyS"}</StyledTd>
                 <StyledTd>{item.tipo}</StyledTd>
-                <StyledTd>
+
+                {item.pdf !== null ? (
+                <StyledTd isEven={true}>
                   <button onClick={() => handleDownloadPDF(item.pdf, 'aceptacion.pdf')}>
                     PDF
                   </button>
                 </StyledTd>
-                <StyledTd>
+                ) : (
+                  <>
+                    <StyledTd>No disponible</StyledTd>
+                  </>
+                )}
+
+                {item.pdf_aceptacion !== null ? (
+                <StyledTd isEven={true}>
                   <button onClick={() => handleDownloadPDF(item.pdf_aceptacion, 'aceptacion2.pdf')}>
                     PDF
                   </button>
                 </StyledTd>
-                <StyledTd>
+              ) : (
+                  <>
+                    <StyledTd>No disponible</StyledTd>
+                  </>
+                )}
+
+                {item.pdf_liberacion !== null ? (
+                <StyledTd isEven={true}>
                   <button onClick={() => handleDownloadPDF(item.pdf_liberacion, 'liberacion.pdf')}>
                     PDF
                   </button>
                 </StyledTd>
+                ) : (
+                  <>
+                    <StyledTd>No disponible</StyledTd>
+                  </>
+                )}
+
                 <StyledTd>{item.fecha}</StyledTd>
                 {filtroSeleccionado === "Pendiente" && (
                   <StyledTd>
@@ -1003,26 +1066,29 @@ const direccion=`
         ))}
       </Form.Select>
     </Form.Group>
-
-
-        
   
-  
-          <Form.Group controlId="periodo_inicio" className="mb-3">
+              <Form.Group controlId="periodo_inicio" className="mb-3">
             <Form.Label>Fecha de Inicio</Form.Label>
             <Form.Control
               type="date"
               value={modalData.periodo_inicio}
-              onChange={(e) => handleChange('periodo_inicio', e.target.value)}
+              onChange={(e) => {
+                handleChange('periodo_inicio', e.target.value);
+                // Actualiza la fecha de término para que no sea anterior a la fecha de inicio
+                if (modalData.periodo_termino < e.target.value) {
+                  handleChange('periodo_termino', e.target.value);
+                }
+              }}
             />
           </Form.Group>
-  
+
           <Form.Group controlId="periodo_termino" className="mb-3">
             <Form.Label>Fecha de Termino</Form.Label>
             <Form.Control
               type="date"
               value={modalData.periodo_termino}
               onChange={(e) => handleChange('periodo_termino', e.target.value)}
+              min={modalData.periodo_inicio} // Establece el mínimo como la fecha de inicio
             />
           </Form.Group>
   

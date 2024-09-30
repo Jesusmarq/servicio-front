@@ -510,7 +510,7 @@ const handleChangeFile = (e) => {
                     <StyledTd>No disponible</StyledTd>
                   </>
                 )}
-              
+                
               </tr>
             </tbody>
           </StyledTable>

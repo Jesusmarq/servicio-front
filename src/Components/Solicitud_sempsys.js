@@ -378,7 +378,7 @@ function Solicitud_SEMPSYS({ title }) {
     }
   };
   
-
+    
   return (
     <div>
       <Header>

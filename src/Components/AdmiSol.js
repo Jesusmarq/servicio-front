@@ -118,7 +118,7 @@ function ADMIsol({ title }) {
         Simplificamos el proceso para que puedas verificar la precisión de los datos de manera rápida. ¡Explora, valida y toma decisiones informadas con facilidad!</Text>
          */}
         <Tabs
-          defaultActiveKey="secretarias"
+          defaultActiveKey="servicio-social" // Cambiado a "servicio-social"
           id="fill-tab-example"
           className="mb-3"
           fill
