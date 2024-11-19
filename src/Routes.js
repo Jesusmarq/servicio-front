@@ -16,7 +16,7 @@ import Usuario_UAEH from './Pages/Usuario_uaeh';
 import Usuario_SEMPSYS from './Pages/Usuario_sempsys';
 import Usuario_UNADEM from './Pages/Usuario_unadem';
 
-console.log(localStorage.getItem('dataUser'))
+//console.log(localStorage.getItem('dataUser'))
   var dataUser = localStorage.getItem('dataUser')
   var parsedDataUser = JSON.parse(dataUser);
   
