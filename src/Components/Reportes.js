@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';import styled from 'styled-components';
+import React, { useState, useEffect } from 'react'; import styled from 'styled-components';
 import Logo2 from '../Img/Oficialia.png';  // por veda 333.jpeg
 import { useDropzone } from 'react-dropzone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -193,35 +193,36 @@ function base64toBlob(base64Data, contentType = '', sliceSize = 512) {
 
 function Reportes({ title }) {
 
- // console.log(localStorage.getItem('dataUser'))
+  // console.log(localStorage.getItem('dataUser'))
   var dataUser = localStorage.getItem('dataUser')
   var parsedDataUser = JSON.parse(dataUser);
-  
+
   // Acceder a la propiedad 'id'
   //console.log(parsedDataUser.id);
 
   const initialState = {
     alumno: parsedDataUser.id,
-    horas:"0"
+    horas: "0"
   };
 
   const [datosTabla, setDatosTabla] = useState([]);
 
+  const fetchData = async () => {
+    try {
+      const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
+      const data = await response.json();
+
+      setDatosTabla(data.solicitudes);
+    } catch (error) {
+      console.error('Error al obtener datos:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaReportesAlumno?alumno=${parsedDataUser.id}`);
-        const data = await response.json();
-  
-        setDatosTabla(data.solicitudes);
-      } catch (error) {
-        console.error('Error al obtener datos:', error);
-      }
-    };
-  
+
     fetchData();
   }, [parsedDataUser.id]); // Agregar parsedDataUser.id como dependencia para que useEffect se ejecute cuando cambie
-  
+
   const [formData, setFormData] = useState(initialState);
 
   function handleDownloadPDF(pdfBase64, fileName) {
@@ -250,39 +251,40 @@ function Reportes({ title }) {
   };
 
 
-  const handleSend = async () => {
-  try {
-    const formDataObj = new FormData();
-    formDataObj.append('JSON', JSON.stringify(formData));
-    formDataObj.append('pdf', pdfFile);
+  const handleSend = async (file) => {
+    try {
+      const formDataObj = new FormData();
+      formDataObj.append('JSON', JSON.stringify(formData));
+      formDataObj.append('pdf', file);
 
-    const response = await fetchWithToken("https://dev-apis.hidalgo.gob.mx/serviciosocial/subirReporte", {
-      method: 'POST',
-      body: formDataObj,
-    });
+      const response = await fetchWithToken("https://dev-apis.hidalgo.gob.mx/serviciosocial/subirReporte", {
+        method: 'POST',
+        body: formDataObj,
+      });
 
-    if (response.ok) {
-      const responseData = await response;
-      if (response.status === 201) {
-        Swal.fire({
-          icon: "success",
-          title: "Archivo enviado",
-          text: "Tu archivo PDF ha sido enviado correctamente.",
-        });
-        window.location.reload();
+      if (response.ok) {
+        const responseData = await response;
+        if (response.status === 201) {
+          Swal.fire({
+            icon: "success",
+            title: "Archivo enviado",
+            text: "Tu archivo PDF ha sido enviado correctamente.",
+          });
+          //window.location.reload();
+          fetchData();
+        }
+      } else {
+        throw new Error('Error en la respuesta de la red');
       }
-    } else {
-      throw new Error('Error en la respuesta de la red');
+    } catch (error) {
+      console.error("Error al enviar el archivo:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error al enviar el archivo",
+        text: "Hubo un problema al enviar el archivo o el archivo esta duplicado.",
+      });
     }
-  } catch (error) {
-    console.error("Error al enviar el archivo:", error);
-    Swal.fire({
-      icon: "error",
-      title: "Error al enviar el archivo",
-      text: "Hubo un problema al enviar el archivo.",
-    });
-  }
-};
+  };
 
   const { getInputProps } = useDropzone({ onDrop });
 
@@ -305,13 +307,13 @@ function Reportes({ title }) {
             </tr>
           </thead>
           <tbody>
-          {datosTabla.map((data, index) => (
-            <tr key={index}>
-            <Td onClick={() => handleDownloadPDF(data.pdf_reporte, 'reporte.pdf')}>PDF</Td>
-            <Td>{data.horas}</Td>
-            <Td>{data.estado}</Td>
-            </tr>
-          ))}
+            {datosTabla.map((data, index) => (
+              <tr key={index}>
+                <Td onClick={() => handleDownloadPDF(data.pdf_reporte, 'reporte.pdf')}>PDF</Td>
+                <Td>{data.horas}</Td>
+                <Td>{data.estado}</Td>
+              </tr>
+            ))}
             {/*{files.map((file, index) => (
               <tr key={index}>
                 <Td onClick={() => handleFileClick(file.preview)}>{file.name}</Td>
@@ -327,18 +329,19 @@ function Reportes({ title }) {
         <br></br>
         <br></br>
 
-        <UploadButton>
+        <UploadButton onChange={(e) => handleSend(e.target.files[0])}>
           <FontAwesomeIcon icon={faFileUpload} style={{ marginRight: '10px' }} />
           Seleccionar Archivo
-          <input type="file" {...getInputProps()} />
+          <input type="file"{...getInputProps()} />
         </UploadButton>
-        <UploadButton onClick={handleSend}>
+        {/* <input type="file" onChange={(e) => handleSend(e.target.files[0])} /> */}
+        {/* <UploadButton onClick={handleSend}>
           <FontAwesomeIcon style={{ marginRight: '10px' }} />
           Subir Archivo
-        </UploadButton>
+        </UploadButton> */}
       </Container>
 
-      
+
     </div>
   );
 }

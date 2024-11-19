@@ -356,7 +356,7 @@ pdf.setFont('Montserrat-Regular');
 pdf.setFontSize(11);
 yPosition += 30;                                                                                                                                                 
 const fecha =`                                                                                                                                                     
-                                                                                           Pachuca de Soto, Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
+                                                                                   Pachuca de Soto, Hgo., a ${format(new Date(modalData.date), 'dd \'de\' MMMM \'de\' yyyy', { locale: esLocale })}`;
 
 
 

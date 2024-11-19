@@ -105,6 +105,14 @@ const StyledForm = styled.form`
 const FormGroup = styled.div`
   margin-bottom: 15px;
 `;
+const FormSelected = styled.select`
+  margin-bottom: 15px;
+  border: 2px solid #9e2343; //  por veda  #666666
+  border-radius: 5px;
+  padding: 5px;
+  width: 100%;
+  box-sizing: border-box;
+`;
 
 const StyledField = styled.input`
   height: 40px;
@@ -114,6 +122,7 @@ const StyledField = styled.input`
   width: 100%;
   box-sizing: border-box;
 `;
+
 
 const ErrorMessageStyled = styled.div`
   color: #bc955b;   // por veda 98989a
@@ -319,13 +328,16 @@ const AgregarVal = ({ title }) => {
           </FormGroup>
           
           <FormGroup>
-          <select value={selectedSecretaria} onChange={handleSecretariaChange}>
-            <option value="">Seleccione una secretaría</option>
-            {secretarias.map(secretaria => (
-              <option key={secretaria} value={secretaria}>{secretaria}</option>
-            ))}
-          </select>
-          </FormGroup>
+        {/* Usa directamente el componente estilizado */}
+        <FormSelected value={selectedSecretaria} onChange={handleSecretariaChange}>
+          <option value="">Seleccione una secretaría</option>
+          {secretarias.map((secretaria) => (
+            <option key={secretaria} value={secretaria}>
+              {secretaria}
+            </option>
+          ))}
+        </FormSelected>
+      </FormGroup>
 
           <FormGroup><br></br>
             <SubmitButton type="submit">

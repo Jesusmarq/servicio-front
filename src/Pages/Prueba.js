@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 import "../Styles/preregistro.css"
 import fetchWithToken from './fetchConfig';
-import { useHistory } from "react-router-dom"; 
+import { useHistory } from "react-router-dom";
 import { Tag } from "keep-react";
 
 
@@ -19,14 +19,14 @@ function Preregistro() {
     otroplantel: "",
     curp: "",
     carrera: "",
-    matricula:"",
-    
+    matricula: "",
+
   };
 
 
 
   const [formData, setFormData] = useState(initialState);
-  
+
   const [plantelOptions, setPlantelOptions] = useState(
     ["Escuela Superior de Actopan",
       "Escuela Superior de Apan",
@@ -81,7 +81,7 @@ function Preregistro() {
       "Universidad Interglobal (UIG)"
     ]);
 
-    const history = useHistory(); // Instancia de useHistory para redireccionar
+  const history = useHistory(); // Instancia de useHistory para redireccionar
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -94,7 +94,7 @@ function Preregistro() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/registroAlumno`, {
         method: 'POST',
@@ -103,7 +103,7 @@ function Preregistro() {
         },
         body: JSON.stringify(formData)
       });
-  
+
       if (response.ok) {
         Swal.fire({
           icon: 'success',
@@ -130,54 +130,60 @@ function Preregistro() {
       });
     }
   };
-  
-  
 
- 
-   
-  
+
+
+
+
+
 
 
   const [escuelas, setEscuelas] = useState();
   const [planteles, setPlanteles] = useState();
   const [institutos, setInstitutos] = useState();
-  
+
   const traerPlanteles = async () => {
-    //Hacer peticion al endpoint  
-    const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/planteles');
-    const data = await response.json();
+    try {
+      //Hacer peticion al endpoint  
+      const response = await fetchWithToken('https://dev-apis.hidalgo.gob.mx/serviciosocial/planteles');
+      const data = await response.json();
 
-    // Array para almacenar los objetos con id y universidad únicos
-    let arrayIdUniversidadUnicos = [
-      {
-        id: 0,
-        value: "Selecciona la escuela"
-      }
-    ];
-    let idUniversidadesSet = new Set();
+      // Array para almacenar los objetos con id y universidad únicos
+      let arrayIdUniversidadUnicos = [
+        {
+          id: 0,
+          value: "Selecciona la escuela"
+        }
+      ];
+      let idUniversidadesSet = new Set();
 
-    // Recorres el array de objetos
-    data.forEach(objeto => {
-      if (!idUniversidadesSet.has(objeto.id_universidad)) {
-        idUniversidadesSet.add(objeto.id_universidad);
+      // Recorres el array de objetos
+      data.forEach(objeto => {
+        if (!idUniversidadesSet.has(objeto.id_universidad)) {
+          idUniversidadesSet.add(objeto.id_universidad);
 
-        arrayIdUniversidadUnicos.push({
-          id: objeto.id_universidad,
-          value: objeto.universidad
-        });
-      }
-    });
+          arrayIdUniversidadUnicos.push({
+            id: objeto.id_universidad,
+            value: objeto.universidad
+          });
+        }
+      });
 
-    const platelesTemp = data.map(element => {
-      return {
-        id: element.id_plantel,
-        value: element.plantel,
-        id_universidad: element.id_universidad
-      }
-    })
+      const platelesTemp = data.map(element => {
+        return {
+          id: element.id_plantel,
+          value: element.plantel,
+          id_universidad: element.id_universidad
+        }
+      })
 
-    setPlanteles(platelesTemp)
-    setEscuelas(arrayIdUniversidadUnicos)
+      setPlanteles(platelesTemp)
+      setEscuelas(arrayIdUniversidadUnicos)
+    } catch (error) {
+      console.log('Error escuelas alv')
+      console.log(error)
+    }
+
   }
 
   useEffect(() => {
@@ -219,18 +225,16 @@ function Preregistro() {
 
   const [showConfirmation, setShowConfirmation] = useState(false); // Estado para controlar la visualización de la alerta
 
-const handleConfirmation = () => {
-  setShowConfirmation(true);
-};
+  const handleConfirmation = () => {
+    setShowConfirmation(true);
+  };
 
   return (
     <section id="section_pre">
       <div className="form-container">
         <img src="./Images/logotipo-09.png" alt="Imagen Superior" className="imagenlogo" />
         <h2 className="encabezado">Registro de Usuario</h2>
-        
-        
-        <form onSubmit={(e) => {handleSubmit(e); handleFormSubmit(e)}}>
+        <form onSubmit={(e) => { handleSubmit(e); handleFormSubmit(e) }}>
           <div className="form-group">
             <label htmlFor="usuario">Correo:</label>
             <input className="cuadros"
@@ -359,22 +363,30 @@ const handleConfirmation = () => {
           </div>
 
           {showConfirmation ? (
-          <>
-            <br></br><br></br><br></br><p className="alerta">Entiendo que los datos ingresados son correctos y no se podrán hacer cambios posteriores.</p>
-            <div className="form-group">
-              <button type="submit" className="botonchido">Enviar</button>
-            </div>
+           
             
-          </>
-        ) : (
-          <div className="form-group">
-            <button className="botonchido2" onClick={handleConfirmation}>Seguir</button>
-          </div>
-        )}
-      </form>
-    </div>
-  </section>
-);
+            <>
+            <div class="cuerpo-alerta">
+              <p className="alerta">Entiendo que los datos ingresados son correctos y de continuar no se podrán hacer cambios posteriores.</p>
+            </div>
+           
+              <button type="submit" className="botonchido2">Enviar</button>
+       
+            
+            
+            </>
+           
+              
+            
+          ) : (
+            <div className="form-group">
+              <button className="botonchido2" onClick={handleConfirmation}>Seguir</button>
+            </div>
+          )}
+        </form>
+      </div>
+    </section>
+  );
 }
 
 export default Preregistro;

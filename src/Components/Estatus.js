@@ -526,10 +526,10 @@ const handleChangeFile = (e) => {
       <CenteredModal show={showModal} onHide={handleClose}>
         <ModalContent>
           <Modal.Header closeButton>
-            <Modal.Title>Carta de presentación</Modal.Title>
+            <Modal.Title>Carta de liberación</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <p>Por favor, adjunta tu carta de presentación y envíala.</p>
+            <p>Por favor, adjunta tu carta de liberación y envíala.</p>
             <Form >
         
 
