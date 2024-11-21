@@ -183,7 +183,6 @@ function ServicioSocialUAEH ({ title }) {
     try {
       const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/generarQr?solicitud=${solicitudId}`); // Utilizamos solicitudId
       const data = await response.json();
-  
       //console.log(data);
   
       // Verifica si la respuesta contiene las propiedades 'qr_image_base64' y 'firma_image_base64'

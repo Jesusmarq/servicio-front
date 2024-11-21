@@ -217,14 +217,13 @@ function Estancia ({ title }) {
 const fetchDataTabla = async (filtroSeleccionado) => {
   try {
       let filtroURL;
-      if (filtroSeleccionado === '') {
-          filtroURL = ''; // Si es 'todos', dejar filtroURL vacío
+      if (filtroSeleccionado === '' || filtroSeleccionado === undefined) {
+        filtroURL = 'https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaSolicitudes?limite=100&filtro=todos'; // Si es 'todos', dejar filtroURL vacío
       } else {
-          filtroURL = `&filtro=${filtroSeleccionado}`; // De lo contrario, establecer el filtro según la selección
+        filtroURL = `https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaSolicitudes?limite=100&filtro=${filtroSeleccionado}`; // De lo contrario, establecer el filtro según la selección
       }
 
-      const response = await fetchWithToken(`https://dev-apis.hidalgo.gob.mx/serviciosocial/consultaSolicitudes?limite=100${filtroURL}`);
-
+      const response = await fetchWithToken(filtroURL);
       if (!response.ok) {
           throw new Error('Error al obtener las solicitudes');
       }
@@ -757,7 +756,7 @@ const direccion=`
   
     useEffect(() => {
       traerDatos();
-      fetchDatosModal();
+      //fetchDatosModal();
     }, []);
   
     const handleSecretariaChange = (e) => {
